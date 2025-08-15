@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyage Authentification - Kidaily</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Kidaily</h1>
+        <p>Nettoyage de l'authentification</p>
+        <button onclick="clearAuth()">Nettoyer et Rediriger</button>
+        <button onclick="window.location.href='/'">Aller à l'Application</button>
+    </div>
+
+    <script>
+        function clearAuth() {
+            // Nettoyer le localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('kidaily_token');
+            localStorage.removeItem('kidaily_refresh_token');
+            
+            // Rediriger vers l'application
+            window.location.href = '/';
+        }
+        
+        // Nettoyer automatiquement au chargement
+        window.onload = function() {
+            clearAuth();
+        };
+    </script>
+</body>
+</html> 

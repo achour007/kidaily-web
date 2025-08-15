@@ -1,0 +1,84 @@
+{
+  "name": "kidaily-web",
+  "version": "1.0.0",
+  "description": "Application web Kidaily - Suivi éducatif",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.0",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.4.0",
+    "axios": "^1.11.0",
+    "express": "^5.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.11.1",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.6.2",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start:test": "REACT_APP_TEST_MODE=true react-scripts start",
+    "build": "react-scripts build",
+    "build:test": "REACT_APP_TEST_MODE=true react-scripts build",
+    "build:prod": "REACT_APP_ENV=production react-scripts build",
+    "build:analyze": "npm run build && npx webpack-bundle-analyzer build/static/js/*.js",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "test:e2e:headless": "cypress run --headless",
+    "test:e2e:chrome": "cypress run --browser chrome",
+    "test:e2e:firefox": "cypress run --browser firefox",
+    "test:e2e:edge": "cypress run --browser edge",
+    "test:all": "npm run test && npm run test:e2e:headless",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "npm run test:coverage && npm run test:e2e:headless",
+    "analyze:performance": "node scripts/performance-analysis.js",
+    "analyze:bundles": "npm run build && npm run performance-analysis",
+    "optimize:performance": "npm run analyze:performance && echo 'Consultez le rapport dans performance-analysis/'",
+    "lighthouse": "npx lighthouse http://localhost:3001 --output=html --output-path=./performance-analysis/lighthouse-report.html",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:github": "npm run build && gh-pages -d build",
+    "deploy:aws": "npm run build && aws s3 sync build/ s3://kidaily-web --delete",
+    "deploy:check": "npm run build && npm run test:ci && echo '✅ Prêt pour le déploiement'",
+    "check:stripe": "node scripts/check-stripe-setup.js",
+    "postbuild": "echo '🚀 Build terminé avec succès !'"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^16.18.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "cypress": "^14.5.4",
+    "identity-obj-proxy": "^3.0.0"
+  }
+}

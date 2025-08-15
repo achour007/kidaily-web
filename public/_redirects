@@ -1,0 +1,14 @@
+# Redirection forcée vers /setup pour toutes les routes
+# Sauf /setup lui-même et les ressources statiques
+
+# Rediriger toutes les routes vers /setup
+/*    /setup   302
+
+# Exclure /setup de la redirection
+/setup    /setup   200
+
+# Exclure les ressources statiques
+/static/*    /static/*   200
+/favicon.ico    /favicon.ico   200
+/manifest.json    /manifest.json   200
+

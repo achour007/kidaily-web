@@ -1,0 +1,52 @@
+# Dockerfile de production pour Kidaily Web
+# Multi-stage build pour optimiser la taille de l'image
+
+# Stage 1: Build de l'application
+FROM node:18-alpine AS builder
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm ci --only=production && npm cache clean --force
+
+# Copier le code source
+COPY . .
+
+# Construire l'application
+RUN npm run build:prod
+
+# Stage 2: Serveur de production
+FROM nginx:alpine AS production
+
+# Copier la configuration nginx personnalisée
+COPY nginx.prod.conf /etc/nginx/nginx.conf
+
+# Copier les fichiers construits depuis le stage builder
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+# Changer les permissions
+RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
+
+# Exposer le port 80
+EXPOSE 80
+
+# Définir l'utilisateur
+USER nextjs
+
+# Commande de démarrage
+CMD ["nginx", "-g", "daemon off;"]
+
+# Labels pour la documentation
+LABEL maintainer="Kidaily Team <dev@kidaily.com>"
+LABEL version="1.0.0"
+LABEL description="Application web Kidaily - Suivi éducatif"
+LABEL environment="production"
