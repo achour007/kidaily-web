@@ -242,7 +242,7 @@ const Dashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        const addedActivity = await response.json();
+        await response.json(); // Récupérer la réponse mais ne pas stocker
         // Mettre à jour la liste des activités
         // setActivities([...activities, addedActivity]);
         setOpenAddActivity(false);
@@ -276,7 +276,8 @@ const Dashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        const addedMeal = await response.json();
+        // const addedMeal = await response.json();
+        await response.json(); // Récupérer la réponse mais ne pas stocker
         // Mettre à jour la liste des repas
         // setMeals([...meals, addedMeal]);
         setOpenAddMeal(false);
@@ -310,7 +311,7 @@ const Dashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        const addedNap = await response.json();
+        await response.json(); // Récupérer la réponse mais ne pas stocker
         // Mettre à jour la liste des siestes
         // setNaps([...naps, addedNap]);
         setOpenAddNap(false);
