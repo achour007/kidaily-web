@@ -41,9 +41,9 @@ const Navigation: React.FC = () => {
 
   const menuItems = [
     { text: t.dashboard, icon: <DashboardIcon />, path: '/dashboard' },
-    { text: t.children, icon: <ChildIcon />, path: '/children' },
+    { text: t.children, icon: <ChildIcon />, path: '/child-management' },
     { text: t.evaluation, icon: <AssessmentIcon />, path: '/evaluation' },
-    { text: t.progress, icon: <TimelineIcon />, path: '/suivi' },
+    { text: t.progress, icon: <TimelineIcon />, path: '/suivi-progres' },
     { text: t.activities, icon: <GamesIcon />, path: '/activites' },
     { text: t.advice, icon: <LightbulbIcon />, path: '/conseils' },
     { text: t.resources, icon: <LocationIcon />, path: '/ressources' },

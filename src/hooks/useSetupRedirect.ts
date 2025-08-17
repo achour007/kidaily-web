@@ -7,6 +7,9 @@ import { useEnvironment } from '../config/environment';
  * Gère automatiquement les redirections selon l'environnement
  */
 export const useSetupRedirect = () => {
+  // 🚨 HOOK DÉSACTIVÉ EN PRODUCTION - Plus de redirection automatique !
+  return { isRedirecting: false };
+  
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [redirectAttempts, setRedirectAttempts] = useState(0);
   const location = useLocation();

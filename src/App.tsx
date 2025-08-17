@@ -153,8 +153,52 @@ function App() {
                   </ProtectedRoute>
                 } />
                 
+                {/* Routes pour les actions du Dashboard */}
+                <Route path="/children/add" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <ChildManagement />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/children/:id/edit" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <ChildManagement />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/children/:id/dashboard" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <Dashboard />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/children/:id/photos" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <ChildManagement />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/children/:id/documents" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <ChildManagement />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/calendar" element={
+                  <ProtectedRoute>
+                    <ProtectedLayout>
+                      <Dashboard />
+                    </ProtectedLayout>
+                  </ProtectedRoute>
+                } />
+                
                 {/* Route par défaut */}
-                <Route path="*" element={<Navigate to="/setup" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Router>
           </TestModeProvider>
