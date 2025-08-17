@@ -32,7 +32,11 @@ import {
   Psychology as PsychologyIcon,
   RecordVoiceOver as SpeechIcon,
   FitnessCenter as PhysioIcon,
+  Language as LanguageIcon,
+  Public as WebsiteIcon,
+  LocalHospital as HospitalIcon,
 } from '@mui/icons-material';
+import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 
 interface Professional {
   id: string;
@@ -55,81 +59,13 @@ const Ressources: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
 
-  const specialties = [
-    { id: 'all', name: 'Toutes les spécialités' },
-    { id: 'orthophoniste', name: 'Orthophoniste' },
-    { id: 'psychologue', name: 'Psychologue' },
-    { id: 'psychomotricien', name: 'Psychomotricien' },
-    { id: 'pediatre', name: 'Pédiatre' },
-    { id: 'neurologue', name: 'Neurologue pédiatrique' },
-  ];
+  // Utiliser les données suisses réelles
+  const specialties = SwissHealthcareData.getSpecialties();
+  const cantons = SwissHealthcareData.getCantons();
+  const professionals = SwissHealthcareData.getProfessionals();
 
-  const professionals: Professional[] = [
-    {
-      id: '1',
-      name: 'Dr. Marie Dubois',
-      specialty: 'orthophoniste',
-      address: '123 Rue de la Paix, 75001 Paris',
-      phone: '01 23 45 67 89',
-      email: 'marie.dubois@example.com',
-      rating: 4.8,
-      reviews: 127,
-      waitingTime: '2-3 mois',
-      acceptsNewPatients: true,
-      coordinates: { lat: 48.8566, lng: 2.3522 },
-      description: 'Spécialisée dans les troubles du langage et de la communication chez l\'enfant.',
-      specialties: ['Troubles du langage', 'Bégaiement', 'Dyslexie'],
-    },
-    {
-      id: '2',
-      name: 'Dr. Jean Martin',
-      specialty: 'psychologue',
-      address: '456 Avenue des Champs, 75008 Paris',
-      phone: '01 98 76 54 32',
-      email: 'jean.martin@example.com',
-      rating: 4.6,
-      reviews: 89,
-      waitingTime: '1-2 mois',
-      acceptsNewPatients: true,
-      coordinates: { lat: 48.8700, lng: 2.3100 },
-      description: 'Psychologue spécialisé dans le développement de l\'enfant et les troubles du comportement.',
-      specialties: ['Troubles du comportement', 'Autisme', 'TDAH'],
-    },
-    {
-      id: '3',
-      name: 'Sophie Bernard',
-      specialty: 'psychomotricien',
-      address: '789 Boulevard Saint-Germain, 75006 Paris',
-      phone: '01 45 67 89 12',
-      email: 'sophie.bernard@example.com',
-      rating: 4.9,
-      reviews: 156,
-      waitingTime: '3-4 mois',
-      acceptsNewPatients: false,
-      coordinates: { lat: 48.8530, lng: 2.3499 },
-      description: 'Psychomotricienne expérimentée dans la rééducation motrice et cognitive.',
-      specialties: ['Motricité fine', 'Coordination', 'Équilibre'],
-    },
-  ];
-
-  const faqItems = [
-    {
-      question: 'Comment obtenir un remboursement ?',
-      answer: 'Les consultations peuvent être remboursées par la Sécurité sociale et les mutuelles. Renseignez-vous auprès de votre caisse d\'assurance maladie et de votre mutuelle pour connaître les conditions de remboursement.',
-    },
-    {
-      question: 'Quels documents préparer pour la première consultation ?',
-      answer: 'Préparez le carnet de santé de votre enfant, les résultats d\'évaluations précédentes, et une lettre de recommandation de votre pédiatre si possible.',
-    },
-    {
-      question: 'Combien de temps dure une consultation ?',
-      answer: 'La première consultation dure généralement 1h à 1h30. Les séances suivantes durent entre 30 minutes et 1h selon le spécialiste et le type de suivi.',
-    },
-    {
-      question: 'Comment choisir le bon spécialiste ?',
-      answer: 'Consultez les avis, vérifiez les spécialités, et n\'hésitez pas à appeler pour poser des questions. Une première consultation permet souvent de voir si le courant passe bien.',
-    },
-  ];
+  // Utiliser la FAQ suisse
+  const faqItems = SwissHealthcareData.getSwissFAQ();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -147,6 +83,9 @@ const Ressources: React.FC = () => {
       case 'orthophoniste': return <SpeechIcon />;
       case 'psychologue': return <PsychologyIcon />;
       case 'psychomotricien': return <PhysioIcon />;
+      case 'pediatre': return <HospitalIcon />;
+      case 'neurologie': return <HospitalIcon />;
+      case 'ergotherapie': return <PhysioIcon />;
       default: return <PersonIcon />;
     }
   };
@@ -156,6 +95,9 @@ const Ressources: React.FC = () => {
       case 'orthophoniste': return '#2196f3';
       case 'psychologue': return '#9c27b0';
       case 'psychomotricien': return '#4caf50';
+      case 'pediatre': return '#f44336';
+      case 'neurologie': return '#ff9800';
+      case 'ergotherapie': return '#00bcd4';
       default: return '#666';
     }
   };
@@ -176,8 +118,8 @@ const Ressources: React.FC = () => {
         <Box>
           <Alert severity="info" sx={{ mb: 3 }}>
             <Typography variant="body2">
-              Carte interactive des professionnels de santé spécialisés dans le développement de l'enfant.
-              Cliquez sur les marqueurs pour voir les détails.
+              Carte interactive des professionnels de santé spécialisés dans le développement de l'enfant en Suisse.
+              Centres hospitaliers universitaires, cabinets privés et institutions spécialisées.
             </Typography>
           </Alert>
 
@@ -334,11 +276,42 @@ const Ressources: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                  {/* Informations spécifiques Suisse */}
+                  {professional.institution && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <HospitalIcon color="action" />
+                      <Typography variant="body2" color="primary">
+                        {professional.institution}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {professional.languages && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <LanguageIcon color="action" />
+                      <Typography variant="body2">
+                        Langues: {professional.languages.join(', ')}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {professional.insuranceAccepted && (
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Assurances acceptées:
+                      </Typography>
+                      {professional.insuranceAccepted.map((insurance, idx) => (
+                        <Chip key={idx} label={insurance} size="small" variant="outlined" color="primary" />
+                      ))}
+                    </Box>
+                  )}
+
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     <Button
                       startIcon={<PhoneIcon />}
                       size="small"
                       variant="outlined"
+                      href={`tel:${professional.phone}`}
                     >
                       Appeler
                     </Button>
@@ -346,9 +319,22 @@ const Ressources: React.FC = () => {
                       startIcon={<EmailIcon />}
                       size="small"
                       variant="outlined"
+                      href={`mailto:${professional.email}`}
                     >
-                      Contacter
+                      Email
                     </Button>
+                    {professional.website && (
+                      <Button
+                        startIcon={<WebsiteIcon />}
+                        size="small"
+                        variant="outlined"
+                        href={professional.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Site web
+                      </Button>
+                    )}
                     {professional.acceptsNewPatients ? (
                       <Chip label="Nouveaux patients" color="success" size="small" />
                     ) : (
