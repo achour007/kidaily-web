@@ -36,8 +36,6 @@ import {
   LocalHospital as HospitalIcon,
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
-import { ComprehensiveSwissDatabase } from '../data/comprehensiveSwissDatabase';
-import { ExpandedSwissDatabase } from '../data/expandedSwissDatabase';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 
 const Ressources: React.FC = () => {
