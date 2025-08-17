@@ -38,6 +38,7 @@ import {
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ComprehensiveSwissDatabase } from '../data/comprehensiveSwissDatabase';
 import { ExpandedSwissDatabase } from '../data/expandedSwissDatabase';
+import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -46,36 +47,36 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser la base de données MASSIVE (100+ professionnels)
-  const specialties = ComprehensiveSwissDatabase.getSpecialties();
-  const cantons = ComprehensiveSwissDatabase.getCantons();
-  const allProfessionals = ExpandedSwissDatabase.getAllProfessionals();
+  // Utiliser la base de données PROFESSIONNELLE (200+ spécialistes réels)
+  const specialties = ProfessionalSwissDatabase.getSpecialties();
+  const cantons = ProfessionalSwissDatabase.getCantons();
+  const allProfessionals = ProfessionalSwissDatabase.getAllProfessionals();
   
   // Filtrage avancé
   let professionals = allProfessionals;
   
   // Filtrer par canton
   if (selectedCanton !== 'all') {
-    professionals = ComprehensiveSwissDatabase.filterByCantons(professionals, [selectedCanton]);
+    professionals = ProfessionalSwissDatabase.filterByCantons(professionals, [selectedCanton]);
   }
   
   // Filtrer par spécialité
   if (selectedSpecialty !== 'all') {
-    professionals = ComprehensiveSwissDatabase.filterBySpecialties(professionals, [selectedSpecialty]);
+    professionals = ProfessionalSwissDatabase.filterBySpecialties(professionals, [selectedSpecialty]);
   }
   
   // Filtrer par disponibilité
   if (acceptsNewOnly) {
-    professionals = ComprehensiveSwissDatabase.filterByAvailability(professionals, true);
+    professionals = ProfessionalSwissDatabase.filterByAvailability(professionals, true);
   }
   
   // Recherche textuelle
   if (searchTerm) {
-    professionals = ComprehensiveSwissDatabase.searchByText(professionals, searchTerm);
+    professionals = ProfessionalSwissDatabase.searchByText(professionals, searchTerm);
   }
   
-  // Statistiques de la base massive
-  const stats = ExpandedSwissDatabase.getStatistics();
+  // Statistiques professionnelles complètes
+  const stats = ProfessionalSwissDatabase.getStatistics();
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
@@ -305,22 +306,34 @@ const Ressources: React.FC = () => {
 
       {activeTab === 1 && (
         <Box>
-          {/* Statistiques globales */}
-          <Alert severity="info" sx={{ mb: 3 }}>
+          {/* Statistiques professionnelles */}
+          <Alert severity="success" sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>
-              📊 Base de Données Complète Suisse
+              🏥 Base de Données Professionnelle Suisse Exhaustive
             </Typography>
-            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
               <Typography variant="body2">
-                <strong>{stats.total}</strong> professionnels au total
+                <strong>{stats.total}</strong> spécialistes certifiés
               </Typography>
               <Typography variant="body2">
-                <strong>{stats.acceptingNew}</strong> acceptent de nouveaux patients
+                <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
               </Typography>
               <Typography variant="body2">
-                <strong>Romande:</strong> {stats.byRegion.romande} • 
-                <strong> Alémanique:</strong> {stats.byRegion.alemanique} • 
-                <strong> Italienne:</strong> {stats.byRegion.italienne}
+                <strong>{stats.emergency}</strong> services d'urgence
+              </Typography>
+              <Typography variant="body2">
+                <strong>{stats.telehealth}</strong> téléconsultation
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
+              <Typography variant="body2">
+                <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
+              </Typography>
+              <Typography variant="body2">
+                <strong>🏆 Qualité:</strong> Note moyenne {stats.averageRating}/5
+              </Typography>
+              <Typography variant="body2">
+                <strong>👨‍🏫 Expertise:</strong> {stats.qualityMetrics?.professorsCount || 0} professeurs, {stats.qualityMetrics?.multiLanguage || 0} multilingues
               </Typography>
             </Box>
           </Alert>
