@@ -52,12 +52,64 @@ const Evaluation: React.FC = () => {
     { id: 'langage', name: 'Langage', color: '#2196f3' },
     { id: 'motricite', name: 'Motricité', color: '#4caf50' },
     { id: 'cognitif', name: 'Cognitif', color: '#ff9800' },
+    { id: 'social', name: 'Social', color: '#9c27b0' },
   ];
 
-  // Questions fictives pour la démonstration
+  // Questions fictives pour la démonstration - TOUS LES GROUPES D'ÂGE
   const questions: Question[] = [
+    // Questions 0-1 an
     {
-      id: '1',
+      id: '0-1-1',
+      text: 'Votre enfant sourit-il en réponse à votre sourire ?',
+      category: 'social',
+      ageGroup: '0-1',
+      options: [
+        { value: 'oui', label: 'Oui, toujours', score: 3 },
+        { value: 'parfois', label: 'Parfois', score: 2 },
+        { value: 'rarement', label: 'Rarement', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    {
+      id: '0-1-2',
+      text: 'Votre enfant tient-il sa tête droite sans soutien ?',
+      category: 'motricite',
+      ageGroup: '0-1',
+      options: [
+        { value: 'oui', label: 'Oui, facilement', score: 3 },
+        { value: 'parfois', label: 'Avec un peu d\'aide', score: 2 },
+        { value: 'rarement', label: 'Difficilement', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    // Questions 1-2 ans  
+    {
+      id: '1-2-1',
+      text: 'Votre enfant dit-il au moins 10 mots différents ?',
+      category: 'langage',
+      ageGroup: '1-2',
+      options: [
+        { value: 'oui', label: 'Oui, plus de 10', score: 3 },
+        { value: 'parfois', label: 'Environ 5-10 mots', score: 2 },
+        { value: 'rarement', label: 'Moins de 5 mots', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    {
+      id: '1-2-2',
+      text: 'Votre enfant marche-t-il sans aide ?',
+      category: 'motricite',
+      ageGroup: '1-2',
+      options: [
+        { value: 'oui', label: 'Oui, court même', score: 3 },
+        { value: 'parfois', label: 'Marche bien', score: 2 },
+        { value: 'rarement', label: 'Marche avec aide', score: 1 },
+        { value: 'non', label: 'Ne marche pas encore', score: 0 },
+      ],
+    },
+    // Questions 2-3 ans
+    {
+      id: '2-3-1',
       text: 'Votre enfant dit-il au moins 50 mots différents ?',
       category: 'langage',
       ageGroup: '2-3',
@@ -69,7 +121,7 @@ const Evaluation: React.FC = () => {
       ],
     },
     {
-      id: '2',
+      id: '2-3-2',
       text: 'Votre enfant peut-il empiler 6 cubes ou plus ?',
       category: 'motricite',
       ageGroup: '2-3',
@@ -80,15 +132,53 @@ const Evaluation: React.FC = () => {
         { value: 'non', label: 'Non', score: 0 },
       ],
     },
+    // Questions 3-4 ans
     {
-      id: '3',
-      text: 'Votre enfant reconnaît-il les couleurs principales ?',
-      category: 'cognitif',
-      ageGroup: '2-3',
+      id: '3-4-1',
+      text: 'Votre enfant forme-t-il des phrases de 3-4 mots ?',
+      category: 'langage',
+      ageGroup: '3-4',
       options: [
-        { value: 'oui', label: 'Oui, plusieurs couleurs', score: 3 },
-        { value: 'parfois', label: 'Quelques couleurs', score: 2 },
-        { value: 'rarement', label: 'Rarement', score: 1 },
+        { value: 'oui', label: 'Oui, des phrases complètes', score: 3 },
+        { value: 'parfois', label: 'Parfois', score: 2 },
+        { value: 'rarement', label: 'Mots isolés surtout', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    {
+      id: '3-4-2',
+      text: 'Votre enfant peut-il courir et sauter ?',
+      category: 'motricite',
+      ageGroup: '3-4',
+      options: [
+        { value: 'oui', label: 'Oui, très bien', score: 3 },
+        { value: 'parfois', label: 'Court bien, saute un peu', score: 2 },
+        { value: 'rarement', label: 'Court seulement', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    // Questions 4-5 ans
+    {
+      id: '4-5-1',
+      text: 'Votre enfant raconte-t-il des histoires simples ?',
+      category: 'langage',
+      ageGroup: '4-5',
+      options: [
+        { value: 'oui', label: 'Oui, avec détails', score: 3 },
+        { value: 'parfois', label: 'Histoires courtes', score: 2 },
+        { value: 'rarement', label: 'Phrases simples', score: 1 },
+        { value: 'non', label: 'Non', score: 0 },
+      ],
+    },
+    {
+      id: '4-5-2',
+      text: 'Votre enfant peut-il dessiner des formes simples ?',
+      category: 'cognitif',
+      ageGroup: '4-5',
+      options: [
+        { value: 'oui', label: 'Oui, cercles et carrés', score: 3 },
+        { value: 'parfois', label: 'Lignes et traits', score: 2 },
+        { value: 'rarement', label: 'Gribouillis', score: 1 },
         { value: 'non', label: 'Non', score: 0 },
       ],
     },
