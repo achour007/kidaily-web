@@ -38,6 +38,7 @@ import {
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 import { ExpandedSwissDatabase } from '../data/expandedSwissDatabase';
+import { MassiveSwissDatabase } from '../data/massiveSwissDatabase';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -46,10 +47,10 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser la base de données EXPANDED (100+ spécialistes réels)
+  // Utiliser la base de données MASSIVE (120+ spécialistes GARANTIS)
   const specialties = ProfessionalSwissDatabase.getSpecialties();
   const cantons = ProfessionalSwissDatabase.getCantons();
-  const allProfessionals = ExpandedSwissDatabase.getAllProfessionals();
+  const allProfessionals = MassiveSwissDatabase.getAllProfessionals();
   
   // Filtrage avancé
   let professionals = allProfessionals;
@@ -77,8 +78,8 @@ const Ressources: React.FC = () => {
     );
   }
   
-  // Statistiques de la base expanded
-  const stats = ExpandedSwissDatabase.getStatistics();
+  // Statistiques de la base massive
+  const stats = MassiveSwissDatabase.getStatistics();
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
