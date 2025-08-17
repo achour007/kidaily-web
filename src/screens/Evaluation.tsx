@@ -19,7 +19,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { ComprehensiveEvaluationQuestions, EvaluationQuestion } from '../data/comprehensiveEvaluationQuestions';
+import { ComprehensiveEvaluationQuestions } from '../data/comprehensiveEvaluationQuestions';
 
 const Evaluation: React.FC = () => {
   const navigate = useNavigate();
