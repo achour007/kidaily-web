@@ -37,6 +37,7 @@ import {
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
+import { ExpandedSwissDatabase } from '../data/expandedSwissDatabase';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -45,36 +46,39 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser la base de données PROFESSIONNELLE (200+ spécialistes réels)
+  // Utiliser la base de données EXPANDED (100+ spécialistes réels)
   const specialties = ProfessionalSwissDatabase.getSpecialties();
   const cantons = ProfessionalSwissDatabase.getCantons();
-  const allProfessionals = ProfessionalSwissDatabase.getAllProfessionals();
+  const allProfessionals = ExpandedSwissDatabase.getAllProfessionals();
   
   // Filtrage avancé
   let professionals = allProfessionals;
   
-  // Filtrer par canton
+  // Filtrage simple adapté à ExpandedSwissDatabase
   if (selectedCanton !== 'all') {
-    professionals = ProfessionalSwissDatabase.filterByCantons(professionals, [selectedCanton]);
+    professionals = professionals.filter(p => p.cantonCode === selectedCanton);
   }
   
-  // Filtrer par spécialité
   if (selectedSpecialty !== 'all') {
-    professionals = ProfessionalSwissDatabase.filterBySpecialties(professionals, [selectedSpecialty]);
+    professionals = professionals.filter(p => p.specialty === selectedSpecialty);
   }
   
-  // Filtrer par disponibilité
   if (acceptsNewOnly) {
-    professionals = ProfessionalSwissDatabase.filterByAvailability(professionals, true);
+    professionals = professionals.filter(p => p.acceptsNewPatients);
   }
   
-  // Recherche textuelle
   if (searchTerm) {
-    professionals = ProfessionalSwissDatabase.searchByText(professionals, searchTerm);
+    const term = searchTerm.toLowerCase();
+    professionals = professionals.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.institution.toLowerCase().includes(term) ||
+      p.city.toLowerCase().includes(term) ||
+      p.canton.toLowerCase().includes(term)
+    );
   }
   
-  // Statistiques professionnelles complètes
-  const stats = ProfessionalSwissDatabase.getStatistics();
+  // Statistiques de la base expanded
+  const stats = ExpandedSwissDatabase.getStatistics();
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
@@ -440,9 +444,9 @@ const Ressources: React.FC = () => {
                   </Typography>
 
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {professional.specializations.map((specialty, idx) => (
+                    {professional.specialties?.map((specialty, idx) => (
                       <Chip key={idx} label={specialty} size="small" variant="outlined" />
-                    ))}
+                    )) || []}
                   </Box>
 
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
