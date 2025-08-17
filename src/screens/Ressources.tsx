@@ -442,7 +442,7 @@ const Ressources: React.FC = () => {
                   </Typography>
 
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {professional.specialties.map((specialty, idx) => (
+                    {professional.specializations.map((specialty, idx) => (
                       <Chip key={idx} label={specialty} size="small" variant="outlined" />
                     ))}
                   </Box>
