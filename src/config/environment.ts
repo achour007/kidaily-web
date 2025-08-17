@@ -70,7 +70,7 @@ const detectEnvironment = (): EnvironmentConfig => {
 
   // Configuration de l'API
   const apiUrl = process.env.REACT_APP_API_URL || 
-    (isTestMode ? 'http://localhost:3000' : 'https://api.kidaily.com');
+    (isTestMode ? 'http://localhost:3000' : 'https://kidaily-backend-cb9a147c3208.herokuapp.com');
   
   const apiTimeout = isTestMode ? 10000 : 30000;
 

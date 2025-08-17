@@ -64,6 +64,13 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
       errorMessage = response.statusText || errorMessage;
     }
 
+    // Si c'est une erreur 401, nettoyer les tokens
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      errorMessage = 'Token d\'accès requis';
+    }
+
     throw new ApiError(response.status, errorMessage, errorData);
   }
 

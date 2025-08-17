@@ -2,7 +2,7 @@
 export const config = {
   // Configuration de l'API
   api: {
-    baseUrl: process.env.REACT_APP_API_URL || 'http://localhost:3000',
+    baseUrl: process.env.REACT_APP_API_URL || 'https://kidaily-backend-cb9a147c3208.herokuapp.com',
     timeout: 10000,
   },
   

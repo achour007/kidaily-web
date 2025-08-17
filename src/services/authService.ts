@@ -40,7 +40,12 @@ export class AuthService {
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await ApiService.post<AuthResponse>('/auth/login', credentials);
     
-    // Si une langue est spécifiée, la mettre à jour
+    // Sauvegarder les tokens si présents dans la réponse
+    if (response.token) {
+      this.saveTokens(response.token, response.refreshToken);
+    }
+
+    // Si une langue est spécifiée, la mettre à jour (après sauvegarde du token)
     if (credentials.language) {
       try {
         await ApiService.put('/users/language', { language: credentials.language });
@@ -48,6 +53,7 @@ export class AuthService {
         localStorage.setItem('selectedLanguage', credentials.language);
       } catch (error) {
         console.warn('Erreur lors de la mise à jour de la langue:', error);
+        // Ne pas faire échouer la connexion pour cette erreur
       }
     }
 
