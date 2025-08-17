@@ -37,7 +37,6 @@ import {
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
-import { ExpandedSwissDatabase } from '../data/expandedSwissDatabase';
 import { MassiveSwissDatabase } from '../data/massiveSwissDatabase';
 
 const Ressources: React.FC = () => {
