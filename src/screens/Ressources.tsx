@@ -321,10 +321,10 @@ const Ressources: React.FC = () => {
                 <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
               </Typography>
               <Typography variant="body2">
-                <strong>{stats.emergency}</strong> services d'urgence
+                <strong>{stats.emergency || 0}</strong> services d'urgence
               </Typography>
               <Typography variant="body2">
-                <strong>{stats.telehealth}</strong> téléconsultation
+                <strong>🌍</strong> Couverture exhaustive
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
@@ -332,10 +332,10 @@ const Ressources: React.FC = () => {
                 <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
               </Typography>
               <Typography variant="body2">
-                <strong>🏆 Qualité:</strong> Note moyenne {stats.averageRating}/5
+                <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
               </Typography>
               <Typography variant="body2">
-                <strong>👨‍🏫 Expertise:</strong> {stats.qualityMetrics?.professorsCount || 0} professeurs, {stats.qualityMetrics?.multiLanguage || 0} multilingues
+                <strong>🇨🇭 Cantons:</strong> Tous les 26 cantons suisses
               </Typography>
             </Box>
           </Alert>
