@@ -40,7 +40,7 @@ const LoginScreen: React.FC = () => {
   // Rediriger si déjà connecté
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/setup');
     }
   }, [isAuthenticated, navigate]);
 

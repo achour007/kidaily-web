@@ -85,14 +85,10 @@ function App() {
                 <Route path="/register" element={<RegisterScreen />} />
                 <Route path="/login" element={<LoginScreen />} />
                 
+                {/* Route par défaut - LoginScreen comme écran d'accueil */}
+                <Route path="/" element={<LoginScreen />} />
+                
                 {/* Routes protégées */}
-                <Route path="/" element={
-                  <ProtectedRoute>
-                    <ProtectedLayout>
-                      <Dashboard />
-                    </ProtectedLayout>
-                  </ProtectedRoute>
-                } />
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <ProtectedLayout>

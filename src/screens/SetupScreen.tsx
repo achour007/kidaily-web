@@ -81,9 +81,9 @@ const SetupScreen: React.FC = () => {
     // Sauvegarder les configurations
     saveConfiguration(selectedLanguage, version);
     
-    // Naviguer vers l'écran de connexion
-    console.log('[SetupScreen] Configuration saved, navigating to login');
-    navigate('/login');
+    // Naviguer vers le dashboard après le setup
+    console.log('[SetupScreen] Configuration saved, navigating to dashboard');
+    navigate('/dashboard');
   };
 
   const handleResetConfiguration = () => {
