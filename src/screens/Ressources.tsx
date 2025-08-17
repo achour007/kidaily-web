@@ -36,15 +36,45 @@ import {
   LocalHospital as HospitalIcon,
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
+import { ComprehensiveSwissDatabase } from '../data/comprehensiveSwissDatabase';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
+  const [selectedCanton, setSelectedCanton] = useState('all');
+  const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser les données suisses réelles
-  const specialties = SwissHealthcareData.getSpecialties();
-  const professionals = SwissHealthcareData.getProfessionals();
+  // Utiliser la base de données exhaustive suisse
+  const specialties = ComprehensiveSwissDatabase.getSpecialties();
+  const cantons = ComprehensiveSwissDatabase.getCantons();
+  const allProfessionals = ComprehensiveSwissDatabase.getAllProfessionals();
+  
+  // Filtrage avancé
+  let professionals = allProfessionals;
+  
+  // Filtrer par canton
+  if (selectedCanton !== 'all') {
+    professionals = ComprehensiveSwissDatabase.filterByCantons(professionals, [selectedCanton]);
+  }
+  
+  // Filtrer par spécialité
+  if (selectedSpecialty !== 'all') {
+    professionals = ComprehensiveSwissDatabase.filterBySpecialties(professionals, [selectedSpecialty]);
+  }
+  
+  // Filtrer par disponibilité
+  if (acceptsNewOnly) {
+    professionals = ComprehensiveSwissDatabase.filterByAvailability(professionals, true);
+  }
+  
+  // Recherche textuelle
+  if (searchTerm) {
+    professionals = ComprehensiveSwissDatabase.searchByText(professionals, searchTerm);
+  }
+  
+  // Statistiques
+  const stats = ComprehensiveSwissDatabase.getStatistics(allProfessionals);
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
@@ -115,11 +145,16 @@ const Ressources: React.FC = () => {
                 mb: 2 
               }}>
                 <Typography variant="h6" color="primary">
-                  🇨🇭 Professionnels de Santé en Suisse
+                  🇨🇭 Base de Données Exhaustive Suisse
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {professionals.length} professionnels trouvés
-                </Typography>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {professionals.length} / {stats.total} professionnels trouvés
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Tous les 26 cantons • {stats.byRegion.romande + stats.byRegion.alemanique + stats.byRegion.italienne} régions
+                  </Typography>
+                </Box>
               </Box>
 
               {/* Carte interactive simplifiée mais fonctionnelle */}
@@ -274,11 +309,31 @@ const Ressources: React.FC = () => {
 
       {activeTab === 1 && (
         <Box>
-          {/* Filtres */}
+          {/* Statistiques globales */}
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              📊 Base de Données Complète Suisse
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              <Typography variant="body2">
+                <strong>{stats.total}</strong> professionnels au total
+              </Typography>
+              <Typography variant="body2">
+                <strong>{stats.acceptingNew}</strong> acceptent de nouveaux patients
+              </Typography>
+              <Typography variant="body2">
+                <strong>Romande:</strong> {stats.byRegion.romande} • 
+                <strong> Alémanique:</strong> {stats.byRegion.alemanique} • 
+                <strong> Italienne:</strong> {stats.byRegion.italienne}
+              </Typography>
+            </Box>
+          </Alert>
+
+          {/* Filtres avancés */}
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
-              placeholder="Rechercher par nom ou adresse..."
+              placeholder="Rechercher par nom, institution, ville, canton..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               InputProps={{
@@ -291,7 +346,36 @@ const Ressources: React.FC = () => {
               sx={{ mb: 2 }}
             />
             
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {/* Filtres par canton */}
+            <Typography variant="subtitle2" gutterBottom>
+              🏔️ Filtrer par canton :
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+              {cantons.slice(0, 10).map((canton) => (
+                <Chip
+                  key={canton.code}
+                  label={canton.name}
+                  onClick={() => setSelectedCanton(canton.code)}
+                  color={selectedCanton === canton.code ? 'primary' : 'default'}
+                  variant={selectedCanton === canton.code ? 'filled' : 'outlined'}
+                  size="small"
+                />
+              ))}
+              {cantons.length > 10 && (
+                <Chip
+                  label="... + autres cantons"
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                />
+              )}
+            </Box>
+
+            {/* Filtres par spécialité */}
+            <Typography variant="subtitle2" gutterBottom>
+              🏥 Filtrer par spécialité :
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
               {specialties.map((specialty) => (
                 <Chip
                   key={specialty.id}
@@ -302,11 +386,24 @@ const Ressources: React.FC = () => {
                 />
               ))}
             </Box>
+
+            {/* Filtres supplémentaires */}
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <Chip
+                label="✅ Accepte nouveaux patients"
+                onClick={() => setAcceptsNewOnly(!acceptsNewOnly)}
+                color={acceptsNewOnly ? 'success' : 'default'}
+                variant={acceptsNewOnly ? 'filled' : 'outlined'}
+              />
+              <Typography variant="body2" color="text.secondary">
+                {professionals.length} résultats
+              </Typography>
+            </Box>
           </Box>
 
           {/* Liste des professionnels */}
           <List>
-            {filteredProfessionals.map((professional, index) => (
+            {professionals.map((professional, index) => (
               <React.Fragment key={professional.id}>
                 <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                   <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -418,7 +515,7 @@ const Ressources: React.FC = () => {
                     )}
                   </Box>
                 </ListItem>
-                {index < filteredProfessionals.length - 1 && <Divider />}
+                {index < professionals.length - 1 && <Divider />}
               </React.Fragment>
             ))}
           </List>
