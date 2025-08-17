@@ -27,7 +27,6 @@ import {
   Email as EmailIcon,
   AccessTime as TimeIcon,
   ExpandMore as ExpandMoreIcon,
-  Map as MapIcon,
   Person as PersonIcon,
   Psychology as PsychologyIcon,
   RecordVoiceOver as SpeechIcon,
@@ -37,7 +36,6 @@ import {
   LocalHospital as HospitalIcon,
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
-import SwissMap from '../components/SwissMap';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
