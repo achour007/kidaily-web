@@ -35,10 +35,10 @@ const RegisterScreen: React.FC = () => {
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
 
-  // Rediriger si déjà connecté
+  // Rediriger vers setup après inscription réussie
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/setup');
     }
   }, [isAuthenticated, navigate]);
 
