@@ -14,11 +14,15 @@ import {
   InputAdornment,
   Fade,
   Grow,
+  Select,
+  MenuItem,
+  FormControl,
 } from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
   School,
+  Language as LanguageIcon,
 } from '@mui/icons-material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -35,7 +39,7 @@ const LoginScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
-  const { language, t } = useLanguageContext();
+  const { language, t, changeLanguage, supportedLanguages } = useLanguageContext();
 
   // Rediriger si déjà connecté
   useEffect(() => {
@@ -97,8 +101,36 @@ const LoginScreen: React.FC = () => {
     }
   };
 
+  const handleLanguageChange = (event: any) => {
+    changeLanguage(event.target.value);
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', position: 'relative' }}>
+      {/* Sélecteur de langue en haut à droite */}
+      <Box sx={{ position: 'absolute', top: 20, right: 20, zIndex: 1000 }}>
+        <FormControl size="small">
+          <Select
+            value={language}
+            onChange={handleLanguageChange}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              borderRadius: 1,
+              minWidth: 100,
+            }}
+            startAdornment={<LanguageIcon sx={{ mr: 1, color: 'text.secondary' }} />}
+          >
+            {supportedLanguages.map((lang) => (
+              <MenuItem key={lang.code} value={lang.code}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <span>{lang.flag}</span>
+                  <span>{lang.name}</span>
+                </Box>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       {/* Contenu principal */}
       <Box
         sx={{
