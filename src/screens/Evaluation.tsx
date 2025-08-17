@@ -19,19 +19,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { ComprehensiveEvaluationQuestions } from '../data/comprehensiveEvaluationQuestions';
-
-interface Question {
-  id: string;
-  text: string;
-  category: string;
-  ageGroup: string;
-  options: {
-    value: string;
-    label: string;
-    score: number;
-  }[];
-}
+import { ComprehensiveEvaluationQuestions, EvaluationQuestion } from '../data/comprehensiveEvaluationQuestions';
 
 const Evaluation: React.FC = () => {
   const navigate = useNavigate();
@@ -51,9 +39,7 @@ const Evaluation: React.FC = () => {
 
   // Utiliser le système complet d'évaluation
   const categories = ComprehensiveEvaluationQuestions.getCategories();
-  const questions = ComprehensiveEvaluationQuestions.getQuestionsByAge(childAge);
-
-  const currentQuestions = questions.filter(q => q.ageGroup === childAge);
+  const currentQuestions = ComprehensiveEvaluationQuestions.getQuestionsByAge(childAge);
   const progress = (activeStep / currentQuestions.length) * 100;
 
   const handleAnswerChange = (questionId: string, value: string) => {
