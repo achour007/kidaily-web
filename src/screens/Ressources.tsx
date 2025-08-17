@@ -38,22 +38,6 @@ import {
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 
-interface Professional {
-  id: string;
-  name: string;
-  specialty: string;
-  address: string;
-  phone: string;
-  email: string;
-  rating: number;
-  reviews: number;
-  waitingTime: string;
-  acceptsNewPatients: boolean;
-  coordinates: { lat: number; lng: number };
-  description: string;
-  specialties: string[];
-}
-
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +45,6 @@ const Ressources: React.FC = () => {
 
   // Utiliser les données suisses réelles
   const specialties = SwissHealthcareData.getSpecialties();
-  const cantons = SwissHealthcareData.getCantons();
   const professionals = SwissHealthcareData.getProfessionals();
 
   // Utiliser la FAQ suisse
