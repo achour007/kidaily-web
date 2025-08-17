@@ -54,8 +54,8 @@ export const fetchEvaluations = createAsyncThunk(
       }
 
       const url = childId 
-        ? `http://localhost:3000/api/evaluations?childId=${childId}`
-        : 'http://localhost:3000/api/evaluations';
+        ? `https://kidaily-backend-cb9a147c3208.herokuapp.com/api/evaluations?childId=${childId}`
+        : 'https://kidaily-backend-cb9a147c3208.herokuapp.com/api/evaluations';
 
       const response = await fetch(url, {
         headers: {
@@ -92,7 +92,7 @@ export const createEvaluation = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch('http://localhost:3000/api/evaluations', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/evaluations', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,7 +124,7 @@ export const updateEvaluation = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/evaluations/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -156,7 +156,7 @@ export const deleteEvaluation = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/evaluations/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

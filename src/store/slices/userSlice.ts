@@ -41,7 +41,7 @@ export const fetchUserProfile = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch('http://localhost:3000/api/users/profile', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/users/profile', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const updateUserProfile = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch('http://localhost:3000/api/users/profile', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/users/profile', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

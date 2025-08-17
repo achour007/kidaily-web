@@ -140,7 +140,7 @@ export class EvaluationService {
 
   // Exporter une évaluation en PDF
   static async exportToPDF(id: string): Promise<Blob> {
-    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000/api'}/evaluations/${id}/export`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://kidaily-backend-cb9a147c3208.herokuapp.com/api'}/evaluations/${id}/export`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

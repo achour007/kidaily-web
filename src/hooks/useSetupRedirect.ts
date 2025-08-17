@@ -129,8 +129,8 @@ export const useSetupRedirect = () => {
     // Nettoyer les timeouts précédents
     clearRedirectTimeout();
 
-    // Si nous sommes en mode test ou si la redirection est désactivée, ne rien faire
-    if (testMode || cypressMode || disableSetupRedirect || additionalTestChecks()) {
+    // DÉSACTIVÉ EN PRODUCTION - Si nous sommes en mode test ou si la redirection est désactivée, ne rien faire
+    if (testMode || cypressMode || disableSetupRedirect || additionalTestChecks() || true) {
       log('Mode test détecté ou redirection désactivée - pas de redirection', {
         testMode,
         cypressMode,
