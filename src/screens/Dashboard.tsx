@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
   const fetchChildren = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/children', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const Dashboard: React.FC = () => {
   const fetchDashboardData = async (childId: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/children/${childId}/dashboard`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children/${childId}/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

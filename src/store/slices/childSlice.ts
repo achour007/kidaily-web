@@ -40,7 +40,7 @@ export const fetchChildren = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch('http://localhost:3000/api/children', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export const createChild = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch('http://localhost:3000/api/children', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -102,7 +102,7 @@ export const updateChild = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch(`http://localhost:3000/api/children/${id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -134,7 +134,7 @@ export const deleteChild = createAsyncThunk(
         return rejectWithValue('Token non disponible');
       }
 
-      const response = await fetch(`http://localhost:3000/api/children/${id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -78,7 +78,7 @@ const ChildManagement: React.FC = () => {
   const fetchChildren = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/children', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const ChildManagement: React.FC = () => {
   const handleAddChild = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/children', {
+      const response = await fetch('https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ const ChildManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/children/${selectedChild.id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children/${selectedChild.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -156,7 +156,7 @@ const ChildManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/children/${childToDelete.id}`, {
+      const response = await fetch(`https://kidaily-backend-cb9a147c3208.herokuapp.com/api/children/${childToDelete.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
