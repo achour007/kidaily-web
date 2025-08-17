@@ -83,12 +83,7 @@ const Ressources: React.FC = () => {
     setActiveTab(newValue);
   };
 
-  const filteredProfessionals = professionals.filter(professional => {
-    const matchesSearch = professional.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         professional.address.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSpecialty = selectedSpecialty === 'all' || professional.specialty === selectedSpecialty;
-    return matchesSearch && matchesSpecialty;
-  });
+
 
   const getSpecialtyIcon = (specialty: string) => {
     switch (specialty) {
