@@ -37,6 +37,7 @@ import {
   LocalHospital as HospitalIcon,
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
+import SwissMap from '../components/SwissMap';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -106,52 +107,12 @@ const Ressources: React.FC = () => {
             </Typography>
           </Alert>
 
-          {/* Carte simulée */}
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Box sx={{ 
-                width: '100%', 
-                height: 400, 
-                bgcolor: 'grey.100',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 1,
-                position: 'relative',
-              }}>
-                <MapIcon sx={{ fontSize: 60, color: 'grey.400' }} />
-                <Typography variant="h6" color="text.secondary" sx={{ ml: 2 }}>
-                  Carte interactive
-                </Typography>
-                
-                {/* Marqueurs simulés */}
-                {professionals.map((professional, index) => (
-                  <Box
-                    key={professional.id}
-                    sx={{
-                      position: 'absolute',
-                      left: `${20 + index * 25}%`,
-                      top: `${30 + (index % 2) * 20}%`,
-                      width: 40,
-                      height: 40,
-                      bgcolor: getSpecialtyColor(professional.specialty),
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        transform: 'scale(1.1)',
-                      },
-                    }}
-                  >
-                    {getSpecialtyIcon(professional.specialty)}
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
+          {/* Vraie carte interactive suisse */}
+          <SwissMap 
+            professionals={professionals}
+            getSpecialtyColor={getSpecialtyColor}
+            getSpecialtyIcon={getSpecialtyIcon}
+          />
 
           {/* Légende */}
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
