@@ -18,7 +18,7 @@ import {
 import { 
   ExpandMore as ExpandMoreIcon,
   Person as PersonIcon,
-  Speech as SpeechIcon,
+  RecordVoiceOver as SpeechIcon,
   Psychology as PsychologyIcon,
   FitnessCenter,
   LocationOn as LocationIcon,
