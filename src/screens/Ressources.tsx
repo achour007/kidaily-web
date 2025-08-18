@@ -223,11 +223,11 @@ const Ressources: React.FC = () => {
               />
               {cantons.slice(0, 10).map((canton) => (
                 <Chip
-                  key={canton.id}
+                  key={canton.code}
                   label={canton.name}
-                  onClick={() => setSelectedCanton(canton.id)}
-                  color={selectedCanton === canton.id ? 'primary' : 'default'}
-                  variant={selectedCanton === canton.id ? 'filled' : 'outlined'}
+                  onClick={() => setSelectedCanton(canton.code)}
+                  color={selectedCanton === canton.code ? 'primary' : 'default'}
+                  variant={selectedCanton === canton.code ? 'filled' : 'outlined'}
                 />
               ))}
             </Box>
@@ -244,11 +244,11 @@ const Ressources: React.FC = () => {
               />
               {specialties.map((specialty) => (
                 <Chip
-                  key={specialty.id}
+                  key={specialty.code}
                   label={specialty.name}
-                  onClick={() => setSelectedSpecialty(specialty.id)}
-                  color={selectedSpecialty === specialty.id ? 'primary' : 'default'}
-                  variant={selectedSpecialty === specialty.id ? 'filled' : 'outlined'}
+                  onClick={() => setSelectedSpecialty(specialty.code)}
+                  color={selectedSpecialty === specialty.code ? 'primary' : 'default'}
+                  variant={selectedSpecialty === specialty.code ? 'filled' : 'outlined'}
                 />
               ))}
             </Box>
