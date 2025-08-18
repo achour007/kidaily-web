@@ -26,32 +26,9 @@ import {
   Email as EmailIcon,
   Language as LanguageIcon
 } from '@mui/icons-material';
-import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
+import { UltraMassiveSwissDatabase, SimplifiedProfessional } from '../data/ultraMassiveSwissDatabase';
 
-interface ComprehensiveProfessional {
-  id: string;
-  name: string;
-  canton: string;
-  cantonCode: string;
-  city: string;
-  specialties: string[];
-  phone: string;
-  email: string;
-  website?: string;
-  acceptsNewPatients: boolean;
-  languages: string[];
-  experience: number;
-  education: string[];
-  certifications: string[];
-  insuranceAccepted: string[];
-  consultationFee: number;
-  availability: string[];
-  address: string;
-  postalCode: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
+;
 }
 
 const Ressources = () => {
@@ -60,8 +37,8 @@ const Ressources = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [professionals, setProfessionals] = useState<ComprehensiveProfessional[]>([]);
-  const [filteredProfessionals, setFilteredProfessionals] = useState<ComprehensiveProfessional[]>([]);
+  const [professionals, setProfessionals] = useState<SimplifiedProfessional[]>([]);
+  const [filteredProfessionals, setFilteredProfessionals] = useState<SimplifiedProfessional[]>([]);
 
   useEffect(() => {
     const allProfessionals = UltraMassiveSwissDatabase.getAllProfessionals();
