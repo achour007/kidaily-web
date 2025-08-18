@@ -38,7 +38,6 @@ import {
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
-import InteractiveSwissMap from '../components/InteractiveSwissMap';
 import MapSection from '../components/MapSection';
 
 const Ressources: React.FC = () => {
@@ -56,7 +55,6 @@ const Ressources: React.FC = () => {
   // Filtrage avancé
   let professionals = allProfessionals;
   
-  // Filtrage simple adapté à ExpandedSwissDatabase
   if (selectedCanton !== 'all') {
     professionals = professionals.filter(p => p.cantonCode === selectedCanton);
   }
@@ -96,8 +94,6 @@ const Ressources: React.FC = () => {
     setActiveTab(newValue);
   };
 
-
-
   const getSpecialtyIcon = (specialty: string) => {
     switch (specialty) {
       case 'orthophoniste': return <SpeechIcon />;
@@ -105,7 +101,7 @@ const Ressources: React.FC = () => {
       case 'psychomotricien': return <PhysioIcon />;
       case 'pediatre': return <HospitalIcon />;
       case 'neurologie': return <HospitalIcon />;
-      case 'ergotherapie': return <PhysioIcon />;
+      case 'physiotherapeute': return <PhysioIcon />;
       default: return <PersonIcon />;
     }
   };
@@ -117,7 +113,7 @@ const Ressources: React.FC = () => {
       case 'psychomotricien': return '#4caf50';
       case 'pediatre': return '#f44336';
       case 'neurologie': return '#ff9800';
-      case 'ergotherapie': return '#00bcd4';
+      case 'physiotherapeute': return '#00bcd4';
       default: return '#666';
     }
   };
@@ -152,152 +148,13 @@ const Ressources: React.FC = () => {
             professionalCountsByCanton={professionalCountsByCanton}
           />
 
-              {/* Carte interactive simplifiée mais fonctionnelle */}
-              <Box sx={{ 
-                width: '100%', 
-                height: 500, 
-                bgcolor: '#e8f4fd',
-                position: 'relative',
-                borderRadius: 2,
-                border: '2px solid #2196f3',
-                overflow: 'hidden',
-              }}>
-                {/* Fond de carte de la Suisse */}
-                <svg
-                  viewBox="0 0 400 300"
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    zIndex: 1
-                  }}
-                >
-                  {/* Contour de la Suisse */}
-                  <path
-                    d="M60,180 Q80,120 140,140 Q200,100 280,120 Q340,140 360,200 Q340,280 280,300 Q200,320 140,300 Q80,280 60,180 Z"
-                    fill="#f0f7ff"
-                    stroke="#2196f3"
-                    strokeWidth="2"
-                    opacity="0.7"
-                  />
-                  {/* Lac Léman */}
-                  <ellipse cx="100" cy="260" rx="30" ry="15" fill="#2196f3" opacity="0.6" />
-                  {/* Lac de Zurich */}
-                  <ellipse cx="280" cy="180" rx="25" ry="8" fill="#2196f3" opacity="0.6" />
-                  
-                  {/* Labels des villes */}
-                  <text x="100" y="275" fontSize="12" fill="#1976d2" fontWeight="bold">Genève</text>
-                  <text x="140" y="250" fontSize="12" fill="#1976d2" fontWeight="bold">Lausanne</text>
-                  <text x="280" y="170" fontSize="12" fill="#1976d2" fontWeight="bold">Zürich</text>
-                  <text x="200" y="200" fontSize="12" fill="#1976d2" fontWeight="bold">Bern</text>
-                  <text x="240" y="320" fontSize="12" fill="#1976d2" fontWeight="bold">Lugano</text>
-                </svg>
-
-                {/* Marqueurs des professionnels - Position fixe mais logique */}
-                {professionals.map((professional, index) => {
-                  // Positions logiques par canton/ville
-                  const getPosition = (professional: any, index: number) => {
-                    if (professional.city === 'Genève') return { x: '25%', y: '65%' };
-                    if (professional.city === 'Lausanne') return { x: '35%', y: '60%' };
-                    if (professional.city === 'Zürich') return { x: '70%', y: '45%' };
-                    if (professional.city === 'Bern') return { x: '50%', y: '50%' };
-                    if (professional.city === 'Basel') return { x: '45%', y: '35%' };
-                    if (professional.city === 'Lugano') return { x: '60%', y: '80%' };
-                    // Position par défaut avec légère variation
-                    return { x: `${30 + (index * 8)}%`, y: `${40 + (index % 3) * 15}%` };
-                  };
-
-                  const position = getPosition(professional, index);
-                  
-                  return (
-                    <Box
-                      key={professional.id}
-                      onClick={() => {
-                        // Afficher les détails dans une alert simple
-                        alert(`${professional.name}\n${professional.institution}\n\nSpécialité: ${professional.specialty}\nTéléphone: ${professional.phone}\nEmail: ${professional.email}\n\nAttente: ${professional.waitingTime}\nLangues: ${professional.languages?.join(', ')}`);
-                      }}
-                      sx={{
-                        position: 'absolute',
-                        left: position.x,
-                        top: position.y,
-                        width: 45,
-                        height: 45,
-                        bgcolor: getSpecialtyColor(professional.specialty),
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        cursor: 'pointer',
-                        zIndex: 10,
-                        boxShadow: '0 3px 10px rgba(0,0,0,0.3)',
-                        border: '3px solid white',
-                        transform: 'translate(-50%, -50%)',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translate(-50%, -50%) scale(1.3)',
-                          zIndex: 20,
-                          boxShadow: '0 5px 20px rgba(0,0,0,0.5)',
-                        },
-                      }}
-                      title={`${professional.name} - ${professional.institution}\nCliquez pour plus de détails`}
-                    >
-                      {getSpecialtyIcon(professional.specialty)}
-                    </Box>
-                  );
-                })}
-
-                {/* Indicateur d'interactivité */}
-                <Box sx={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  bgcolor: 'rgba(255,255,255,0.9)',
-                  px: 2,
-                  py: 1,
-                  borderRadius: 1,
-                  fontSize: '0.8rem',
-                  color: 'primary.main',
-                  fontWeight: 'bold'
-                }}>
-                  ✨ Cliquez sur les marqueurs !
-                </Box>
-              </Box>
-
-              {/* Instructions claires */}
-              <Alert severity="success" sx={{ mt: 2 }}>
-                <Typography variant="body2">
-                  <strong>🎯 Instructions :</strong> Cliquez sur les marqueurs colorés pour voir les informations détaillées de chaque professionnel. 
-                  Chaque couleur représente une spécialité différente.
-                </Typography>
-              </Alert>
-            </CardContent>
-          </Card>
-
-          {/* Légende */}
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {specialties.slice(1).map((specialty) => (
-              <Box key={specialty.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    bgcolor: getSpecialtyColor(specialty.id),
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {getSpecialtyIcon(specialty.id)}
-                </Box>
-                <Typography variant="body2">{specialty.name}</Typography>
-              </Box>
-            ))}
+          {/* Légende des spécialités */}
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mb: 3 }}>
+            <Chip icon={<PersonIcon />} label="Pédiatrie développement" color="error" variant="outlined" />
+            <Chip icon={<SpeechIcon />} label="Logopédie (Orthophonie)" color="info" variant="outlined" />
+            <Chip icon={<PsychologyIcon />} label="Psychologie infantile" color="secondary" variant="outlined" />
+            <Chip icon={<HospitalIcon />} label="Neuropédiatrie" color="warning" variant="outlined" />
+            <Chip icon={<PhysioIcon />} label="Physiothérapie" color="success" variant="outlined" />
           </Box>
         </Box>
       )}
@@ -305,42 +162,43 @@ const Ressources: React.FC = () => {
       {activeTab === 1 && (
         <Box>
           {/* Statistiques professionnelles */}
-                  <Alert severity="success" sx={{ mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            🎯 Base de Données ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-            <Typography variant="body2">
-              <strong>{stats.total}</strong> spécialistes certifiés
+          <Alert severity="success" sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              🎯 Base de Données ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
             </Typography>
-            <Typography variant="body2">
-              <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
-            </Typography>
-            <Typography variant="body2">
-              <strong>{stats.emergency || 0}</strong> services d'urgence
-            </Typography>
-            <Typography variant="body2">
-              <strong>✅ {stats.guaranteedMinimum}+</strong> par canton minimum
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
-            <Typography variant="body2">
-              <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
-            </Typography>
-            <Typography variant="body2">
-              <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
-            </Typography>
-            <Typography variant="body2">
-              <strong>🇨🇭 Cantons:</strong> Tous les {stats.cantons} cantons suisses (moyenne: {stats.averagePerCanton}/canton)
-            </Typography>
-          </Box>
-        </Alert>
+            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+              <Typography variant="body2">
+                <strong>{stats.total}</strong> spécialistes certifiés
+              </Typography>
+              <Typography variant="body2">
+                <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
+              </Typography>
+              <Typography variant="body2">
+                <strong>{stats.emergency || 0}</strong> services d'urgence
+              </Typography>
+              <Typography variant="body2">
+                <strong>✅ {stats.guaranteedMinimum}+</strong> par canton minimum
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
+              <Typography variant="body2">
+                <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
+              </Typography>
+              <Typography variant="body2">
+                <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
+              </Typography>
+              <Typography variant="body2">
+                <strong>🇨🇭 Cantons:</strong> Tous les {stats.cantons} cantons suisses (moyenne: {stats.averagePerCanton}/canton)
+              </Typography>
+            </Box>
+          </Alert>
 
           {/* Filtres avancés */}
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
-              placeholder="Rechercher par nom, institution, ville, canton..."
+              variant="outlined"
+              placeholder="Rechercher par nom, institution, ville..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               InputProps={{
@@ -352,37 +210,38 @@ const Ressources: React.FC = () => {
               }}
               sx={{ mb: 2 }}
             />
-            
-            {/* Filtres par canton */}
-            <Typography variant="subtitle2" gutterBottom>
-              🏔️ Filtrer par canton :
+
+            <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              🌍 Filtrer par canton :
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+              <Chip
+                label="Tous"
+                onClick={() => setSelectedCanton('all')}
+                color={selectedCanton === 'all' ? 'primary' : 'default'}
+                variant={selectedCanton === 'all' ? 'filled' : 'outlined'}
+              />
               {cantons.slice(0, 10).map((canton) => (
                 <Chip
-                  key={canton.code}
+                  key={canton.id}
                   label={canton.name}
-                  onClick={() => setSelectedCanton(canton.code)}
-                  color={selectedCanton === canton.code ? 'primary' : 'default'}
-                  variant={selectedCanton === canton.code ? 'filled' : 'outlined'}
-                  size="small"
+                  onClick={() => setSelectedCanton(canton.id)}
+                  color={selectedCanton === canton.id ? 'primary' : 'default'}
+                  variant={selectedCanton === canton.id ? 'filled' : 'outlined'}
                 />
               ))}
-              {cantons.length > 10 && (
-                <Chip
-                  label="... + autres cantons"
-                  variant="outlined"
-                  size="small"
-                  color="secondary"
-                />
-              )}
             </Box>
 
-            {/* Filtres par spécialité */}
-            <Typography variant="subtitle2" gutterBottom>
+            <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
               🏥 Filtrer par spécialité :
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+              <Chip
+                label="Toutes"
+                onClick={() => setSelectedSpecialty('all')}
+                color={selectedSpecialty === 'all' ? 'primary' : 'default'}
+                variant={selectedSpecialty === 'all' ? 'filled' : 'outlined'}
+              />
               {specialties.map((specialty) => (
                 <Chip
                   key={specialty.id}
@@ -394,7 +253,6 @@ const Ressources: React.FC = () => {
               ))}
             </Box>
 
-            {/* Filtres supplémentaires */}
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               <Chip
                 label="✅ Accepte nouveaux patients"
@@ -412,7 +270,7 @@ const Ressources: React.FC = () => {
           <List>
             {professionals.map((professional, index) => (
               <React.Fragment key={professional.id}>
-                <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                <ListItem sx={{ flexDirection: 'column', alignItems: 'stretch', py: 3 }}>
                   <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Avatar sx={{ bgcolor: getSpecialtyColor(professional.specialty) }}>
@@ -423,32 +281,30 @@ const Ressources: React.FC = () => {
                           {professional.name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {specialties.find(s => s.id === professional.specialty)?.name}
+                          {professional.institution}
                         </Typography>
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Rating value={professional.rating} readOnly size="small" />
                       <Typography variant="body2" color="text.secondary">
-                        ({professional.reviews})
+                        ({professional.reviews} avis)
                       </Typography>
                     </Box>
                   </Box>
 
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    {professional.description}
-                  </Typography>
-
+                  {/* Spécialités */}
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
                     {professional.specialties?.map((specialty, idx) => (
                       <Chip key={idx} label={specialty} size="small" variant="outlined" />
                     )) || []}
                   </Box>
 
+                  {/* Informations de contact */}
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <LocationIcon color="action" />
-                      <Typography variant="body2">{professional.address}</Typography>
+                      <Typography variant="body2">{professional.address}, {professional.city}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <TimeIcon color="action" />
@@ -456,49 +312,49 @@ const Ressources: React.FC = () => {
                     </Box>
                   </Box>
 
-                  {/* Informations spécifiques Suisse */}
-                  {professional.institution && (
+                  {/* Institution et langues */}
+                  <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <HospitalIcon color="action" />
                       <Typography variant="body2" color="primary">
                         {professional.institution}
                       </Typography>
+                      {professional.acceptsNewPatients && (
+                        <Chip label="Accepte nouveaux patients" size="small" color="success" />
+                      )}
                     </Box>
-                  )}
-
-                  {professional.languages && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <LanguageIcon color="action" />
                       <Typography variant="body2">
-                        Langues: {professional.languages.join(', ')}
+                        {professional.languages?.join(', ') || 'Non spécifié'}
                       </Typography>
                     </Box>
-                  )}
+                  </Box>
 
-                  {professional.insuranceAccepted && (
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                      <Typography variant="caption" color="text.secondary">
-                        Assurances acceptées:
-                      </Typography>
-                      {professional.insuranceAccepted.map((insurance, idx) => (
-                        <Chip key={idx} label={insurance} size="small" variant="outlined" color="primary" />
-                      ))}
-                    </Box>
-                  )}
+                  {/* Assurances */}
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Assurances acceptées:
+                    </Typography>
+                    {professional.insuranceAccepted?.map((insurance, idx) => (
+                      <Chip key={idx} label={insurance} size="small" variant="outlined" />
+                    )) || []}
+                  </Box>
 
+                  {/* Actions */}
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     <Button
                       startIcon={<PhoneIcon />}
-                      size="small"
                       variant="outlined"
+                      size="small"
                       href={`tel:${professional.phone}`}
                     >
-                      Appeler
+                      {professional.phone}
                     </Button>
                     <Button
                       startIcon={<EmailIcon />}
-                      size="small"
                       variant="outlined"
+                      size="small"
                       href={`mailto:${professional.email}`}
                     >
                       Email
@@ -506,19 +362,13 @@ const Ressources: React.FC = () => {
                     {professional.website && (
                       <Button
                         startIcon={<WebsiteIcon />}
-                        size="small"
                         variant="outlined"
+                        size="small"
                         href={professional.website}
                         target="_blank"
-                        rel="noopener noreferrer"
                       >
                         Site web
                       </Button>
-                    )}
-                    {professional.acceptsNewPatients ? (
-                      <Chip label="Nouveaux patients" color="success" size="small" />
-                    ) : (
-                      <Chip label="Liste d'attente" color="warning" size="small" />
                     )}
                   </Box>
                 </ListItem>
@@ -554,4 +404,4 @@ const Ressources: React.FC = () => {
   );
 };
 
-export default Ressources; 
+export default Ressources;
