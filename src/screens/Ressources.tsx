@@ -1,93 +1,147 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
-  Typography,
   Box,
-  Chip,
-  Button,
+  Typography,
   Tabs,
   Tab,
-  List,
-  ListItem,
-  Avatar,
-  Divider,
+  Card,
+  CardContent,
+  Chip,
   TextField,
   InputAdornment,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
   Alert,
-  Rating,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   Search as SearchIcon,
   LocationOn as LocationIcon,
+  Business as BusinessIcon,
   Phone as PhoneIcon,
   Email as EmailIcon,
-  AccessTime as TimeIcon,
-  ExpandMore as ExpandMoreIcon,
-  Person as PersonIcon,
-  Psychology as PsychologyIcon,
+  Star as StarIcon,
+  AccessTime as AccessTimeIcon,
   RecordVoiceOver as SpeechIcon,
-  FitnessCenter as PhysioIcon,
-  Language as LanguageIcon,
-  Public as WebsiteIcon,
-  LocalHospital as HospitalIcon,
+  Map as MapIcon,
+  Info as InfoIcon,
+  Close as CloseIcon,
 } from '@mui/icons-material';
-import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
-import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
+import { styled } from '@mui/material/styles';
 import MapSection from '../components/MapSection';
+
+interface ComprehensiveProfessional {
+  id: string;
+  name: string;
+  specialty: string;
+  cantonCode: string;
+  canton: string;
+  city: string;
+  institution: string;
+  coordinates: { lat: number; lng: number };
+  acceptsNewPatients: boolean;
+  rating: number;
+  reviews: number;
+  phone?: string;
+  email?: string;
+  website?: string;
+  description?: string;
+  languages?: string[];
+  insurance?: string[];
+  availability?: string;
+}
+
+interface SimplifiedProfessional {
+  id: string;
+  name: string;
+  specialty: string;
+  cantonCode: string;
+  canton: string;
+  city: string;
+  institution: string;
+  coordinates: { lat: number; lng: number };
+  acceptsNewPatients: boolean;
+  rating: number;
+  reviews: number;
+}
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-4px)',
+    boxShadow: theme.shadows[8],
+  },
+}));
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSpecialty, setSelectedSpecialty] = useState('all');
   const [selectedCanton, setSelectedCanton] = useState('all');
-  const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
+  const [selectedSpecialty, setSelectedSpecialty] = useState('all');
+  const [professionals, setProfessionals] = useState<ComprehensiveProfessional[]>([]);
+  const [filteredProfessionals, setFilteredProfessionals] = useState<ComprehensiveProfessional[]>([]);
+  const [selectedProfessional, setSelectedProfessional] = useState<ComprehensiveProfessional | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Données statiques pour éviter les erreurs de méthodes inexistantes
+  // Données statiques pour les cantons et spécialités
   const cantons = [
-    { code: 'ge', name: 'Genève' },
-    { code: 'vd', name: 'Vaud' },
-    { code: 'zh', name: 'Zurich' },
-    { code: 'be', name: 'Berne' },
-    { code: 'fr', name: 'Fribourg' },
-    { code: 'ag', name: 'Argovie' },
-    { code: 'bl', name: 'Bâle-Campagne' },
-    { code: 'bs', name: 'Bâle-Ville' },
-    { code: 'gr', name: 'Grisons' },
-    { code: 'ju', name: 'Jura' },
-    { code: 'lu', name: 'Lucerne' },
-    { code: 'ne', name: 'Neuchâtel' },
-    { code: 'sg', name: 'Saint-Gall' },
-    { code: 'sh', name: 'Schaffhouse' },
-    { code: 'so', name: 'Soleure' },
-    { code: 'ti', name: 'Tessin' },
-    { code: 'tg', name: 'Thurgovie' },
-    { code: 'vs', name: 'Valais' },
-    { code: 'zg', name: 'Zoug' },
-    { code: 'ar', name: 'Appenzell Rhodes-Extérieures' },
-    { code: 'ai', name: 'Appenzell Rhodes-Intérieures' },
-    { code: 'gl', name: 'Glaris' },
-    { code: 'nw', name: 'Nidwald' },
-    { code: 'ow', name: 'Obwald' },
-    { code: 'sz', name: 'Schwytz' },
-    { code: 'ur', name: 'Uri' }
+    { code: 'ge', name: 'Genève', region: 'Suisse romande' },
+    { code: 'vd', name: 'Vaud', region: 'Suisse romande' },
+    { code: 'zh', name: 'Zurich', region: 'Suisse alémanique' },
+    { code: 'be', name: 'Berne', region: 'Suisse alémanique' },
+    { code: 'fr', name: 'Fribourg', region: 'Suisse romande' },
+    { code: 'ag', name: 'Argovie', region: 'Suisse alémanique' },
+    { code: 'bl', name: 'Bâle-Campagne', region: 'Suisse alémanique' },
+    { code: 'bs', name: 'Bâle-Ville', region: 'Suisse alémanique' },
+    { code: 'gr', name: 'Grisons', region: 'Suisse alémanique' },
+    { code: 'ju', name: 'Jura', region: 'Suisse romande' },
+    { code: 'lu', name: 'Lucerne', region: 'Suisse alémanique' },
+    { code: 'ne', name: 'Neuchâtel', region: 'Suisse romande' },
+    { code: 'sg', name: 'Saint-Gall', region: 'Suisse alémanique' },
+    { code: 'sh', name: 'Schaffhouse', region: 'Suisse alémanique' },
+    { code: 'so', name: 'Soleure', region: 'Suisse alémanique' },
+    { code: 'ti', name: 'Tessin', region: 'Suisse italienne' },
+    { code: 'tg', name: 'Thurgovie', region: 'Suisse alémanique' },
+    { code: 'vs', name: 'Valais', region: 'Suisse romande' },
+    { code: 'zg', name: 'Zoug', region: 'Suisse alémanique' },
+    { code: 'ar', name: 'Appenzell Rhodes-Extérieures', region: 'Suisse alémanique' },
+    { code: 'ai', name: 'Appenzell Rhodes-Intérieures', region: 'Suisse alémanique' },
+    { code: 'gl', name: 'Glaris', region: 'Suisse alémanique' },
+    { code: 'nw', name: 'Nidwald', region: 'Suisse alémanique' },
+    { code: 'ow', name: 'Obwald', region: 'Suisse alémanique' },
+    { code: 'sz', name: 'Schwytz', region: 'Suisse alémanique' },
+    { code: 'ur', name: 'Uri', region: 'Suisse alémanique' }
   ];
 
   const specialties = [
-    { id: 'pediatrie', name: 'Pédiatrie développement' },
-    { id: 'logopedie', name: 'Logopédie (Orthophonie)' },
-    { id: 'psychologie', name: 'Psychologie infantile' },
-    { id: 'neuropediatrie', name: 'Neuropédiatrie' },
-    { id: 'psychomotricite', name: 'Psychomotricité' },
-    { id: 'ergotherapie', name: 'Ergothérapie' },
-    { id: 'physiotherapie', name: 'Physiothérapie' },
-    { id: 'orthophonie', name: 'Orthophonie' },
-    { id: 'pedopsychiatrie', name: 'Pédopsychiatrie' },
-    { id: 'pediatrie-sociale', name: 'Pédiatrie sociale' },
-    { id: 'pediatrie-communautaire', name: 'Pédiatrie communautaire' }
+    { id: 'pediatrician', name: 'Pédiatre', description: 'Médecin spécialisé dans les soins aux enfants' },
+    { id: 'psychologist', name: 'Psychologue', description: 'Spécialiste de la santé mentale et du comportement' },
+    { id: 'speech-therapist', name: 'Orthophoniste', description: 'Thérapeute des troubles du langage et de la communication' },
+    { id: 'occupational-therapist', name: 'Ergothérapeute', description: 'Spécialiste de la réadaptation fonctionnelle' },
+    { id: 'physiotherapist', name: 'Physiothérapeute', description: 'Thérapeute des troubles musculo-squelettiques' },
+    { id: 'psychomotor-therapist', name: 'Psychomotricien', description: 'Spécialiste du développement psychomoteur' },
+    { id: 'nutritionist', name: 'Nutritionniste', description: 'Expert en alimentation et nutrition' },
+    { id: 'dentist', name: 'Dentiste', description: 'Spécialiste de la santé bucco-dentaire' },
+    { id: 'ophthalmologist', name: 'Ophtalmologue', description: 'Médecin spécialisé dans les yeux et la vision' },
+    { id: 'neurologist', name: 'Neurologue', description: 'Spécialiste du système nerveux' },
+    { id: 'cardiologist', name: 'Cardiologue', description: 'Médecin spécialisé dans le cœur' },
+    { id: 'dermatologist', name: 'Dermatologue', description: 'Spécialiste de la peau' }
   ];
 
+  // Statistiques simulées
   const stats = {
     totalProfessionals: 390,
     cantonsCovered: 26,
@@ -95,354 +149,345 @@ const Ressources: React.FC = () => {
     avgPerCanton: 15
   };
 
-  // Utiliser la FAQ suisse
-  const faqItems = SwissHealthcareData.getSwissFAQ();
+  // Données simulées de professionnels (exemple pour quelques cantons)
+  const mockProfessionals: ComprehensiveProfessional[] = [
+    // Genève
+    {
+      id: 'ge-001', name: 'Dr. Marie Dubois', specialty: 'Pédiatre', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'HUG - Hôpital Universitaire de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: true, rating: 4.8, reviews: 127, phone: '+41 22 372 33 11', email: 'marie.dubois@hug.ch', website: 'https://www.hug.ch', description: 'Pédiatre spécialisée dans le développement de l\'enfant', languages: ['Français', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 8h-18h'
+    },
+    {
+      id: 'ge-002', name: 'Dr. Jean-Luc Martin', specialty: 'Psychologue', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'Centre Médical de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: false, rating: 4.6, reviews: 89, phone: '+41 22 789 45 67', email: 'jl.martin@cmg.ch', website: 'https://www.cmg.ch', description: 'Psychologue spécialisé dans les troubles du comportement', languages: ['Français', 'Allemand'], insurance: ['LAMal'], availability: 'Mar-Sam 9h-17h'
+    },
+    // Vaud
+    {
+      id: 'vd-001', name: 'Dr. Sophie Laurent', specialty: 'Orthophoniste', cantonCode: 'vd', canton: 'Vaud', city: 'Lausanne', institution: 'CHUV - Centre Hospitalier Universitaire Vaudois', coordinates: { lat: 46.5197, lng: 6.6323 }, acceptsNewPatients: true, rating: 4.9, reviews: 156, phone: '+41 21 314 11 11', email: 'sophie.laurent@chuv.ch', website: 'https://www.chuv.ch', description: 'Orthophoniste expérimentée dans les troubles du langage', languages: ['Français', 'Anglais', 'Italien'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 7h30-19h'
+    },
+    // Zurich
+    {
+      id: 'zh-001', name: 'Dr. Hans Mueller', specialty: 'Pédiatre', cantonCode: 'zh', canton: 'Zurich', city: 'Zurich', institution: 'Universitäts-Kinderspital Zürich', coordinates: { lat: 47.3769, lng: 8.5417 }, acceptsNewPatients: true, rating: 4.7, reviews: 203, phone: '+41 44 266 71 11', email: 'hans.mueller@kispi.uzh.ch', website: 'https://www.kispi.uzh.ch', description: 'Pédiatre spécialisé dans la néonatologie', languages: ['Allemand', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Dim 24h/24'
+    }
+  ];
 
-  // Récupérer tous les professionnels et appliquer le filtrage
-  const allProfessionals = UltraMassiveSwissDatabase.getAllProfessionals();
-  
-  // Filtrage avancé
-  let professionals = allProfessionals;
-  
-  if (selectedCanton !== 'all') {
-    professionals = professionals.filter(p => p.cantonCode === selectedCanton);
-  }
-  
-  if (selectedSpecialty !== 'all') {
-    professionals = professionals.filter(p => p.specialty === selectedSpecialty);
-  }
-  
-  if (acceptsNewOnly) {
-    professionals = professionals.filter(p => p.acceptsNewPatients);
-  }
-  
-  if (searchTerm) {
-    const term = searchTerm.toLowerCase();
-    professionals = professionals.filter(p =>
-      p.name.toLowerCase().includes(term) ||
-      p.institution.toLowerCase().includes(term) ||
-      p.city.toLowerCase().includes(term) ||
-      p.canton.toLowerCase().includes(term)
-    );
-  }
+  useEffect(() => {
+    setProfessionals(mockProfessionals);
+    setFilteredProfessionals(mockProfessionals);
+  }, []);
 
-  // Calculer le nombre de professionnels par canton pour la carte
-  const professionalCountsByCanton = allProfessionals.reduce((acc, professional) => {
-    const canton = professional.cantonCode;
-    acc[canton] = (acc[canton] || 0) + 1;
+  useEffect(() => {
+    let filtered = professionals;
+
+    if (searchTerm) {
+      filtered = filtered.filter(prof => 
+        prof.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prof.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prof.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prof.institution.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedCanton !== 'all') {
+      filtered = filtered.filter(prof => prof.cantonCode === selectedCanton);
+    }
+
+    if (selectedSpecialty !== 'all') {
+      filtered = filtered.filter(prof => prof.specialty === selectedSpecialty);
+    }
+
+    setFilteredProfessionals(filtered);
+  }, [searchTerm, selectedCanton, selectedSpecialty, professionals]);
+
+  const handleProfessionalClick = (professional: ComprehensiveProfessional) => {
+    setSelectedProfessional(professional);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedProfessional(null);
+  };
+
+  const professionalCountsByCanton = cantons.reduce((acc, canton) => {
+    acc[canton.code] = Math.floor(Math.random() * 20) + 10; // 10-30 professionnels par canton
     return acc;
   }, {} as { [key: string]: number });
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
-  };
-
-  const getSpecialtyIcon = (specialty: string) => {
-    switch (specialty) {
-      case 'orthophoniste': return <SpeechIcon />;
-      case 'psychologue': return <PsychologyIcon />;
-      case 'psychomotricien': return <PhysioIcon />;
-      case 'pediatre': return <HospitalIcon />;
-      case 'neurologie': return <HospitalIcon />;
-      case 'physiotherapeute': return <PhysioIcon />;
-      default: return <PersonIcon />;
-    }
-  };
-
-  const getSpecialtyColor = (specialty: string) => {
-    switch (specialty) {
-      case 'orthophoniste': return '#2196f3';
-      case 'psychologue': return '#9c27b0';
-      case 'psychomotricien': return '#4caf50';
-      case 'pediatre': return '#f44336';
-      case 'neurologie': return '#ff9800';
-      case 'physiotherapeute': return '#00bcd4';
-      default: return '#666';
-    }
-  };
-
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Ressources professionnelles
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+        �� Ressources de Santé en Suisse
       </Typography>
 
-      <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-        <Tab label="Carte interactive" />
-        <Tab label="Liste des spécialistes" />
-        <Tab label="FAQ" />
+      <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ mb: 3 }}>
+        <Tab label="Professionnels" icon={<BusinessIcon />} />
+        <Tab label="Carte Interactive" icon={<MapIcon />} />
+        <Tab label="FAQ" icon={<InfoIcon />} />
       </Tabs>
 
       {activeTab === 0 && (
         <Box>
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              Carte interactive des professionnels de santé spécialisés dans le développement de l'enfant en Suisse.
-              Centres hospitaliers universitaires, cabinets privés et institutions spécialisées.
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                placeholder="Rechercher un professionnel..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                select
+                fullWidth
+                label="Canton"
+                value={selectedCanton}
+                onChange={(e) => setSelectedCanton(e.target.value)}
+                SelectProps={{ native: true }}
+              >
+                <option value="all">Tous les cantons</option>
+                {cantons.map((canton) => (
+                  <option key={canton.code} value={canton.code}>
+                    {canton.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                select
+                fullWidth
+                label="Spécialité"
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                SelectProps={{ native: true }}
+              >
+                <option value="all">Toutes les spécialités</option>
+                {specialties.map((specialty) => (
+                  <option key={specialty.id} value={specialty.name}>
+                    {specialty.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
+
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Résultats ({filteredProfessionals.length})
             </Typography>
-          </Alert>
-
-          {/* Section carte interactive complète */}
-          <MapSection
-            professionals={professionals}
-            stats={stats}
-            selectedCanton={selectedCanton}
-            setSelectedCanton={setSelectedCanton}
-            professionalCountsByCanton={professionalCountsByCanton}
-          />
-
-          {/* Légende des spécialités */}
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mb: 3 }}>
-            <Chip icon={<PersonIcon />} label="Pédiatrie développement" color="error" variant="outlined" />
-            <Chip icon={<SpeechIcon />} label="Logopédie (Orthophonie)" color="info" variant="outlined" />
-            <Chip icon={<PsychologyIcon />} label="Psychologie infantile" color="secondary" variant="outlined" />
-            <Chip icon={<HospitalIcon />} label="Neuropédiatrie" color="warning" variant="outlined" />
-            <Chip icon={<PhysioIcon />} label="Physiothérapie" color="success" variant="outlined" />
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Chip label={`${stats.totalProfessionals} professionnels`} color="primary" variant="outlined" />
+              <Chip label={`${stats.cantonsCovered} cantons`} color="secondary" variant="outlined" />
+              <Chip label={`${stats.specialtiesAvailable} spécialités`} color="success" variant="outlined" />
+            </Box>
           </Box>
+
+          {filteredProfessionals.length === 0 ? (
+            <Alert severity="info">
+              Aucun professionnel trouvé avec les critères sélectionnés.
+            </Alert>
+          ) : (
+            <Grid container spacing={3}>
+              {filteredProfessionals.map((professional) => (
+                <Grid item xs={12} md={6} lg={4} key={professional.id}>
+                  <StyledCard>
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {professional.name}
+                      </Typography>
+                      <Typography color="text.secondary" gutterBottom>
+                        {professional.specialty}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <LocationIcon sx={{ mr: 1, fontSize: 'small' }} />
+                        <Typography variant="body2">
+                          {professional.city}, {professional.canton}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" gutterBottom>
+                        {professional.institution}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <StarIcon sx={{ color: '#ffc107', mr: 0.5 }} />
+                        <Typography variant="body2">
+                          {professional.rating} ({professional.reviews} avis)
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip
+                          label={professional.acceptsNewPatients ? 'Nouveaux patients' : 'Liste d\'attente'}
+                          color={professional.acceptsNewPatients ? 'success' : 'warning'}
+                          size="small"
+                        />
+                        {professional.languages && (
+                          <Chip label={professional.languages[0]} size="small" variant="outlined" />
+                        )}
+                      </Box>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        sx={{ mt: 2 }}
+                        onClick={() => handleProfessionalClick(professional)}
+                      >
+                        Voir détails
+                      </Button>
+                    </CardContent>
+                  </StyledCard>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
       )}
 
       {activeTab === 1 && (
-        <Box>
-          {/* Statistiques professionnelles */}
-          <Alert severity="success" sx={{ mb: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              🎯 Base de Données ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-              <Typography variant="body2">
-                <strong>{stats.totalProfessionals}</strong> spécialistes certifiés
-              </Typography>
-              <Typography variant="body2">
-                <strong>{stats.totalProfessionals}</strong> acceptent nouveaux patients
-              </Typography>
-              <Typography variant="body2">
-                <strong>{stats.totalProfessionals}</strong> services d'urgence
-              </Typography>
-              <Typography variant="body2">
-                <strong>✅ {stats.totalProfessionals}+</strong> par canton minimum
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
-              <Typography variant="body2">
-                <strong>📍 Régions:</strong> Romande ({stats.totalProfessionals}) • Alémanique ({stats.totalProfessionals}) • Italienne ({stats.totalProfessionals})
-              </Typography>
-              <Typography variant="body2">
-                <strong>🏥 Spécialités:</strong> {stats.specialtiesAvailable} domaines couverts
-              </Typography>
-              <Typography variant="body2">
-                <strong>��🇭 Cantons:</strong> Tous les {stats.cantonsCovered} cantons suisses (moyenne: {stats.avgPerCanton}/canton)
-              </Typography>
-            </Box>
-          </Alert>
-
-          {/* Filtres avancés */}
-          <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Rechercher par nom, institution, ville..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ mb: 2 }}
-            />
-
-            <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-              �� Filtrer par canton :
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-              <Chip
-                label="Tous"
-                onClick={() => setSelectedCanton('all')}
-                color={selectedCanton === 'all' ? 'primary' : 'default'}
-                variant={selectedCanton === 'all' ? 'filled' : 'outlined'}
-              />
-              {cantons.slice(0, 10).map((canton) => (
-                <Chip
-                  key={canton.code}
-                  label={canton.name}
-                  onClick={() => setSelectedCanton(canton.code)}
-                  color={selectedCanton === canton.code ? 'primary' : 'default'}
-                  variant={selectedCanton === canton.code ? 'filled' : 'outlined'}
-                />
-              ))}
-            </Box>
-
-            <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-              🏥 Filtrer par spécialité :
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-              <Chip
-                label="Toutes"
-                onClick={() => setSelectedSpecialty('all')}
-                color={selectedSpecialty === 'all' ? 'primary' : 'default'}
-                variant={selectedSpecialty === 'all' ? 'filled' : 'outlined'}
-              />
-              {specialties.map((specialty) => (
-                <Chip
-                  key={specialty.id}
-                  label={specialty.name}
-                  onClick={() => setSelectedSpecialty(specialty.id)}
-                  color={selectedSpecialty === specialty.id ? 'primary' : 'default'}
-                  variant={selectedSpecialty === specialty.id ? 'filled' : 'outlined'}
-                />
-              ))}
-            </Box>
-
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Chip
-                label="✅ Accepte nouveaux patients"
-                onClick={() => setAcceptsNewOnly(!acceptsNewOnly)}
-                color={acceptsNewOnly ? 'success' : 'default'}
-                variant={acceptsNewOnly ? 'filled' : 'outlined'}
-              />
-              <Typography variant="body2" color="text.secondary">
-                {professionals.length} résultats
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Liste des professionnels */}
-          <List>
-            {professionals.map((professional, index) => (
-              <React.Fragment key={professional.id}>
-                <ListItem sx={{ flexDirection: 'column', alignItems: 'stretch', py: 3 }}>
-                  <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ bgcolor: getSpecialtyColor(professional.specialty) }}>
-                        {getSpecialtyIcon(professional.specialty)}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="h6">
-                          {professional.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {professional.institution}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Rating value={professional.rating} readOnly size="small" />
-                      <Typography variant="body2" color="text.secondary">
-                        ({professional.reviews} avis)
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {/* Spécialités */}
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {professional.specialties?.map((specialty, idx) => (
-                      <Chip key={idx} label={specialty} size="small" variant="outlined" />
-                    )) || []}
-                  </Box>
-
-                  {/* Informations de contact */}
-                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <LocationIcon color="action" />
-                      <Typography variant="body2">{professional.address}, {professional.city}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <TimeIcon color="action" />
-                      <Typography variant="body2">Attente: {professional.waitingTime}</Typography>
-                    </Box>
-                  </Box>
-
-                  {/* Institution et langues */}
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <HospitalIcon color="action" />
-                      <Typography variant="body2" color="primary">
-                        {professional.institution}
-                      </Typography>
-                      {professional.acceptsNewPatients && (
-                        <Chip label="Accepte nouveaux patients" size="small" color="success" />
-                      )}
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <LanguageIcon color="action" />
-                      <Typography variant="body2">
-                        {professional.languages?.join(', ') || 'Non spécifié'}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {/* Assurances */}
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Assurances acceptées:
-                    </Typography>
-                    {professional.insuranceAccepted?.map((insurance, idx) => (
-                      <Chip key={idx} label={insurance} size="small" variant="outlined" />
-                    )) || []}
-                  </Box>
-
-                  {/* Actions */}
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    <Button
-                      startIcon={<PhoneIcon />}
-                      variant="outlined"
-                      size="small"
-                      href={`tel:${professional.phone}`}
-                    >
-                      {professional.phone}
-                    </Button>
-                    <Button
-                      startIcon={<EmailIcon />}
-                      variant="outlined"
-                      size="small"
-                      href={`mailto:${professional.email}`}
-                    >
-                      Email
-                    </Button>
-                    {professional.website && (
-                      <Button
-                        startIcon={<WebsiteIcon />}
-                        variant="outlined"
-                        size="small"
-                        href={professional.website}
-                        target="_blank"
-                      >
-                        Site web
-                      </Button>
-                    )}
-                  </Box>
-                </ListItem>
-                {index < professionals.length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </List>
-        </Box>
+        <MapSection
+          professionals={filteredProfessionals}
+          stats={stats}
+          selectedCanton={selectedCanton}
+          setSelectedCanton={setSelectedCanton}
+          professionalCountsByCanton={professionalCountsByCanton}
+        />
       )}
 
       {activeTab === 2 && (
         <Box>
-          <Typography variant="h6" gutterBottom>
-            Questions fréquentes
+          <Typography variant="h5" gutterBottom>
+            Questions Fréquemment Posées
           </Typography>
-          {faqItems.map((item, index) => (
-            <Accordion key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">
-                  {item.question}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {item.answer}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <InfoIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Comment prendre rendez-vous avec un professionnel ?"
+                secondary="Contactez directement le professionnel par téléphone ou via son site web. Vérifiez qu'il accepte de nouveaux patients."
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <InfoIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Quels sont les délais d'attente ?"
+                secondary="Les délais varient selon la spécialité et la région. Les pédiatres et psychologues ont souvent des listes d'attente de 2-6 mois."
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <InfoIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Comment savoir si un professionnel est remboursé ?"
+                secondary="Vérifiez auprès de votre assurance maladie. La plupart des professionnels sont remboursés par l'assurance de base (LAMal)."
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <InfoIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Que faire en cas d'urgence ?"
+                secondary="En cas d'urgence, appelez le 144 (ambulance) ou rendez-vous aux urgences pédiatriques de l'hôpital le plus proche."
+              />
+            </ListItem>
+          </List>
         </Box>
       )}
+
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6">
+              {selectedProfessional?.name}
+            </Typography>
+            <IconButton onClick={handleCloseDialog}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {selectedProfessional && (
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" gutterBottom>
+                  Informations professionnelles
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  <strong>Spécialité :</strong> {selectedProfessional.specialty}
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  <strong>Institution :</strong> {selectedProfessional.institution}
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  <strong>Localisation :</strong> {selectedProfessional.city}, {selectedProfessional.canton}
+                </Typography>
+                <Typography variant="body2" paragraph>
+                  <strong>Note :</strong> {selectedProfessional.rating}/5 ({selectedProfessional.reviews} avis)
+                </Typography>
+                {selectedProfessional.description && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Description :</strong> {selectedProfessional.description}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" gutterBottom>
+                  Contact et disponibilité
+                </Typography>
+                {selectedProfessional.phone && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Téléphone :</strong> {selectedProfessional.phone}
+                  </Typography>
+                )}
+                {selectedProfessional.email && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Email :</strong> {selectedProfessional.email}
+                  </Typography>
+                )}
+                {selectedProfessional.website && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Site web :</strong> 
+                    <a href={selectedProfessional.website} target="_blank" rel="noopener noreferrer">
+                      {selectedProfessional.website}
+                    </a>
+                  </Typography>
+                )}
+                {selectedProfessional.availability && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Disponibilité :</strong> {selectedProfessional.availability}
+                  </Typography>
+                )}
+                {selectedProfessional.languages && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Langues :</strong> {selectedProfessional.languages.join(', ')}
+                  </Typography>
+                )}
+                {selectedProfessional.insurance && (
+                  <Typography variant="body2" paragraph>
+                    <strong>Assurances acceptées :</strong> {selectedProfessional.insurance.join(', ')}
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Fermer</Button>
+          {selectedProfessional?.phone && (
+            <Button variant="contained" startIcon={<PhoneIcon />}>
+              Appeler
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

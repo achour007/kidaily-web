@@ -76,7 +76,6 @@ const MapSection: React.FC<MapSectionProps> = ({
 }) => {
   const [hoveredCanton, setHoveredCanton] = useState<string | null>(null);
 
-  // Carte simplifiée de la Suisse avec cantons
   const cantons = [
     { code: 'ge', name: 'Genève', path: 'M 50 150 L 80 150 L 80 180 L 50 180 Z', x: 65, y: 165 },
     { code: 'vd', name: 'Vaud', path: 'M 30 120 L 80 120 L 80 150 L 30 150 Z', x: 55, y: 135 },
@@ -128,7 +127,6 @@ const MapSection: React.FC<MapSectionProps> = ({
 
   return (
     <Box>
-      {/* Statistiques de la carte */}
       <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid #e0e0e0' }}>
         <Typography variant="h6" gutterBottom>
           ��️ Carte Interactive des Cantons Suisses
@@ -151,7 +149,6 @@ const MapSection: React.FC<MapSectionProps> = ({
           />
         </Box>
         
-        {/* Légende des couleurs */}
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant="body2" color="text.secondary">
             Légende:
@@ -175,7 +172,6 @@ const MapSection: React.FC<MapSectionProps> = ({
         </Box>
       </Box>
 
-      {/* Carte SVG interactive */}
       <MapContainer>
         <svg
           width="100%"
@@ -185,7 +181,6 @@ const MapSection: React.FC<MapSectionProps> = ({
             cursor: 'grab'
           }}
         >
-          {/* Cantons */}
           {cantons.map((canton) => (
             <g key={canton.code}>
               <CantonPath
@@ -209,7 +204,6 @@ const MapSection: React.FC<MapSectionProps> = ({
         </svg>
       </MapContainer>
 
-      {/* Informations sur le canton sélectionné */}
       {selectedCanton !== 'all' && (
         <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Typography variant="h6" gutterBottom>
@@ -228,7 +222,6 @@ const MapSection: React.FC<MapSectionProps> = ({
         </Box>
       )}
 
-      {/* Instructions d'utilisation */}
       <Alert severity="info" sx={{ mt: 2 }}>
         <Typography variant="body2">
           💡 <strong>Comment utiliser la carte :</strong> Cliquez sur un canton pour le sélectionner et filtrer les professionnels. 
