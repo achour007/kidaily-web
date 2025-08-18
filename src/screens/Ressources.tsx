@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Typography,
   Box,
@@ -36,7 +36,7 @@ import {
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
-import MapSection from '../components/MapSection';
+
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -45,12 +45,12 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser la base de données ULTRA MASSIVE (390+ spécialistes GARANTIS - 15+ par canton)
+  // Utiliser la base de donnÃ©es ULTRA MASSIVE (390+ spÃ©cialistes GARANTIS - 15+ par canton)
   const specialties = ProfessionalSwissDatabase.getSpecialties();
   const cantons = ProfessionalSwissDatabase.getCantons();
   const allProfessionals = UltraMassiveSwissDatabase.getAllProfessionals();
   
-  // Filtrage avancé
+  // Filtrage avancÃ©
   let professionals = allProfessionals;
   
   if (selectedCanton !== 'all') {
@@ -124,7 +124,7 @@ const Ressources: React.FC = () => {
 
       <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 3 }}>
         <Tab label="Carte interactive" />
-        <Tab label="Liste des spécialistes" />
+        <Tab label="Liste des spÃ©cialistes" />
         <Tab label="FAQ" />
       </Tabs>
 
@@ -132,12 +132,12 @@ const Ressources: React.FC = () => {
         <Box>
           <Alert severity="info" sx={{ mb: 3 }}>
             <Typography variant="body2">
-              Carte interactive des professionnels de santé spécialisés dans le développement de l'enfant en Suisse.
-              Centres hospitaliers universitaires, cabinets privés et institutions spécialisées.
+              Carte interactive des professionnels de santÃ© spÃ©cialisÃ©s dans le dÃ©veloppement de l'enfant en Suisse.
+              Centres hospitaliers universitaires, cabinets privÃ©s et institutions spÃ©cialisÃ©es.
             </Typography>
           </Alert>
 
-          {/* Section carte interactive complète */}
+          {/* Section carte interactive complÃ¨te */}
           <MapSection
             professionals={professionals}
             stats={stats}
@@ -146,13 +146,13 @@ const Ressources: React.FC = () => {
             professionalCountsByCanton={professionalCountsByCanton}
           />
 
-          {/* Légende des spécialités */}
+          {/* LÃ©gende des spÃ©cialitÃ©s */}
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mb: 3 }}>
-            <Chip icon={<PersonIcon />} label="Pédiatrie développement" color="error" variant="outlined" />
-            <Chip icon={<SpeechIcon />} label="Logopédie (Orthophonie)" color="info" variant="outlined" />
+            <Chip icon={<PersonIcon />} label="PÃ©diatrie dÃ©veloppement" color="error" variant="outlined" />
+            <Chip icon={<SpeechIcon />} label="LogopÃ©die (Orthophonie)" color="info" variant="outlined" />
             <Chip icon={<PsychologyIcon />} label="Psychologie infantile" color="secondary" variant="outlined" />
-            <Chip icon={<HospitalIcon />} label="Neuropédiatrie" color="warning" variant="outlined" />
-            <Chip icon={<PhysioIcon />} label="Physiothérapie" color="success" variant="outlined" />
+            <Chip icon={<HospitalIcon />} label="NeuropÃ©diatrie" color="warning" variant="outlined" />
+            <Chip icon={<PhysioIcon />} label="PhysiothÃ©rapie" color="success" variant="outlined" />
           </Box>
         </Box>
       )}
@@ -162,11 +162,11 @@ const Ressources: React.FC = () => {
           {/* Statistiques professionnelles */}
           <Alert severity="success" sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>
-              🎯 Base de Données ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
+              ðŸŽ¯ Base de DonnÃ©es ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
             </Typography>
             <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
               <Typography variant="body2">
-                <strong>{stats.total}</strong> spécialistes certifiés
+                <strong>{stats.total}</strong> spÃ©cialistes certifiÃ©s
               </Typography>
               <Typography variant="body2">
                 <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
@@ -175,23 +175,23 @@ const Ressources: React.FC = () => {
                 <strong>{stats.emergency || 0}</strong> services d'urgence
               </Typography>
               <Typography variant="body2">
-                <strong>✅ {stats.guaranteedMinimum}+</strong> par canton minimum
+                <strong>âœ… {stats.guaranteedMinimum}+</strong> par canton minimum
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
               <Typography variant="body2">
-                <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
+                <strong>ðŸ“ RÃ©gions:</strong> Romande ({stats.byRegion.romande}) â€¢ AlÃ©manique ({stats.byRegion.alemanique}) â€¢ Italienne ({stats.byRegion.italienne})
               </Typography>
               <Typography variant="body2">
-                <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
+                <strong>ðŸ¥ SpÃ©cialitÃ©s:</strong> {stats.bySpecialty.length} domaines couverts
               </Typography>
               <Typography variant="body2">
-                <strong>🇨🇭 Cantons:</strong> Tous les {stats.cantons} cantons suisses (moyenne: {stats.averagePerCanton}/canton)
+                <strong>ðŸ‡¨ðŸ‡­ Cantons:</strong> Tous les {stats.cantons} cantons suisses (moyenne: {stats.averagePerCanton}/canton)
               </Typography>
             </Box>
           </Alert>
 
-          {/* Filtres avancés */}
+          {/* Filtres avancÃ©s */}
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
@@ -210,7 +210,7 @@ const Ressources: React.FC = () => {
             />
 
             <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-              🌍 Filtrer par canton :
+              ðŸŒ Filtrer par canton :
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
               <Chip
@@ -231,7 +231,7 @@ const Ressources: React.FC = () => {
             </Box>
 
             <Typography variant="body2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-              🏥 Filtrer par spécialité :
+              ðŸ¥ Filtrer par spÃ©cialitÃ© :
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
               <Chip
@@ -253,13 +253,13 @@ const Ressources: React.FC = () => {
 
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               <Chip
-                label="✅ Accepte nouveaux patients"
+                label="âœ… Accepte nouveaux patients"
                 onClick={() => setAcceptsNewOnly(!acceptsNewOnly)}
                 color={acceptsNewOnly ? 'success' : 'default'}
                 variant={acceptsNewOnly ? 'filled' : 'outlined'}
               />
               <Typography variant="body2" color="text.secondary">
-                {professionals.length} résultats
+                {professionals.length} rÃ©sultats
               </Typography>
             </Box>
           </Box>
@@ -291,7 +291,7 @@ const Ressources: React.FC = () => {
                     </Box>
                   </Box>
 
-                  {/* Spécialités */}
+                  {/* SpÃ©cialitÃ©s */}
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
                     {professional.specialties?.map((specialty, idx) => (
                       <Chip key={idx} label={specialty} size="small" variant="outlined" />
@@ -324,7 +324,7 @@ const Ressources: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <LanguageIcon color="action" />
                       <Typography variant="body2">
-                        {professional.languages?.join(', ') || 'Non spécifié'}
+                        {professional.languages?.join(', ') || 'Non spÃ©cifiÃ©'}
                       </Typography>
                     </Box>
                   </Box>
@@ -332,7 +332,7 @@ const Ressources: React.FC = () => {
                   {/* Assurances */}
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
                     <Typography variant="caption" color="text.secondary">
-                      Assurances acceptées:
+                      Assurances acceptÃ©es:
                     </Typography>
                     {professional.insuranceAccepted?.map((insurance, idx) => (
                       <Chip key={idx} label={insurance} size="small" variant="outlined" />
@@ -380,7 +380,7 @@ const Ressources: React.FC = () => {
       {activeTab === 2 && (
         <Box>
           <Typography variant="h6" gutterBottom>
-            Questions fréquentes
+            Questions frÃ©quentes
           </Typography>
           {faqItems.map((item, index) => (
             <Accordion key={index}>
