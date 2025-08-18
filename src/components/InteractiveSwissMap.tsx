@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Tooltip, Typography, Chip, Card, CardContent } from '@mui/material';
+import { Box, Typography, Chip, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 interface Canton {
@@ -32,36 +32,7 @@ const MapContainer = styled(Box)(({ theme }) => ({
   }
 }));
 
-const CantonPath = styled('path')<{ isSelected: boolean; professionalCount: number }>(({ theme, isSelected, professionalCount }) => ({
-  fill: isSelected ? '#1976d2' : 
-        professionalCount >= 15 ? '#4caf50' : 
-        professionalCount >= 10 ? '#ff9800' : 
-        professionalCount >= 5 ? '#f44336' : '#9e9e9e',
-  stroke: '#ffffff',
-  strokeWidth: isSelected ? 3 : 1.5,
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    fill: isSelected ? '#1565c0' : 
-          professionalCount >= 15 ? '#388e3c' : 
-          professionalCount >= 10 ? '#f57c00' : 
-          professionalCount >= 5 ? '#d32f2f' : '#757575',
-    strokeWidth: 2.5,
-    filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
-  }
-}));
 
-const MapMarker = styled('circle')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
-  fill: isSelected ? '#d32f2f' : '#1976d2',
-  stroke: '#ffffff',
-  strokeWidth: 2,
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    r: '8',
-    fill: '#ff5722'
-  }
-}));
 
 const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({ 
   onCantonClick, 
@@ -69,8 +40,6 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
   professionalCounts 
 }) => {
   const [hoveredCanton, setHoveredCanton] = useState<Canton | null>(null);
-  const [mapScale, setMapScale] = useState(1);
-  const [mapPosition, setMapPosition] = useState({ x: 0, y: 0 });
 
   // Données géographiques simplifiées des cantons suisses
   const cantons: Canton[] = [
