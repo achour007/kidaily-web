@@ -115,8 +115,7 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
           height="100%"
           viewBox="0 0 600 450"
           style={{ 
-            transform: `scale(${mapScale}) translate(${mapPosition.x}px, ${mapPosition.y}px)`,
-            transition: 'transform 0.3s ease'
+            transition: 'all 0.3s ease'
           }}
         >
           {/* Contour de la Suisse (simplifié) */}
