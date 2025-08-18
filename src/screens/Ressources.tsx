@@ -1,4 +1,30 @@
 ﻿import React, { useState, useEffect } from 'react';
+interface ComprehensiveProfessional {
+  id: string;
+  name: string;
+  canton: string;
+  cantonCode: string;
+  city: string;
+  specialties: string[];
+  phone: string;
+  email: string;
+  website?: string;
+  acceptsNewPatients: boolean;
+  languages: string[];
+  experience: number;
+  education: string[];
+  certifications: string[];
+  insuranceAccepted: string[];
+  consultationFee: number;
+  availability: string[];
+  address: string;
+  postalCode: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 import { 
   Box, 
   Typography, 
@@ -34,8 +60,8 @@ const Ressources = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [professionals, setProfessionals] = useState([]);
-  const [filteredProfessionals, setFilteredProfessionals] = useState([]);
+  const [professionals, setProfessionals] = useState<ComprehensiveProfessional[]>([]);
+  const [filteredProfessionals, setFilteredProfessionals] = useState<ComprehensiveProfessional[]>([]);
 
   useEffect(() => {
     const allProfessionals = UltraMassiveSwissDatabase.getAllProfessionals();
