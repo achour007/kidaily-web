@@ -34,28 +34,6 @@ import {
 } from '@mui/icons-material';
 import InteractiveMap from '../components/InteractiveMap';
 
-interface Professional {
-  id: string;
-  name: string;
-  specialty: string;
-  cantonCode: string;
-  canton: string;
-  city: string;
-  institution: string;
-  coordinates: { lat: number; lng: number };
-  acceptsNewPatients: boolean;
-  rating: number;
-  reviews: number;
-  phone: string;
-  email: string;
-  website: string;
-  description: string;
-  languages: string[];
-  insuranceAccepted: string[];
-  openingHours: string;
-  emergencyContact: boolean;
-}
-
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
