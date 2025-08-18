@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
 import { Icon, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -8,6 +8,8 @@ import {
   Chip,
   Alert,
   Paper,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 
 interface Professional {
@@ -65,14 +67,23 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   selectedCanton,
   setSelectedCanton
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const [mapCenter] = useState<LatLngTuple>([46.8182, 8.2275]); // Centre de la Suisse
-  const [mapZoom] = useState(8);
+  const [mapZoom, setMapZoom] = useState(isMobile ? 7 : 8);
+
+  // Ajuster le zoom pour mobile
+  useEffect(() => {
+    setMapZoom(isMobile ? 7 : 8);
+  }, [isMobile]);
 
   // Icône personnalisée pour les marqueurs
   const customIcon = new Icon({
     iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyQzIgMTcuNTIgNi40OCAyMiAxMiAyMkMxNy41MiAyMiAyMiAxNy41MiAyMiAxMkMyMiA2LjQ4IDE3LjUyIDIgMTIgMloiIGZpbGw9IiNFMzM0MzYiLz4KPHBhdGggZD0iTTEyIDZDNi40OCA2IDIgMTAuNDggMiAxNkMyIDE5LjUyIDQuNDggMjIgOCAyMkMxMiAyMiAxNiAxOS41MiAxNiAxNkMxNiAxMC40OCAxMS41MiA2IDcgNloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
+    iconSize: isMobile ? [20, 32] : [25, 41],
+    iconAnchor: isMobile ? [10, 32] : [12, 41],
     popupAnchor: [1, -34],
   });
 
@@ -86,60 +97,85 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   return (
     <Box>
-      {/* Statistiques de la carte */}
-      <Paper elevation={2} sx={{ mb: 3, p: 2 }}>
-        <Typography variant="h6" gutterBottom>
+      {/* Statistiques de la carte - Responsive */}
+      <Paper elevation={2} sx={{ mb: 3, p: isMobile ? 1.5 : 2 }}>
+        <Typography variant={isMobile ? "h6" : "h6"} gutterBottom>
           ��️ Carte Interactive de la Suisse
         </Typography>
-        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 2 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isMobile ? 1.5 : 3, 
+          flexWrap: 'wrap', 
+          mb: 2,
+          flexDirection: isSmallMobile ? 'column' : 'row'
+        }}>
           <Chip
             label={`${professionals.length} professionnels`}
             color="primary"
             variant="outlined"
+            size={isMobile ? "small" : "medium"}
           />
           <Chip
             label={`${Object.keys(cantonCoordinates).length} cantons`}
             color="secondary"
             variant="outlined"
+            size={isMobile ? "small" : "medium"}
           />
           <Chip
             label="Géolocalisation précise"
             color="success"
             variant="outlined"
+            size={isMobile ? "small" : "medium"}
           />
         </Box>
 
-        {/* Légende des couleurs */}
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+        {/* Légende des couleurs - Responsive */}
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isMobile ? 1 : 2, 
+          flexWrap: 'wrap', 
+          alignItems: 'center',
+          flexDirection: isSmallMobile ? 'column' : 'row'
+        }}>
           <Typography variant="body2" color="text.secondary">
             Légende:
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 16, height: 16, bgcolor: '#4caf50', borderRadius: '2px' }} />
-            <Typography variant="caption">15+ professionnels</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 16, height: 16, bgcolor: '#ff9800', borderRadius: '2px' }} />
-            <Typography variant="caption">10-14 professionnels</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 16, height: 16, bgcolor: '#f44336', borderRadius: '2px' }} />
-            <Typography variant="caption">5-9 professionnels</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 16, height: 16, bgcolor: '#e0e0e0', borderRadius: '2px' }} />
-            <Typography variant="caption">0-4 professionnels</Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ width: 16, height: 16, bgcolor: '#4caf50', borderRadius: '2px' }} />
+              <Typography variant="caption">15+ prof.</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ width: 16, height: 16, bgcolor: '#ff9800', borderRadius: '2px' }} />
+              <Typography variant="caption">10-14 prof.</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ width: 16, height: 16, bgcolor: '#f44336', borderRadius: '2px' }} />
+              <Typography variant="caption">5-9 prof.</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ width: 16, height: 16, bgcolor: '#e0e0e0', borderRadius: '2px' }} />
+              <Typography variant="caption">0-4 prof.</Typography>
+            </Box>
           </Box>
         </Box>
       </Paper>
 
-      {/* Carte interactive */}
-      <Paper elevation={3} sx={{ height: '600px', overflow: 'hidden' }}>
+      {/* Carte interactive - Responsive */}
+      <Paper elevation={3} sx={{ 
+        height: isMobile ? '400px' : '600px', 
+        overflow: 'hidden',
+        borderRadius: isMobile ? 1 : 2
+      }}>
         <MapContainer
           center={mapCenter}
           zoom={mapZoom}
           style={{ height: '100%', width: '100%' }}
           zoomControl={false}
+          doubleClickZoom={!isMobile}
+          scrollWheelZoom={!isMobile}
+          dragging={true}
+          touchZoom={true}
         >
           {/* Couche de carte OpenStreetMap */}
           <TileLayer
@@ -147,8 +183,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {/* Contrôles de zoom */}
-          <ZoomControl position="topright" />
+          {/* Contrôles de zoom - Position adaptée mobile */}
+          <ZoomControl position={isMobile ? "bottomright" : "topright"} />
 
           {/* Marqueurs des cantons */}
           {Object.entries(cantonCoordinates).map(([cantonCode, coords]) => (
@@ -161,7 +197,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
               }}
             >
               <Popup>
-                <Box>
+                <Box sx={{ minWidth: isMobile ? '200px' : '250px' }}>
                   <Typography variant="h6" gutterBottom>
                     {coords.name}
                   </Typography>
@@ -191,13 +227,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
               position={[professional.coordinates.lat, professional.coordinates.lng] as LatLngTuple}
               icon={new Icon({
                 iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyQzIgMTcuNTIgNi40OCAyMiAxMiAyMkMxNy41MiAyMiAyMiAxNy41MiAyMiAxMkMyMiA2LjQ4IDE3LjUyIDIgMTIgMloiIGZpbGw9IiMyMTk2RjMiLz4KPHBhdGggZD0iTTEyIDZDNi40OCA2IDIgMTAuNDggMiAxNkMyIDE5LjUyIDQuNDggMjIgOCAyMkMxMiAyMiAxNiAxOS41MiAxNiAxNkMxNiAxMC40OCAxMS41MiA2IDcgNloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
-                iconSize: [20, 32],
-                iconAnchor: [10, 32],
+                iconSize: isMobile ? [16, 26] : [20, 32],
+                iconAnchor: isMobile ? [8, 26] : [10, 32],
                 popupAnchor: [1, -34],
               })}
             >
               <Popup>
-                <Box>
+                <Box sx={{ minWidth: isMobile ? '200px' : '250px' }}>
                   <Typography variant="h6" gutterBottom>
                     {professional.name}
                   </Typography>
@@ -230,31 +266,38 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </MapContainer>
       </Paper>
 
-      {/* Informations sur le canton sélectionné */}
+      {/* Informations sur le canton sélectionné - Responsive */}
       {selectedCanton !== 'all' && (
-        <Paper elevation={2} sx={{ mt: 2, p: 2 }}>
+        <Paper elevation={2} sx={{ mt: 2, p: isMobile ? 1.5 : 2 }}>
           <Typography variant="h6" gutterBottom>
             �� Canton sélectionné: {cantonCoordinates[selectedCanton]?.name || selectedCanton}
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            gap: isMobile ? 1 : 2, 
+            flexWrap: 'wrap',
+            flexDirection: isSmallMobile ? 'column' : 'row'
+          }}>
             <Chip
               label={`${professionals.filter(p => p.cantonCode === selectedCanton).length} professionnels`}
               color="primary"
+              size={isMobile ? "small" : "medium"}
             />
             <Chip
               label={`${professionals.filter(p => p.cantonCode === selectedCanton).length} résultats filtrés`}
               color="secondary"
+              size={isMobile ? "small" : "medium"}
             />
           </Box>
         </Paper>
       )}
 
-      {/* Instructions d'utilisation */}
+      {/* Instructions d'utilisation - Responsive */}
       <Alert severity="info" sx={{ mt: 2 }}>
         <Typography variant="body2">
           💡 <strong>Comment utiliser la carte :</strong>
-          Cliquez sur les marqueurs des cantons pour les sélectionner et filtrer les professionnels.
-          Utilisez les contrôles de zoom pour naviguer. Les couleurs indiquent le nombre de professionnels disponibles.
+          {isMobile ? 'Touchez les marqueurs des cantons pour les sélectionner. Utilisez les gestes de pincement pour zoomer.' : 'Cliquez sur les marqueurs des cantons pour les sélectionner et filtrer les professionnels. Utilisez les contrôles de zoom pour naviguer.'}
+          Les couleurs indiquent le nombre de professionnels disponibles.
         </Typography>
       </Alert>
     </Box>

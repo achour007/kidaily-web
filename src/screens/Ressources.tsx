@@ -22,6 +22,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -35,6 +37,10 @@ import {
 import InteractiveMap from '../components/InteractiveMap';
 
 const Ressources: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('all');
@@ -160,20 +166,20 @@ const Ressources: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom sx={{ color: '#1976d2', mb: 3 }}>
+    <Box sx={{ p: isMobile ? 2 : 3 }}>
+      <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ color: '#1976d2', mb: 3 }}>
         Ressources Médicales Suisses
       </Typography>
 
-      {/* Statistiques générales */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3, bgcolor: '#f8f9fa' }}>
+      {/* Statistiques générales - Responsive */}
+      <Paper elevation={2} sx={{ p: isMobile ? 2 : 3, mb: 3, bgcolor: '#f8f9fa' }}>
         <Typography variant="h6" gutterBottom>
           📊 Aperçu des Ressources
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="primary">
+        <Grid container spacing={isMobile ? 1 : 2}>
+          <Grid item xs={6} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
+              <Typography variant={isMobile ? "h5" : "h4"} color="primary">
                 {stats.totalProfessionals}+
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -181,9 +187,9 @@ const Ressources: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="secondary">
+          <Grid item xs={6} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
+              <Typography variant={isMobile ? "h5" : "h4"} color="secondary">
                 {stats.cantonsCovered}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -191,9 +197,9 @@ const Ressources: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="success.main">
+          <Grid item xs={6} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
+              <Typography variant={isMobile ? "h5" : "h4"} color="success.main">
                 {stats.specialtiesAvailable}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -201,9 +207,9 @@ const Ressources: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="warning.main">
+          <Grid item xs={6} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
+              <Typography variant={isMobile ? "h5" : "h4"} color="warning.main">
                 {stats.avgPerCanton}+
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -214,9 +220,15 @@ const Ressources: React.FC = () => {
         </Grid>
       </Paper>
 
-      {/* Onglets */}
+      {/* Onglets - Responsive */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="Ressources médicales">
+        <Tabs 
+          value={activeTab} 
+          onChange={handleTabChange} 
+          aria-label="Ressources médicales"
+          variant={isMobile ? "scrollable" : "fullWidth"}
+          scrollButtons={isMobile ? "auto" : false}
+        >
           <Tab label="PROFESSIONNELS" />
           <Tab label="CARTE INTERACTIVE" />
           <Tab label="FAQ & AIDE" />
@@ -226,15 +238,16 @@ const Ressources: React.FC = () => {
       {/* Contenu des onglets */}
       {activeTab === 0 && (
         <Box>
-          {/* Filtres */}
-          <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
-            <Grid container spacing={2} alignItems="center">
+          {/* Filtres - Responsive */}
+          <Paper elevation={1} sx={{ p: isMobile ? 1.5 : 2, mb: 3 }}>
+            <Grid container spacing={isMobile ? 1.5 : 2} alignItems="center">
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
                   placeholder="Rechercher un professionnel..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  size={isMobile ? "small" : "medium"}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -245,7 +258,7 @@ const Ressources: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
+                <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                   <InputLabel>Canton</InputLabel>
                   <Select
                     value={selectedCanton}
@@ -264,18 +277,18 @@ const Ressources: React.FC = () => {
             </Grid>
           </Paper>
 
-          {/* Liste des professionnels */}
-          <Grid container spacing={3}>
+          {/* Liste des professionnels - Responsive */}
+          <Grid container spacing={isMobile ? 2 : 3}>
             {filteredProfessionals.map((professional) => (
-              <Grid item xs={12} md={6} lg={4} key={professional.id}>
+              <Grid item xs={12} sm={6} lg={4} key={professional.id}>
                 <Card elevation={2} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
+                  <CardContent sx={{ flexGrow: 1, p: isMobile ? 1.5 : 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+                      <Avatar sx={{ bgcolor: 'primary.main', mr: 2, width: isMobile ? 40 : 48, height: isMobile ? 40 : 48 }}>
                         <MedicalIcon />
                       </Avatar>
                       <Box>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant={isMobile ? "h6" : "h6"} gutterBottom>
                           {professional.name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -288,19 +301,19 @@ const Ressources: React.FC = () => {
                       <Chip
                         icon={<LocationIcon />}
                         label={`${professional.city}, ${professional.canton}`}
-                        size="small"
+                        size={isMobile ? "small" : "small"}
                         sx={{ mb: 1, mr: 1 }}
                       />
                       <Chip
                         icon={<StarIcon />}
                         label={`${professional.rating} (${professional.reviews})`}
-                        size="small"
+                        size={isMobile ? "small" : "small"}
                         color="warning"
                         sx={{ mb: 1, mr: 1 }}
                       />
                       <Chip
                         label={professional.acceptsNewPatients ? 'Nouveaux patients' : 'Liste d\'attente'}
-                        size="small"
+                        size={isMobile ? "small" : "small"}
                         color={professional.acceptsNewPatients ? 'success' : 'warning'}
                         sx={{ mb: 1 }}
                       />
@@ -334,25 +347,28 @@ const Ressources: React.FC = () => {
                     </Box>
                   </CardContent>
 
-                  <CardActions sx={{ p: 2, pt: 0 }}>
+                  <CardActions sx={{ p: isMobile ? 1.5 : 2, pt: 0 }}>
                     <Button
-                      size="small"
+                      size={isMobile ? "small" : "small"}
                       startIcon={<PhoneIcon />}
                       onClick={() => window.open(`tel:${professional.phone}`)}
+                      fullWidth={isSmallMobile}
                     >
                       Appeler
                     </Button>
                     <Button
-                      size="small"
+                      size={isMobile ? "small" : "small"}
                       startIcon={<EmailIcon />}
                       onClick={() => window.open(`mailto:${professional.email}`)}
+                      fullWidth={isSmallMobile}
                     >
                       Email
                     </Button>
                     <Button
-                      size="small"
+                      size={isMobile ? "small" : "small"}
                       startIcon={<SpeechIcon />}
                       onClick={() => window.open(professional.website, '_blank')}
+                      fullWidth={isSmallMobile}
                     >
                       Site web
                     </Button>
