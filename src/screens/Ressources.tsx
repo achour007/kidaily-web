@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+ï»¿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -33,7 +33,7 @@ import {
   Close as CloseIcon,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-import MapSection from '../components/MapSection';
+import RealMapSection from '../components/RealMapSection';
 
 interface ComprehensiveProfessional {
   id: string;
@@ -78,47 +78,47 @@ const Ressources: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const cantons = useMemo(() => [
-    { code: 'ge', name: 'Genève', region: 'Suisse romande' },
+    { code: 'ge', name: 'GenÃ¨ve', region: 'Suisse romande' },
     { code: 'vd', name: 'Vaud', region: 'Suisse romande' },
-    { code: 'zh', name: 'Zurich', region: 'Suisse alémanique' },
-    { code: 'be', name: 'Berne', region: 'Suisse alémanique' },
+    { code: 'zh', name: 'Zurich', region: 'Suisse alÃ©manique' },
+    { code: 'be', name: 'Berne', region: 'Suisse alÃ©manique' },
     { code: 'fr', name: 'Fribourg', region: 'Suisse romande' },
-    { code: 'ag', name: 'Argovie', region: 'Suisse alémanique' },
-    { code: 'bl', name: 'Bâle-Campagne', region: 'Suisse alémanique' },
-    { code: 'bs', name: 'Bâle-Ville', region: 'Suisse alémanique' },
-    { code: 'gr', name: 'Grisons', region: 'Suisse alémanique' },
+    { code: 'ag', name: 'Argovie', region: 'Suisse alÃ©manique' },
+    { code: 'bl', name: 'BÃ¢le-Campagne', region: 'Suisse alÃ©manique' },
+    { code: 'bs', name: 'BÃ¢le-Ville', region: 'Suisse alÃ©manique' },
+    { code: 'gr', name: 'Grisons', region: 'Suisse alÃ©manique' },
     { code: 'ju', name: 'Jura', region: 'Suisse romande' },
-    { code: 'lu', name: 'Lucerne', region: 'Suisse alémanique' },
-    { code: 'ne', name: 'Neuchâtel', region: 'Suisse romande' },
-    { code: 'sg', name: 'Saint-Gall', region: 'Suisse alémanique' },
-    { code: 'sh', name: 'Schaffhouse', region: 'Suisse alémanique' },
-    { code: 'so', name: 'Soleure', region: 'Suisse alémanique' },
+    { code: 'lu', name: 'Lucerne', region: 'Suisse alÃ©manique' },
+    { code: 'ne', name: 'NeuchÃ¢tel', region: 'Suisse romande' },
+    { code: 'sg', name: 'Saint-Gall', region: 'Suisse alÃ©manique' },
+    { code: 'sh', name: 'Schaffhouse', region: 'Suisse alÃ©manique' },
+    { code: 'so', name: 'Soleure', region: 'Suisse alÃ©manique' },
     { code: 'ti', name: 'Tessin', region: 'Suisse italienne' },
-    { code: 'tg', name: 'Thurgovie', region: 'Suisse alémanique' },
+    { code: 'tg', name: 'Thurgovie', region: 'Suisse alÃ©manique' },
     { code: 'vs', name: 'Valais', region: 'Suisse romande' },
-    { code: 'zg', name: 'Zoug', region: 'Suisse alémanique' },
-    { code: 'ar', name: 'Appenzell Rhodes-Extérieures', region: 'Suisse alémanique' },
-    { code: 'ai', name: 'Appenzell Rhodes-Intérieures', region: 'Suisse alémanique' },
-    { code: 'gl', name: 'Glaris', region: 'Suisse alémanique' },
-    { code: 'nw', name: 'Nidwald', region: 'Suisse alémanique' },
-    { code: 'ow', name: 'Obwald', region: 'Suisse alémanique' },
-    { code: 'sz', name: 'Schwytz', region: 'Suisse alémanique' },
-    { code: 'ur', name: 'Uri', region: 'Suisse alémanique' }
+    { code: 'zg', name: 'Zoug', region: 'Suisse alÃ©manique' },
+    { code: 'ar', name: 'Appenzell Rhodes-ExtÃ©rieures', region: 'Suisse alÃ©manique' },
+    { code: 'ai', name: 'Appenzell Rhodes-IntÃ©rieures', region: 'Suisse alÃ©manique' },
+    { code: 'gl', name: 'Glaris', region: 'Suisse alÃ©manique' },
+    { code: 'nw', name: 'Nidwald', region: 'Suisse alÃ©manique' },
+    { code: 'ow', name: 'Obwald', region: 'Suisse alÃ©manique' },
+    { code: 'sz', name: 'Schwytz', region: 'Suisse alÃ©manique' },
+    { code: 'ur', name: 'Uri', region: 'Suisse alÃ©manique' }
   ], []);
 
   const specialties = useMemo(() => [
-    { id: 'pediatrician', name: 'Pédiatre', description: 'Médecin spécialisé dans les soins aux enfants' },
-    { id: 'psychologist', name: 'Psychologue', description: 'Spécialiste de la santé mentale et du comportement' },
-    { id: 'speech-therapist', name: 'Orthophoniste', description: 'Thérapeute des troubles du langage et de la communication' },
-    { id: 'occupational-therapist', name: 'Ergothérapeute', description: 'Spécialiste de la réadaptation fonctionnelle' },
-    { id: 'physiotherapist', name: 'Physiothérapeute', description: 'Thérapeute des troubles musculo-squelettiques' },
-    { id: 'psychomotor-therapist', name: 'Psychomotricien', description: 'Spécialiste du développement psychomoteur' },
+    { id: 'pediatrician', name: 'PÃ©diatre', description: 'MÃ©decin spÃ©cialisÃ© dans les soins aux enfants' },
+    { id: 'psychologist', name: 'Psychologue', description: 'SpÃ©cialiste de la santÃ© mentale et du comportement' },
+    { id: 'speech-therapist', name: 'Orthophoniste', description: 'ThÃ©rapeute des troubles du langage et de la communication' },
+    { id: 'occupational-therapist', name: 'ErgothÃ©rapeute', description: 'SpÃ©cialiste de la rÃ©adaptation fonctionnelle' },
+    { id: 'physiotherapist', name: 'PhysiothÃ©rapeute', description: 'ThÃ©rapeute des troubles musculo-squelettiques' },
+    { id: 'psychomotor-therapist', name: 'Psychomotricien', description: 'SpÃ©cialiste du dÃ©veloppement psychomoteur' },
     { id: 'nutritionist', name: 'Nutritionniste', description: 'Expert en alimentation et nutrition' },
-    { id: 'dentist', name: 'Dentiste', description: 'Spécialiste de la santé bucco-dentaire' },
-    { id: 'ophthalmologist', name: 'Ophtalmologue', description: 'Médecin spécialisé dans les yeux et la vision' },
-    { id: 'neurologist', name: 'Neurologue', description: 'Spécialiste du système nerveux' },
-    { id: 'cardiologist', name: 'Cardiologue', description: 'Médecin spécialisé dans le cœur' },
-    { id: 'dermatologist', name: 'Dermatologue', description: 'Spécialiste de la peau' }
+    { id: 'dentist', name: 'Dentiste', description: 'SpÃ©cialiste de la santÃ© bucco-dentaire' },
+    { id: 'ophthalmologist', name: 'Ophtalmologue', description: 'MÃ©decin spÃ©cialisÃ© dans les yeux et la vision' },
+    { id: 'neurologist', name: 'Neurologue', description: 'SpÃ©cialiste du systÃ¨me nerveux' },
+    { id: 'cardiologist', name: 'Cardiologue', description: 'MÃ©decin spÃ©cialisÃ© dans le cÅ“ur' },
+    { id: 'dermatologist', name: 'Dermatologue', description: 'SpÃ©cialiste de la peau' }
   ], []);
 
   const stats = useMemo(() => ({
@@ -130,16 +130,16 @@ const Ressources: React.FC = () => {
 
   const mockProfessionals = useMemo(() => [
     {
-      id: 'ge-001', name: 'Dr. Marie Dubois', specialty: 'Pédiatre', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'HUG - Hôpital Universitaire de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: true, rating: 4.8, reviews: 127, phone: '+41 22 372 33 11', email: 'marie.dubois@hug.ch', website: 'https://www.hug.ch', description: 'Pédiatre spécialisée dans le développement de l\'enfant', languages: ['Français', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 8h-18h'
+      id: 'ge-001', name: 'Dr. Marie Dubois', specialty: 'PÃ©diatre', cantonCode: 'ge', canton: 'GenÃ¨ve', city: 'GenÃ¨ve', institution: 'HUG - HÃ´pital Universitaire de GenÃ¨ve', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: true, rating: 4.8, reviews: 127, phone: '+41 22 372 33 11', email: 'marie.dubois@hug.ch', website: 'https://www.hug.ch', description: 'PÃ©diatre spÃ©cialisÃ©e dans le dÃ©veloppement de l\'enfant', languages: ['FranÃ§ais', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 8h-18h'
     },
     {
-      id: 'ge-002', name: 'Dr. Jean-Luc Martin', specialty: 'Psychologue', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'Centre Médical de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: false, rating: 4.6, reviews: 89, phone: '+41 22 789 45 67', email: 'jl.martin@cmg.ch', website: 'https://www.cmg.ch', description: 'Psychologue spécialisé dans les troubles du comportement', languages: ['Français', 'Allemand'], insurance: ['LAMal'], availability: 'Mar-Sam 9h-17h'
+      id: 'ge-002', name: 'Dr. Jean-Luc Martin', specialty: 'Psychologue', cantonCode: 'ge', canton: 'GenÃ¨ve', city: 'GenÃ¨ve', institution: 'Centre MÃ©dical de GenÃ¨ve', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: false, rating: 4.6, reviews: 89, phone: '+41 22 789 45 67', email: 'jl.martin@cmg.ch', website: 'https://www.cmg.ch', description: 'Psychologue spÃ©cialisÃ© dans les troubles du comportement', languages: ['FranÃ§ais', 'Allemand'], insurance: ['LAMal'], availability: 'Mar-Sam 9h-17h'
     },
     {
-      id: 'vd-001', name: 'Dr. Sophie Laurent', specialty: 'Orthophoniste', cantonCode: 'vd', canton: 'Vaud', city: 'Lausanne', institution: 'CHUV - Centre Hospitalier Universitaire Vaudois', coordinates: { lat: 46.5197, lng: 6.6323 }, acceptsNewPatients: true, rating: 4.9, reviews: 156, phone: '+41 21 314 11 11', email: 'sophie.laurent@chuv.ch', website: 'https://www.chuv.ch', description: 'Orthophoniste expérimentée dans les troubles du langage', languages: ['Français', 'Anglais', 'Italien'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 7h30-19h'
+      id: 'vd-001', name: 'Dr. Sophie Laurent', specialty: 'Orthophoniste', cantonCode: 'vd', canton: 'Vaud', city: 'Lausanne', institution: 'CHUV - Centre Hospitalier Universitaire Vaudois', coordinates: { lat: 46.5197, lng: 6.6323 }, acceptsNewPatients: true, rating: 4.9, reviews: 156, phone: '+41 21 314 11 11', email: 'sophie.laurent@chuv.ch', website: 'https://www.chuv.ch', description: 'Orthophoniste expÃ©rimentÃ©e dans les troubles du langage', languages: ['FranÃ§ais', 'Anglais', 'Italien'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 7h30-19h'
     },
     {
-      id: 'zh-001', name: 'Dr. Hans Mueller', specialty: 'Pédiatre', cantonCode: 'zh', canton: 'Zurich', city: 'Zurich', institution: 'Universitäts-Kinderspital Zürich', coordinates: { lat: 47.3769, lng: 8.5417 }, acceptsNewPatients: true, rating: 4.7, reviews: 203, phone: '+41 44 266 71 11', email: 'hans.mueller@kispi.uzh.ch', website: 'https://www.kispi.uzh.ch', description: 'Pédiatre spécialisé dans la néonatologie', languages: ['Allemand', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Dim 24h/24'
+      id: 'zh-001', name: 'Dr. Hans Mueller', specialty: 'PÃ©diatre', cantonCode: 'zh', canton: 'Zurich', city: 'Zurich', institution: 'UniversitÃ¤ts-Kinderspital ZÃ¼rich', coordinates: { lat: 47.3769, lng: 8.5417 }, acceptsNewPatients: true, rating: 4.7, reviews: 203, phone: '+41 44 266 71 11', email: 'hans.mueller@kispi.uzh.ch', website: 'https://www.kispi.uzh.ch', description: 'PÃ©diatre spÃ©cialisÃ© dans la nÃ©onatologie', languages: ['Allemand', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Dim 24h/24'
     }
   ], []);
 
@@ -193,7 +193,7 @@ const Ressources: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-        Ressources de Santé en Suisse
+        Ressources de SantÃ© en Suisse
       </Typography>
 
       <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ mb: 3 }}>
@@ -241,12 +241,12 @@ const Ressources: React.FC = () => {
               <TextField
                 select
                 fullWidth
-                label="Spécialité"
+                label="SpÃ©cialitÃ©"
                 value={selectedSpecialty}
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
                 SelectProps={{ native: true }}
               >
-                <option value="all">Toutes les spécialités</option>
+                <option value="all">Toutes les spÃ©cialitÃ©s</option>
                 {specialties.map((specialty) => (
                   <option key={specialty.id} value={specialty.name}>
                     {specialty.name}
@@ -258,18 +258,18 @@ const Ressources: React.FC = () => {
 
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>
-              Résultats ({filteredProfessionals.length})
+              RÃ©sultats ({filteredProfessionals.length})
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               <Chip label={`${stats.totalProfessionals} professionnels`} color="primary" variant="outlined" />
               <Chip label={`${stats.cantonsCovered} cantons`} color="secondary" variant="outlined" />
-              <Chip label={`${stats.specialtiesAvailable} spécialités`} color="success" variant="outlined" />
+              <Chip label={`${stats.specialtiesAvailable} spÃ©cialitÃ©s`} color="success" variant="outlined" />
             </Box>
           </Box>
 
           {filteredProfessionals.length === 0 ? (
             <Alert severity="info">
-              Aucun professionnel trouvé avec les critères sélectionnés.
+              Aucun professionnel trouvÃ© avec les critÃ¨res sÃ©lectionnÃ©s.
             </Alert>
           ) : (
             <Grid container spacing={3}>
@@ -314,7 +314,7 @@ const Ressources: React.FC = () => {
                         sx={{ mt: 2 }}
                         onClick={() => handleProfessionalClick(professional)}
                       >
-                        Voir détails
+                        Voir dÃ©tails
                       </Button>
                     </CardContent>
                   </StyledCard>
@@ -326,7 +326,7 @@ const Ressources: React.FC = () => {
       )}
 
       {activeTab === 1 && (
-        <MapSection
+        <RealMapSection
           professionals={filteredProfessionals}
           stats={stats}
           selectedCanton={selectedCanton}
@@ -338,7 +338,7 @@ const Ressources: React.FC = () => {
       {activeTab === 2 && (
         <Box>
           <Typography variant="h5" gutterBottom>
-            Questions Fréquemment Posées
+            Questions FrÃ©quemment PosÃ©es
           </Typography>
           <List>
             <ListItem>
@@ -347,7 +347,7 @@ const Ressources: React.FC = () => {
               </ListItemIcon>
               <ListItemText
                 primary="Comment prendre rendez-vous avec un professionnel ?"
-                secondary="Contactez directement le professionnel par téléphone ou via son site web. Vérifiez qu'il accepte de nouveaux patients."
+                secondary="Contactez directement le professionnel par tÃ©lÃ©phone ou via son site web. VÃ©rifiez qu'il accepte de nouveaux patients."
               />
             </ListItem>
             <ListItem>
@@ -355,8 +355,8 @@ const Ressources: React.FC = () => {
                 <InfoIcon color="primary" />
               </ListItemIcon>
               <ListItemText
-                primary="Quels sont les délais d'attente ?"
-                secondary="Les délais varient selon la spécialité et la région. Les pédiatres et psychologues ont souvent des listes d'attente de 2-6 mois."
+                primary="Quels sont les dÃ©lais d'attente ?"
+                secondary="Les dÃ©lais varient selon la spÃ©cialitÃ© et la rÃ©gion. Les pÃ©diatres et psychologues ont souvent des listes d'attente de 2-6 mois."
               />
             </ListItem>
             <ListItem>
@@ -364,8 +364,8 @@ const Ressources: React.FC = () => {
                 <InfoIcon color="primary" />
               </ListItemIcon>
               <ListItemText
-                primary="Comment savoir si un professionnel est remboursé ?"
-                secondary="Vérifiez auprès de votre assurance maladie. La plupart des professionnels sont remboursés par l'assurance de base (LAMal)."
+                primary="Comment savoir si un professionnel est remboursÃ© ?"
+                secondary="VÃ©rifiez auprÃ¨s de votre assurance maladie. La plupart des professionnels sont remboursÃ©s par l'assurance de base (LAMal)."
               />
             </ListItem>
             <ListItem>
@@ -374,7 +374,7 @@ const Ressources: React.FC = () => {
               </ListItemIcon>
               <ListItemText
                 primary="Que faire en cas d'urgence ?"
-                secondary="En cas d'urgence, appelez le 144 (ambulance) ou rendez-vous aux urgences pédiatriques de l'hôpital le plus proche."
+                secondary="En cas d'urgence, appelez le 144 (ambulance) ou rendez-vous aux urgences pÃ©diatriques de l'hÃ´pital le plus proche."
               />
             </ListItem>
           </List>
@@ -400,7 +400,7 @@ const Ressources: React.FC = () => {
                   Informations professionnelles
                 </Typography>
                 <Typography variant="body2" paragraph>
-                  <strong>Spécialité :</strong> {selectedProfessional.specialty}
+                  <strong>SpÃ©cialitÃ© :</strong> {selectedProfessional.specialty}
                 </Typography>
                 <Typography variant="body2" paragraph>
                   <strong>Institution :</strong> {selectedProfessional.institution}
@@ -419,11 +419,11 @@ const Ressources: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" gutterBottom>
-                  Contact et disponibilité
+                  Contact et disponibilitÃ©
                 </Typography>
                 {selectedProfessional.phone && (
                   <Typography variant="body2" paragraph>
-                    <strong>Téléphone :</strong> {selectedProfessional.phone}
+                    <strong>TÃ©lÃ©phone :</strong> {selectedProfessional.phone}
                   </Typography>
                 )}
                 {selectedProfessional.email && (
@@ -441,7 +441,7 @@ const Ressources: React.FC = () => {
                 )}
                 {selectedProfessional.availability && (
                   <Typography variant="body2" paragraph>
-                    <strong>Disponibilité :</strong> {selectedProfessional.availability}
+                    <strong>DisponibilitÃ© :</strong> {selectedProfessional.availability}
                   </Typography>
                 )}
                 {selectedProfessional.languages && (
@@ -451,7 +451,7 @@ const Ressources: React.FC = () => {
                 )}
                 {selectedProfessional.insurance && (
                   <Typography variant="body2" paragraph>
-                    <strong>Assurances acceptées :</strong> {selectedProfessional.insurance.join(', ')}
+                    <strong>Assurances acceptÃ©es :</strong> {selectedProfessional.insurance.join(', ')}
                   </Typography>
                 )}
               </Grid>
@@ -472,3 +472,4 @@ const Ressources: React.FC = () => {
 };
 
 export default Ressources;
+
