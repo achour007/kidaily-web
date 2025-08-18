@@ -11,7 +11,6 @@ import {
   InputAdornment,
   Grid,
   Avatar,
-  Rating,
   Button,
   Alert,
   Paper,
@@ -31,31 +30,8 @@ import {
   Star as StarIcon,
   Phone as PhoneIcon,
   Email as EmailIcon,
-  AccessTime as AccessTimeIcon,
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
-
-interface ComprehensiveProfessional {
-  id: string;
-  name: string;
-  specialty: string;
-  cantonCode: string;
-  canton: string;
-  city: string;
-  institution: string;
-  coordinates: { lat: number; lng: number };
-  acceptsNewPatients: boolean;
-  rating: number;
-  reviews: number;
-  phone: string;
-  email: string;
-  website: string;
-  description: string;
-  languages: string[];
-  insuranceAccepted: string[];
-  openingHours: string;
-  emergencyContact: boolean;
-}
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -73,7 +49,6 @@ const Ressources: React.FC = () => {
       canton: 'Genève',
       city: 'Genève',
       institution: 'HUG - Hôpital Universitaire de Genève',
-      coordinates: { lat: 46.2044, lng: 6.1432 },
       acceptsNewPatients: true,
       rating: 4.8,
       reviews: 127,
@@ -94,7 +69,6 @@ const Ressources: React.FC = () => {
       canton: 'Vaud',
       city: 'Lausanne',
       institution: 'CHUV - Centre Hospitalier Universitaire Vaudois',
-      coordinates: { lat: 46.5197, lng: 6.6323 },
       acceptsNewPatients: false,
       rating: 4.6,
       reviews: 89,
@@ -115,7 +89,6 @@ const Ressources: React.FC = () => {
       canton: 'Zurich',
       city: 'Zurich',
       institution: 'USZ - Universitätsspital Zürich',
-      coordinates: { lat: 47.3769, lng: 8.5417 },
       acceptsNewPatients: true,
       rating: 4.9,
       reviews: 156,
@@ -136,7 +109,6 @@ const Ressources: React.FC = () => {
       canton: 'Berne',
       city: 'Berne',
       institution: 'Inselspital Bern',
-      coordinates: { lat: 46.9479, lng: 7.4474 },
       acceptsNewPatients: true,
       rating: 4.7,
       reviews: 98,
@@ -171,15 +143,6 @@ const Ressources: React.FC = () => {
     specialtiesAvailable: 12,
     avgPerCanton: 15
   };
-
-  // Comptage par canton
-  const professionalCountsByCanton = useMemo(() => {
-    const counts: { [key: string]: number } = {};
-    mockProfessionals.forEach(professional => {
-      counts[professional.cantonCode] = (counts[professional.cantonCode] || 0) + 1;
-    });
-    return counts;
-  }, [mockProfessionals]);
 
   // Cantons disponibles
   const cantons = [
