@@ -6,7 +6,7 @@ interface Canton {
   code: string;
   name: string;
   capital: string;
-  region: 'Suisse romande' | 'Suisse alÃ©manique' | 'Suisse italienne';
+  region: 'Suisse romande' | 'Suisse alémanique' | 'Suisse italienne';
   professionalCount: number;
   coordinates: { x: number; y: number };
   color: string;
@@ -40,11 +40,11 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
 }) => {
   const [hoveredCanton, setHoveredCanton] = useState<Canton | null>(null);
 
-  // CARTE COMPLÃˆTE DE LA SUISSE - 26 CANTONS AVEC CONTOURS RÃ‰ELS
+  // CARTE COMPLÈTE DE LA SUISSE - 26 CANTONS AVEC CONTOURS RÉELS
   const cantons: Canton[] = [
     // SUISSE ROMANDE (6 cantons)
     {
-      code: 'ge', name: 'GenÃ¨ve', capital: 'GenÃ¨ve', region: 'Suisse romande',
+      code: 'ge', name: 'Genève', capital: 'Genève', region: 'Suisse romande',
       professionalCount: professionalCounts['ge'] || 0, coordinates: { x: 120, y: 520 },
       color: '#e3f2fd',
       pathData: "M 100 500 L 140 500 L 140 540 L 100 540 Z"
@@ -68,129 +68,129 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
       pathData: "M 200 320 L 240 320 L 240 380 L 200 380 Z"
     },
     {
-      code: 'ne', name: 'NeuchÃ¢tel', capital: 'NeuchÃ¢tel', region: 'Suisse romande',
+      code: 'ne', name: 'Neuchâtel', capital: 'Neuchâtel', region: 'Suisse romande',
       professionalCount: professionalCounts['ne'] || 0, coordinates: { x: 200, y: 280 },
       color: '#e3f2fd',
       pathData: "M 180 260 L 220 260 L 220 300 L 180 300 Z"
     },
     {
-      code: 'ju', name: 'Jura', capital: 'DelÃ©mont', region: 'Suisse romande',
+      code: 'ju', name: 'Jura', capital: 'Delémont', region: 'Suisse romande',
       professionalCount: professionalCounts['ju'] || 0, coordinates: { x: 240, y: 220 },
       color: '#e3f2fd',
       pathData: "M 220 200 L 260 200 L 260 240 L 220 240 Z"
     },
     
-    // SUISSE ALÃ‰MANIQUE (15 cantons)
+    // SUISSE ALÉMANIQUE (15 cantons)
     {
-      code: 'zh', name: 'Zurich', capital: 'Zurich', region: 'Suisse alÃ©manique',
+      code: 'zh', name: 'Zurich', capital: 'Zurich', region: 'Suisse alémanique',
       professionalCount: professionalCounts['zh'] || 0, coordinates: { x: 480, y: 280 },
       color: '#fff3e0',
       pathData: "M 460 260 L 500 260 L 500 300 L 460 300 Z"
     },
     {
-      code: 'be', name: 'Berne', capital: 'Berne', region: 'Suisse alÃ©manique',
+      code: 'be', name: 'Berne', capital: 'Berne', region: 'Suisse alémanique',
       professionalCount: professionalCounts['be'] || 0, coordinates: { x: 320, y: 320 },
       color: '#fff3e0',
       pathData: "M 300 300 L 340 300 L 340 340 L 300 340 Z"
     },
     {
-      code: 'lu', name: 'Lucerne', capital: 'Lucerne', region: 'Suisse alÃ©manique',
+      code: 'lu', name: 'Lucerne', capital: 'Lucerne', region: 'Suisse alémanique',
       professionalCount: professionalCounts['lu'] || 0, coordinates: { x: 380, y: 320 },
       color: '#fff3e0',
       pathData: "M 360 300 L 400 300 L 400 340 L 360 340 Z"
     },
     {
-      code: 'ur', name: 'Uri', capital: 'Altdorf', region: 'Suisse alÃ©manique',
+      code: 'ur', name: 'Uri', capital: 'Altdorf', region: 'Suisse alémanique',
       professionalCount: professionalCounts['ur'] || 0, coordinates: { x: 400, y: 380 },
       color: '#fff3e0',
       pathData: "M 380 360 L 420 360 L 420 400 L 380 400 Z"
     },
     {
-      code: 'sz', name: 'Schwytz', capital: 'Schwytz', region: 'Suisse alÃ©manique',
+      code: 'sz', name: 'Schwytz', capital: 'Schwytz', region: 'Suisse alémanique',
       professionalCount: professionalCounts['sz'] || 0, coordinates: { x: 440, y: 360 },
       color: '#fff3e0',
       pathData: "M 420 340 L 460 340 L 460 380 L 420 380 Z"
     },
     {
-      code: 'ow', name: 'Obwald', capital: 'Sarnen', region: 'Suisse alÃ©manique',
+      code: 'ow', name: 'Obwald', capital: 'Sarnen', region: 'Suisse alémanique',
       professionalCount: professionalCounts['ow'] || 0, coordinates: { x: 380, y: 360 },
       color: '#fff3e0',
       pathData: "M 360 340 L 400 340 L 400 380 L 360 380 Z"
     },
     {
-      code: 'nw', name: 'Nidwald', capital: 'Stans', region: 'Suisse alÃ©manique',
+      code: 'nw', name: 'Nidwald', capital: 'Stans', region: 'Suisse alémanique',
       professionalCount: professionalCounts['nw'] || 0, coordinates: { x: 400, y: 340 },
       color: '#fff3e0',
       pathData: "M 380 320 L 420 320 L 420 360 L 380 360 Z"
     },
     {
-      code: 'gl', name: 'Glaris', capital: 'Glaris', region: 'Suisse alÃ©manique',
+      code: 'gl', name: 'Glaris', capital: 'Glaris', region: 'Suisse alémanique',
       professionalCount: professionalCounts['gl'] || 0, coordinates: { x: 520, y: 320 },
       color: '#fff3e0',
       pathData: "M 500 300 L 540 300 L 540 340 L 500 340 Z"
     },
     {
-      code: 'zg', name: 'Zoug', capital: 'Zoug', region: 'Suisse alÃ©manique',
+      code: 'zg', name: 'Zoug', capital: 'Zoug', region: 'Suisse alémanique',
       professionalCount: professionalCounts['zg'] || 0, coordinates: { x: 420, y: 300 },
       color: '#fff3e0',
       pathData: "M 400 280 L 440 280 L 440 320 L 400 320 Z"
     },
     {
-      code: 'so', name: 'Soleure', capital: 'Soleure', region: 'Suisse alÃ©manique',
+      code: 'so', name: 'Soleure', capital: 'Soleure', region: 'Suisse alémanique',
       professionalCount: professionalCounts['so'] || 0, coordinates: { x: 280, y: 240 },
       color: '#fff3e0',
       pathData: "M 260 220 L 300 220 L 300 260 L 260 260 Z"
     },
     {
-      code: 'bs', name: 'BÃ¢le-Ville', capital: 'BÃ¢le', region: 'Suisse alÃ©manique',
+      code: 'bs', name: 'Bâle-Ville', capital: 'Bâle', region: 'Suisse alémanique',
       professionalCount: professionalCounts['bs'] || 0, coordinates: { x: 280, y: 180 },
       color: '#fff3e0',
       pathData: "M 260 160 L 300 160 L 300 200 L 260 200 Z"
     },
     {
-      code: 'bl', name: 'BÃ¢le-Campagne', capital: 'Liestal', region: 'Suisse alÃ©manique',
+      code: 'bl', name: 'Bâle-Campagne', capital: 'Liestal', region: 'Suisse alémanique',
       professionalCount: professionalCounts['bl'] || 0, coordinates: { x: 320, y: 200 },
       color: '#fff3e0',
       pathData: "M 300 180 L 340 180 L 340 220 L 300 220 Z"
     },
     {
-      code: 'sh', name: 'Schaffhouse', capital: 'Schaffhouse', region: 'Suisse alÃ©manique',
+      code: 'sh', name: 'Schaffhouse', capital: 'Schaffhouse', region: 'Suisse alémanique',
       professionalCount: professionalCounts['sh'] || 0, coordinates: { x: 480, y: 180 },
       color: '#fff3e0',
       pathData: "M 460 160 L 500 160 L 500 200 L 460 200 Z"
     },
     {
-      code: 'ar', name: 'Appenzell R.-E.', capital: 'Herisau', region: 'Suisse alÃ©manique',
+      code: 'ar', name: 'Appenzell R.-E.', capital: 'Herisau', region: 'Suisse alémanique',
       professionalCount: professionalCounts['ar'] || 0, coordinates: { x: 580, y: 220 },
       color: '#fff3e0',
       pathData: "M 560 200 L 600 200 L 600 240 L 560 240 Z"
     },
     {
-      code: 'ai', name: 'Appenzell R.-I.', capital: 'Appenzell', region: 'Suisse alÃ©manique',
+      code: 'ai', name: 'Appenzell R.-I.', capital: 'Appenzell', region: 'Suisse alémanique',
       professionalCount: professionalCounts['ai'] || 0, coordinates: { x: 600, y: 240 },
       color: '#fff3e0',
       pathData: "M 580 220 L 620 220 L 620 260 L 580 260 Z"
     },
     {
-      code: 'sg', name: 'Saint-Gall', capital: 'Saint-Gall', region: 'Suisse alÃ©manique',
+      code: 'sg', name: 'Saint-Gall', capital: 'Saint-Gall', region: 'Suisse alémanique',
       professionalCount: professionalCounts['sg'] || 0, coordinates: { x: 560, y: 280 },
       color: '#fff3e0',
       pathData: "M 540 260 L 580 260 L 580 300 L 540 300 Z"
     },
     {
-      code: 'gr', name: 'Grisons', capital: 'Coire', region: 'Suisse alÃ©manique',
+      code: 'gr', name: 'Grisons', capital: 'Coire', region: 'Suisse alémanique',
       professionalCount: professionalCounts['gr'] || 0, coordinates: { x: 640, y: 400 },
       color: '#fff3e0',
       pathData: "M 620 380 L 660 380 L 660 420 L 620 420 Z"
     },
     {
-      code: 'ag', name: 'Argovie', capital: 'Aarau', region: 'Suisse alÃ©manique',
+      code: 'ag', name: 'Argovie', capital: 'Aarau', region: 'Suisse alémanique',
       professionalCount: professionalCounts['ag'] || 0, coordinates: { x: 380, y: 240 },
       color: '#fff3e0',
       pathData: "M 360 220 L 400 220 L 400 260 L 360 260 Z"
     },
     {
-      code: 'tg', name: 'Thurgovie', capital: 'Frauenfeld', region: 'Suisse alÃ©manique',
+      code: 'tg', name: 'Thurgovie', capital: 'Frauenfeld', region: 'Suisse alémanique',
       professionalCount: professionalCounts['tg'] || 0, coordinates: { x: 520, y: 200 },
       color: '#fff3e0',
       pathData: "M 500 180 L 540 180 L 540 220 L 500 220 Z"
@@ -217,24 +217,24 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
     if (count >= 15) return '#4caf50'; // Vert - Objectif atteint
     if (count >= 10) return '#ff9800'; // Orange - Bon niveau
     if (count >= 5) return '#f44336';  // Rouge - Niveau faible
-    return '#9e9e9e'; // Gris - TrÃ¨s faible/aucun
+    return '#9e9e9e'; // Gris - Très faible/aucun
   };
 
   const getStatusText = (count: number) => {
-    if (count >= 15) return 'âœ… Objectif atteint';
-    if (count >= 10) return 'ðŸŸ¡ Bon niveau';
-    if (count >= 5) return 'ðŸ”´ Niveau faible';
-    return 'âš« TrÃ¨s faible';
+    if (count >= 15) return '✅ Objectif atteint';
+    if (count >= 10) return '🟡 Bon niveau';
+    if (count >= 5) return '🔴 Niveau faible';
+    return '⚫ Très faible';
   };
 
   return (
     <Box>
-      {/* LÃ©gende */}
+      {/* Légende */}
       <Box sx={{ mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-        <Chip label="âœ… 15+ professionnels" sx={{ backgroundColor: '#4caf50', color: 'white' }} size="small" />
-        <Chip label="ðŸŸ¡ 10-14 professionnels" sx={{ backgroundColor: '#ff9800', color: 'white' }} size="small" />
-        <Chip label="ðŸ”´ 5-9 professionnels" sx={{ backgroundColor: '#f44336', color: 'white' }} size="small" />
-        <Chip label="âš« < 5 professionnels" sx={{ backgroundColor: '#9e9e9e', color: 'white' }} size="small" />
+        <Chip label="✅ 15+ professionnels" sx={{ backgroundColor: '#4caf50', color: 'white' }} size="small" />
+        <Chip label="🟡 10-14 professionnels" sx={{ backgroundColor: '#ff9800', color: 'white' }} size="small" />
+        <Chip label="🔴 5-9 professionnels" sx={{ backgroundColor: '#f44336', color: 'white' }} size="small" />
+        <Chip label="⚫ < 5 professionnels" sx={{ backgroundColor: '#9e9e9e', color: 'white' }} size="small" />
       </Box>
 
       <MapContainer>
@@ -247,7 +247,7 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
             transition: 'all 0.3s ease'
           }}
         >
-          {/* Contour de la Suisse (gÃ©omÃ©trie rÃ©elle) */}
+          {/* Contour de la Suisse (géométrie réelle) */}
           <path
             d="M 50 100 L 150 80 L 250 60 L 350 70 L 450 90 L 550 120 L 650 150 L 700 200 L 720 250 L 700 300 L 650 350 L 550 400 L 450 450 L 350 480 L 250 500 L 150 480 L 50 450 L 30 400 L 20 350 L 30 300 L 50 250 L 70 200 L 50 100 Z"
             fill="#f0f0f0"
@@ -255,10 +255,10 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
             strokeWidth="2"
           />
           
-          {/* 26 CANTONS SUISSES AVEC CONTOURS RÃ‰ELS */}
+          {/* 26 CANTONS SUISSES AVEC CONTOURS RÉELS */}
           {cantons.map((canton) => (
             <g key={canton.code}>
-              {/* Contour RÃ‰EL du canton */}
+              {/* Contour RÉEL du canton */}
               <path
                 d={canton.pathData}
                 fill={selectedCanton === canton.code ? '#1976d2' : getColorByCount(canton.professionalCount)}
@@ -323,7 +323,7 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
                 Capital: {hoveredCanton.capital}
               </Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
-                RÃ©gion: {hoveredCanton.region}
+                Région: {hoveredCanton.region}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
                 <Typography variant="body1" fontWeight="bold">
@@ -343,7 +343,7 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
         )}
       </MapContainer>
 
-      {/* Informations du canton sÃ©lectionnÃ© */}
+      {/* Informations du canton sélectionné */}
       {selectedCanton && selectedCanton !== 'all' && (
         <Box sx={{ mt: 2 }}>
           {(() => {
@@ -352,14 +352,14 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
               <Card sx={{ backgroundColor: '#e3f2fd' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    ðŸ“ Canton sÃ©lectionnÃ©: {canton.name}
+                    📍 Canton sélectionné: {canton.name}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                     <Typography variant="body2">
                       <strong>Capital:</strong> {canton.capital}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>RÃ©gion:</strong> {canton.region}
+                      <strong>Région:</strong> {canton.region}
                     </Typography>
                     <Typography variant="body2">
                       <strong>Professionnels:</strong> {canton.professionalCount}
@@ -384,4 +384,3 @@ const InteractiveSwissMap: React.FC<InteractiveSwissMapProps> = ({
 };
 
 export default InteractiveSwissMap;
-
