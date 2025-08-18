@@ -38,6 +38,8 @@ import {
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
 import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
+import InteractiveSwissMap from '../components/InteractiveSwissMap';
+import MapSection from '../components/MapSection';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -82,6 +84,13 @@ const Ressources: React.FC = () => {
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
+
+  // Calculer le nombre de professionnels par canton pour la carte
+  const professionalCountsByCanton = allProfessionals.reduce((acc, professional) => {
+    const canton = professional.cantonCode;
+    acc[canton] = (acc[canton] || 0) + 1;
+    return acc;
+  }, {} as { [key: string]: number });
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -134,27 +143,14 @@ const Ressources: React.FC = () => {
             </Typography>
           </Alert>
 
-          {/* Carte interactive suisse fonctionnelle */}
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                mb: 2 
-              }}>
-                <Typography variant="h6" color="primary">
-                  🇨🇭 Base de Données Exhaustive Suisse
-                </Typography>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {professionals.length} / {stats.total} professionnels trouvés
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Tous les 26 cantons • {stats.byRegion.romande + stats.byRegion.alemanique + stats.byRegion.italienne} régions
-                  </Typography>
-                </Box>
-              </Box>
+          {/* Section carte interactive complète */}
+          <MapSection
+            professionals={professionals}
+            stats={stats}
+            selectedCanton={selectedCanton}
+            setSelectedCanton={setSelectedCanton}
+            professionalCountsByCanton={professionalCountsByCanton}
+          />
 
               {/* Carte interactive simplifiée mais fonctionnelle */}
               <Box sx={{ 
