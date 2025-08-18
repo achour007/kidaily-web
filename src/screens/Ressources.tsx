@@ -244,11 +244,11 @@ const Ressources: React.FC = () => {
               />
               {specialties.map((specialty) => (
                 <Chip
-                  key={specialty.code}
+                  key={specialty.id}
                   label={specialty.name}
-                  onClick={() => setSelectedSpecialty(specialty.code)}
-                  color={selectedSpecialty === specialty.code ? 'primary' : 'default'}
-                  variant={selectedSpecialty === specialty.code ? 'filled' : 'outlined'}
+                  onClick={() => setSelectedSpecialty(specialty.id)}
+                  color={selectedSpecialty === specialty.id ? 'primary' : 'default'}
+                  variant={selectedSpecialty === specialty.id ? 'filled' : 'outlined'}
                 />
               ))}
             </Box>
