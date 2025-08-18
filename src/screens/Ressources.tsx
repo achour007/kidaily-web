@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -39,7 +39,6 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
 
-  // Données simulées pour les professionnels
   const mockProfessionals = useMemo(() => [
     {
       id: 'ge-hug-001',
@@ -80,50 +79,9 @@ const Ressources: React.FC = () => {
       insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
       openingHours: 'Lun-Ven: 9h-17h',
       emergencyContact: true
-    },
-    {
-      id: 'zh-usz-001',
-      name: 'Dr. Anna Schmidt',
-      specialty: 'Neurologie',
-      cantonCode: 'zh',
-      canton: 'Zurich',
-      city: 'Zurich',
-      institution: 'USZ - Universitätsspital Zürich',
-      acceptsNewPatients: true,
-      rating: 4.9,
-      reviews: 156,
-      phone: '+41 44 255 11 11',
-      email: 'anna.schmidt@usz.ch',
-      website: 'https://www.usz.ch',
-      description: 'Neurologue pédiatrique spécialisée en troubles du développement',
-      languages: ['Allemand', 'Anglais', 'Français'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 8h-17h',
-      emergencyContact: true
-    },
-    {
-      id: 'be-insel-001',
-      name: 'Dr. Hans Müller',
-      specialty: 'Cardiologie',
-      cantonCode: 'be',
-      canton: 'Berne',
-      city: 'Berne',
-      institution: 'Inselspital Bern',
-      acceptsNewPatients: true,
-      rating: 4.7,
-      reviews: 98,
-      phone: '+41 31 632 21 11',
-      email: 'hans.mueller@insel.ch',
-      website: 'https://www.insel.ch',
-      description: 'Cardiologue pédiatrique spécialisé en cardiopathies congénitales',
-      languages: ['Allemand', 'Français', 'Anglais'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 8h-18h',
-      emergencyContact: true
     }
   ], []);
 
-  // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
     return mockProfessionals.filter(professional => {
       const matchesSearch = professional.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,7 +94,6 @@ const Ressources: React.FC = () => {
     });
   }, [mockProfessionals, searchTerm, selectedCanton, selectedSpecialty]);
 
-  // Statistiques
   const stats = {
     totalProfessionals: 390,
     cantonsCovered: 26,
@@ -144,50 +101,17 @@ const Ressources: React.FC = () => {
     avgPerCanton: 15
   };
 
-  // Cantons disponibles
   const cantons = [
     { code: 'ge', name: 'Genève' },
     { code: 'vd', name: 'Vaud' },
     { code: 'zh', name: 'Zurich' },
-    { code: 'be', name: 'Berne' },
-    { code: 'fr', name: 'Fribourg' },
-    { code: 'ag', name: 'Argovie' },
-    { code: 'bl', name: 'Bâle-Campagne' },
-    { code: 'bs', name: 'Bâle-Ville' },
-    { code: 'gr', name: 'Grisons' },
-    { code: 'ju', name: 'Jura' },
-    { code: 'lu', name: 'Lucerne' },
-    { code: 'ne', name: 'Neuchâtel' },
-    { code: 'sg', name: 'Saint-Gall' },
-    { code: 'sh', name: 'Schaffhouse' },
-    { code: 'so', name: 'Soleure' },
-    { code: 'ti', name: 'Tessin' },
-    { code: 'tg', name: 'Thurgovie' },
-    { code: 'vs', name: 'Valais' },
-    { code: 'zg', name: 'Zoug' },
-    { code: 'ar', name: 'Appenzell Rhodes-Extérieures' },
-    { code: 'ai', name: 'Appenzell Rhodes-Intérieures' },
-    { code: 'gl', name: 'Glaris' },
-    { code: 'nw', name: 'Nidwald' },
-    { code: 'ow', name: 'Obwald' },
-    { code: 'sz', name: 'Schwytz' },
-    { code: 'ur', name: 'Uri' }
+    { code: 'be', name: 'Berne' }
   ];
 
-  // Spécialités disponibles
   const specialties = [
     { id: 'pediatrie', name: 'Pédiatrie', count: 45 },
     { id: 'orthopedie', name: 'Orthopédie', count: 38 },
-    { id: 'neurologie', name: 'Neurologie', count: 32 },
-    { id: 'cardiologie', name: 'Cardiologie', count: 28 },
-    { id: 'dermatologie', name: 'Dermatologie', count: 25 },
-    { id: 'ophtalmologie', name: 'Ophtalmologie', count: 22 },
-    { id: 'psychiatrie', name: 'Psychiatrie', count: 35 },
-    { id: 'chirurgie', name: 'Chirurgie', count: 30 },
-    { id: 'rehabilitation', name: 'Rééducation', count: 20 },
-    { id: 'nutrition', name: 'Nutrition', count: 18 },
-    { id: 'allergologie', name: 'Allergologie', count: 15 },
-    { id: 'endocrinologie', name: 'Endocrinologie', count: 12 }
+    { id: 'neurologie', name: 'Neurologie', count: 32 }
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -200,7 +124,6 @@ const Ressources: React.FC = () => {
         Ressources Médicales Suisses
       </Typography>
 
-      {/* Statistiques générales */}
       <Paper elevation={2} sx={{ p: 3, mb: 3, bgcolor: '#f8f9fa' }}>
         <Typography variant="h6" gutterBottom>
           📊 Aperçu des Ressources
@@ -226,30 +149,9 @@ const Ressources: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="success.main">
-                {stats.specialtiesAvailable}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Spécialités
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ textAlign: 'center', p: 2 }}>
-              <Typography variant="h4" color="warning.main">
-                {stats.avgPerCanton}+
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Par canton
-              </Typography>
-            </Box>
-          </Grid>
         </Grid>
       </Paper>
 
-      {/* Onglets */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange} aria-label="Ressources médicales">
           <Tab label="PROFESSIONNELS" />
@@ -258,10 +160,8 @@ const Ressources: React.FC = () => {
         </Tabs>
       </Box>
 
-      {/* Contenu des onglets */}
       {activeTab === 0 && (
         <Box>
-          {/* Filtres */}
           <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} md={4}>
@@ -296,27 +196,9 @@ const Ressources: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Spécialité</InputLabel>
-                  <Select
-                    value={selectedSpecialty}
-                    onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    label="Spécialité"
-                  >
-                    <MenuItem value="all">Toutes les spécialités</MenuItem>
-                    {specialties.map((specialty) => (
-                      <MenuItem key={specialty.id} value={specialty.name}>
-                        {specialty.name} ({specialty.count})
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
             </Grid>
           </Paper>
 
-          {/* Liste des professionnels */}
           <Grid container spacing={3}>
             {filteredProfessionals.map((professional) => (
               <Grid item xs={12} md={6} lg={4} key={professional.id}>
@@ -431,7 +313,6 @@ const Ressources: React.FC = () => {
             <Typography variant="body1">
               🗺️ <strong>Carte Interactive en Développement</strong><br />
               La carte interactive avec géolocalisation des professionnels sera bientôt disponible.
-              Elle permettra de visualiser tous les professionnels sur une carte de la Suisse.
             </Typography>
           </Alert>
 
@@ -473,42 +354,6 @@ const Ressources: React.FC = () => {
               <Typography>
                 Les délais varient selon la spécialité et la région. Pour les urgences,
                 contactez directement l\'hôpital ou appelez le 144.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion>
-            <AccordionSummary expandIcon={<Typography>+</Typography>}>
-              <Typography variant="h6">Comment savoir si un professionnel accepte ma caisse maladie ?</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Chaque professionnel affiche les caisses maladie acceptées.
-                Vous pouvez également contacter directement votre caisse maladie pour vérifier.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion>
-            <AccordionSummary expandIcon={<Typography>+</Typography>}>
-              <Typography variant="h6">Que faire en cas d\'urgence ?</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                En cas d\'urgence, appelez immédiatement le 144 (ambulance) ou le 117 (police).
-                Rendez-vous aux urgences de l\'hôpital le plus proche.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-
-          <Accordion>
-            <AccordionSummary expandIcon={<Typography>+</Typography>}>
-              <Typography variant="h6">Comment trouver un professionnel parlant ma langue ?</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Utilisez les filtres de recherche pour trouver des professionnels parlant votre langue.
-                La plupart des professionnels parlent plusieurs langues.
               </Typography>
             </AccordionDetails>
           </Accordion>
