@@ -37,7 +37,7 @@ import {
 } from '@mui/icons-material';
 import { SwissHealthcareData } from '../data/swissHealthcareProfessionals';
 import { ProfessionalSwissDatabase } from '../data/professionalSwissDatabase';
-import { MassiveSwissDatabase } from '../data/massiveSwissDatabase';
+import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -46,10 +46,10 @@ const Ressources: React.FC = () => {
   const [selectedCanton, setSelectedCanton] = useState('all');
   const [acceptsNewOnly, setAcceptsNewOnly] = useState(false);
 
-  // Utiliser la base de données MASSIVE (120+ spécialistes GARANTIS)
+  // Utiliser la base de données ULTRA MASSIVE (390+ spécialistes GARANTIS - 15+ par canton)
   const specialties = ProfessionalSwissDatabase.getSpecialties();
   const cantons = ProfessionalSwissDatabase.getCantons();
-  const allProfessionals = MassiveSwissDatabase.getAllProfessionals();
+  const allProfessionals = UltraMassiveSwissDatabase.getAllProfessionals();
   
   // Filtrage avancé
   let professionals = allProfessionals;
@@ -77,8 +77,8 @@ const Ressources: React.FC = () => {
     );
   }
   
-  // Statistiques de la base massive
-  const stats = MassiveSwissDatabase.getStatistics();
+  // Statistiques de la base ultra massive
+  const stats = UltraMassiveSwissDatabase.getStatistics();
 
   // Utiliser la FAQ suisse
   const faqItems = SwissHealthcareData.getSwissFAQ();
@@ -309,36 +309,36 @@ const Ressources: React.FC = () => {
       {activeTab === 1 && (
         <Box>
           {/* Statistiques professionnelles */}
-          <Alert severity="success" sx={{ mb: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              🏥 Base de Données Professionnelle Suisse Exhaustive
+                  <Alert severity="success" sx={{ mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            🎯 Base de Données ULTRA MASSIVE Suisse - 15+ par Canton GARANTI
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+            <Typography variant="body2">
+              <strong>{stats.total}</strong> spécialistes certifiés
             </Typography>
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-              <Typography variant="body2">
-                <strong>{stats.total}</strong> spécialistes certifiés
-              </Typography>
-              <Typography variant="body2">
-                <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
-              </Typography>
-              <Typography variant="body2">
-                <strong>{stats.emergency || 0}</strong> services d'urgence
-              </Typography>
-              <Typography variant="body2">
-                <strong>🌍</strong> Couverture exhaustive
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
-              <Typography variant="body2">
-                <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
-              </Typography>
-              <Typography variant="body2">
-                <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
-              </Typography>
-              <Typography variant="body2">
-                <strong>🇨🇭 Cantons:</strong> Tous les 26 cantons suisses
-              </Typography>
-            </Box>
-          </Alert>
+            <Typography variant="body2">
+              <strong>{stats.acceptingNew}</strong> acceptent nouveaux patients
+            </Typography>
+            <Typography variant="body2">
+              <strong>{stats.emergency || 0}</strong> services d'urgence
+            </Typography>
+            <Typography variant="body2">
+              <strong>✅ {stats.guaranteedMinimum}+</strong> par canton minimum
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', mt: 1 }}>
+            <Typography variant="body2">
+              <strong>📍 Régions:</strong> Romande ({stats.byRegion.romande}) • Alémanique ({stats.byRegion.alemanique}) • Italienne ({stats.byRegion.italienne})
+            </Typography>
+            <Typography variant="body2">
+              <strong>🏥 Spécialités:</strong> {stats.bySpecialty.length} domaines couverts
+            </Typography>
+            <Typography variant="body2">
+              <strong>🇨🇭 Cantons:</strong> Tous les {stats.cantons} cantons suisses (moyenne: {stats.averagePerCanton}/canton)
+            </Typography>
+          </Box>
+        </Alert>
 
           {/* Filtres avancés */}
           <Box sx={{ mb: 3 }}>
