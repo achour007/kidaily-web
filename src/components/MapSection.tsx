@@ -1,4 +1,4 @@
-Ôªøimport React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -77,18 +77,18 @@ const MapSection: React.FC<MapSectionProps> = ({
   const [hoveredCanton, setHoveredCanton] = useState<string | null>(null);
 
   const cantons = [
-    { code: 'ge', name: 'Gen√®ve', path: 'M 50 150 L 80 150 L 80 180 L 50 180 Z', x: 65, y: 165 },
+    { code: 'ge', name: 'GenËve', path: 'M 50 150 L 80 150 L 80 180 L 50 180 Z', x: 65, y: 165 },
     { code: 'vd', name: 'Vaud', path: 'M 30 120 L 80 120 L 80 150 L 30 150 Z', x: 55, y: 135 },
     { code: 'zh', name: 'Zurich', path: 'M 120 80 L 160 80 L 160 120 L 120 120 Z', x: 140, y: 100 },
     { code: 'be', name: 'Berne', path: 'M 80 80 L 120 80 L 120 120 L 80 120 Z', x: 100, y: 100 },
     { code: 'fr', name: 'Fribourg', path: 'M 60 100 L 90 100 L 90 130 L 60 130 Z', x: 75, y: 115 },
     { code: 'ag', name: 'Argovie', path: 'M 100 60 L 140 60 L 140 100 L 100 100 Z', x: 120, y: 80 },
-    { code: 'bl', name: 'B√¢le-Campagne', path: 'M 140 40 L 180 40 L 180 80 L 140 80 Z', x: 160, y: 60 },
-    { code: 'bs', name: 'B√¢le-Ville', path: 'M 180 40 L 200 40 L 200 80 L 180 80 Z', x: 190, y: 60 },
+    { code: 'bl', name: 'B‚le-Campagne', path: 'M 140 40 L 180 40 L 180 80 L 140 80 Z', x: 160, y: 60 },
+    { code: 'bs', name: 'B‚le-Ville', path: 'M 180 40 L 200 40 L 200 80 L 180 80 Z', x: 190, y: 60 },
     { code: 'gr', name: 'Grisons', path: 'M 180 120 L 220 120 L 220 180 L 180 180 Z', x: 200, y: 150 },
     { code: 'ju', name: 'Jura', path: 'M 80 40 L 120 40 L 120 80 L 80 80 Z', x: 100, y: 60 },
     { code: 'lu', name: 'Lucerne', path: 'M 100 100 L 130 100 L 130 130 L 100 130 Z', x: 115, y: 115 },
-    { code: 'ne', name: 'Neuch√¢tel', path: 'M 70 80 L 100 80 L 100 110 L 70 110 Z', x: 85, y: 95 },
+    { code: 'ne', name: 'Neuch‚tel', path: 'M 70 80 L 100 80 L 100 110 L 70 110 Z', x: 85, y: 95 },
     { code: 'sg', name: 'Saint-Gall', path: 'M 160 100 L 190 100 L 190 140 L 160 140 Z', x: 175, y: 120 },
     { code: 'sh', name: 'Schaffhouse', path: 'M 140 80 L 170 80 L 170 120 L 140 120 Z', x: 155, y: 100 },
     { code: 'so', name: 'Soleure', path: 'M 90 60 L 120 60 L 120 90 L 90 90 Z', x: 105, y: 75 },
@@ -96,8 +96,8 @@ const MapSection: React.FC<MapSectionProps> = ({
     { code: 'tg', name: 'Thurgovie', path: 'M 140 120 L 170 120 L 170 150 L 140 150 Z', x: 155, y: 135 },
     { code: 'vs', name: 'Valais', path: 'M 40 160 L 80 160 L 80 200 L 40 200 Z', x: 60, y: 180 },
     { code: 'zg', name: 'Zoug', path: 'M 110 120 L 130 120 L 130 140 L 110 140 Z', x: 120, y: 130 },
-    { code: 'ar', name: 'Appenzell Rhodes-Ext√©rieures', path: 'M 170 120 L 190 120 L 190 140 L 170 140 Z', x: 180, y: 130 },
-    { code: 'ai', name: 'Appenzell Rhodes-Int√©rieures', path: 'M 180 120 L 200 120 L 200 140 L 180 140 Z', x: 190, y: 130 },
+    { code: 'ar', name: 'Appenzell Rhodes-ExtÈrieures', path: 'M 170 120 L 190 120 L 190 140 L 170 140 Z', x: 180, y: 130 },
+    { code: 'ai', name: 'Appenzell Rhodes-IntÈrieures', path: 'M 180 120 L 200 120 L 200 140 L 180 140 Z', x: 190, y: 130 },
     { code: 'gl', name: 'Glaris', path: 'M 130 100 L 150 100 L 150 120 L 130 120 Z', x: 140, y: 110 },
     { code: 'nw', name: 'Nidwald', path: 'M 110 100 L 125 100 L 125 115 L 110 115 Z', x: 117.5, y: 107.5 },
     { code: 'ow', name: 'Obwald', path: 'M 100 100 L 115 100 L 115 115 L 100 115 Z', x: 107.5, y: 107.5 },
@@ -129,7 +129,7 @@ const MapSection: React.FC<MapSectionProps> = ({
     <Box>
       <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid #e0e0e0' }}>
         <Typography variant="h6" gutterBottom>
-          ÔøΩÔøΩÔ∏è Carte Interactive des Cantons Suisses
+          Carte Interactive des Cantons Suisses
         </Typography>
         <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 2 }}>
           <Chip 
@@ -151,7 +151,7 @@ const MapSection: React.FC<MapSectionProps> = ({
         
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant="body2" color="text.secondary">
-            L√©gende:
+            LÈgende:
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{ width: 16, height: 16, bgcolor: '#4caf50', borderRadius: '2px' }} />
@@ -207,7 +207,7 @@ const MapSection: React.FC<MapSectionProps> = ({
       {selectedCanton !== 'all' && (
         <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid #e0e0e0' }}>
           <Typography variant="h6" gutterBottom>
-            ÔøΩÔøΩ Canton s√©lectionn√©: {cantons.find(c => c.code === selectedCanton)?.name}
+            Canton sÈlectionnÈ: {cantons.find(c => c.code === selectedCanton)?.name}
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <Chip 
@@ -215,7 +215,7 @@ const MapSection: React.FC<MapSectionProps> = ({
               color="primary" 
             />
             <Chip 
-              label={`${professionals.filter(p => p.cantonCode === selectedCanton).length} r√©sultats filtr√©s`} 
+              label={`${professionals.filter(p => p.cantonCode === selectedCanton).length} rÈsultats filtrÈs`} 
               color="secondary" 
             />
           </Box>
@@ -224,8 +224,8 @@ const MapSection: React.FC<MapSectionProps> = ({
 
       <Alert severity="info" sx={{ mt: 2 }}>
         <Typography variant="body2">
-          üí° <strong>Comment utiliser la carte :</strong> Cliquez sur un canton pour le s√©lectionner et filtrer les professionnels. 
-          Cliquez √† nouveau pour d√©s√©lectionner. Les couleurs indiquent le nombre de professionnels disponibles.
+          Comment utiliser la carte : Cliquez sur un canton pour le sÈlectionner et filtrer les professionnels. 
+          Cliquez ‡ nouveau pour dÈsÈlectionner. Les couleurs indiquent le nombre de professionnels disponibles.
         </Typography>
       </Alert>
     </Box>
