@@ -39,10 +39,7 @@ interface SimplifiedProfessional {
   insuranceAccepted: string[];
   address: string;
   postalCode: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
+  coordinates: { lat: number; lng: number; };
 }
 
 const Ressources: React.FC = () => {
