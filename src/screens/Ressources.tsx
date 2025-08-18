@@ -1,30 +1,4 @@
 ﻿import React, { useState, useEffect } from 'react';
-interface ComprehensiveProfessional {
-  id: string;
-  name: string;
-  canton: string;
-  cantonCode: string;
-  city: string;
-  specialties: string[];
-  phone: string;
-  email: string;
-  website?: string;
-  acceptsNewPatients: boolean;
-  languages: string[];
-  experience: number;
-  education: string[];
-  certifications: string[];
-  insuranceAccepted: string[];
-  consultationFee: number;
-  availability: string[];
-  address: string;
-  postalCode: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
 import { 
   Box, 
   Typography, 
@@ -53,6 +27,32 @@ import {
   Language as LanguageIcon
 } from '@mui/icons-material';
 import { UltraMassiveSwissDatabase } from '../data/ultraMassiveSwissDatabase';
+
+interface ComprehensiveProfessional {
+  id: string;
+  name: string;
+  canton: string;
+  cantonCode: string;
+  city: string;
+  specialties: string[];
+  phone: string;
+  email: string;
+  website?: string;
+  acceptsNewPatients: boolean;
+  languages: string[];
+  experience: number;
+  education: string[];
+  certifications: string[];
+  insuranceAccepted: string[];
+  consultationFee: number;
+  availability: string[];
+  address: string;
+  postalCode: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 const Ressources = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -95,7 +95,7 @@ const Ressources = () => {
     setFilteredProfessionals(filtered);
   }, [professionals, selectedCanton, selectedSpecialty, acceptsNewOnly, searchTerm]);
 
-  const getSpecialtyIcon = (specialty) => {
+  const getSpecialtyIcon = (specialty: string) => {
     switch (specialty.toLowerCase()) {
       case 'pédiatrie développement':
       case 'pediatrie developpement':
@@ -116,7 +116,7 @@ const Ressources = () => {
     }
   };
 
-  const getSpecialtyColor = (specialty) => {
+  const getSpecialtyColor = (specialty: string) => {
     switch (specialty.toLowerCase()) {
       case 'pédiatrie développement':
       case 'pediatrie developpement':
