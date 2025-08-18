@@ -37,7 +37,6 @@ const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('all');
-  const [selectedSpecialty, setSelectedSpecialty] = useState('all');
 
   const mockProfessionals = useMemo(() => [
     {
@@ -88,11 +87,10 @@ const Ressources: React.FC = () => {
                            professional.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            professional.city.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCanton = selectedCanton === 'all' || professional.cantonCode === selectedCanton;
-      const matchesSpecialty = selectedSpecialty === 'all' || professional.specialty === selectedSpecialty;
       
-      return matchesSearch && matchesCanton && matchesSpecialty;
+      return matchesSearch && matchesCanton;
     });
-  }, [mockProfessionals, searchTerm, selectedCanton, selectedSpecialty]);
+  }, [mockProfessionals, searchTerm, selectedCanton]);
 
   const stats = {
     totalProfessionals: 390,
@@ -106,12 +104,6 @@ const Ressources: React.FC = () => {
     { code: 'vd', name: 'Vaud' },
     { code: 'zh', name: 'Zurich' },
     { code: 'be', name: 'Berne' }
-  ];
-
-  const specialties = [
-    { id: 'pediatrie', name: 'Pédiatrie', count: 45 },
-    { id: 'orthopedie', name: 'Orthopédie', count: 38 },
-    { id: 'neurologie', name: 'Neurologie', count: 32 }
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
