@@ -138,7 +138,7 @@ const Ressources: React.FC = () => {
           </Alert>
 
           {/* Section carte interactive complÃ¨te */}
-          <MapSection
+          <
             professionals={professionals}
             stats={stats}
             selectedCanton={selectedCanton}
