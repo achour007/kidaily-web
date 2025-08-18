@@ -32,12 +32,36 @@ import {
   Email as EmailIcon,
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
+import InteractiveMap from '../components/InteractiveMap';
+
+interface Professional {
+  id: string;
+  name: string;
+  specialty: string;
+  cantonCode: string;
+  canton: string;
+  city: string;
+  institution: string;
+  coordinates: { lat: number; lng: number };
+  acceptsNewPatients: boolean;
+  rating: number;
+  reviews: number;
+  phone: string;
+  email: string;
+  website: string;
+  description: string;
+  languages: string[];
+  insuranceAccepted: string[];
+  openingHours: string;
+  emergencyContact: boolean;
+}
 
 const Ressources: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('all');
 
+  // Données simulées pour les professionnels avec coordonnées
   const mockProfessionals = useMemo(() => [
     {
       id: 'ge-hug-001',
@@ -47,6 +71,7 @@ const Ressources: React.FC = () => {
       canton: 'Genève',
       city: 'Genève',
       institution: 'HUG - Hôpital Universitaire de Genève',
+      coordinates: { lat: 46.2044, lng: 6.1432 },
       acceptsNewPatients: true,
       rating: 4.8,
       reviews: 127,
@@ -67,6 +92,7 @@ const Ressources: React.FC = () => {
       canton: 'Vaud',
       city: 'Lausanne',
       institution: 'CHUV - Centre Hospitalier Universitaire Vaudois',
+      coordinates: { lat: 46.5197, lng: 6.6323 },
       acceptsNewPatients: false,
       rating: 4.6,
       reviews: 89,
@@ -78,9 +104,52 @@ const Ressources: React.FC = () => {
       insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
       openingHours: 'Lun-Ven: 9h-17h',
       emergencyContact: true
+    },
+    {
+      id: 'zh-usz-001',
+      name: 'Dr. Anna Schmidt',
+      specialty: 'Neurologie',
+      cantonCode: 'zh',
+      canton: 'Zurich',
+      city: 'Zurich',
+      institution: 'USZ - Universitätsspital Zürich',
+      coordinates: { lat: 47.3769, lng: 8.5417 },
+      acceptsNewPatients: true,
+      rating: 4.9,
+      reviews: 156,
+      phone: '+41 44 255 11 11',
+      email: 'anna.schmidt@usz.ch',
+      website: 'https://www.usz.ch',
+      description: 'Neurologue pédiatrique spécialisée en troubles du développement',
+      languages: ['Allemand', 'Anglais', 'Français'],
+      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
+      openingHours: 'Lun-Ven: 8h-17h',
+      emergencyContact: true
+    },
+    {
+      id: 'be-insel-001',
+      name: 'Dr. Hans Müller',
+      specialty: 'Cardiologie',
+      cantonCode: 'be',
+      canton: 'Berne',
+      city: 'Berne',
+      institution: 'Inselspital Bern',
+      coordinates: { lat: 46.9479, lng: 7.4474 },
+      acceptsNewPatients: true,
+      rating: 4.7,
+      reviews: 98,
+      phone: '+41 31 632 21 11',
+      email: 'hans.mueller@insel.ch',
+      website: 'https://www.insel.ch',
+      description: 'Cardiologue pédiatrique spécialisé en cardiopathies congénitales',
+      languages: ['Allemand', 'Français', 'Anglais'],
+      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
+      openingHours: 'Lun-Ven: 8h-18h',
+      emergencyContact: true
     }
   ], []);
 
+  // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
     return mockProfessionals.filter(professional => {
       const matchesSearch = professional.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -92,6 +161,7 @@ const Ressources: React.FC = () => {
     });
   }, [mockProfessionals, searchTerm, selectedCanton]);
 
+  // Statistiques
   const stats = {
     totalProfessionals: 390,
     cantonsCovered: 26,
@@ -99,6 +169,7 @@ const Ressources: React.FC = () => {
     avgPerCanton: 15
   };
 
+  // Cantons disponibles
   const cantons = [
     { code: 'ge', name: 'Genève' },
     { code: 'vd', name: 'Vaud' },
@@ -116,6 +187,7 @@ const Ressources: React.FC = () => {
         Ressources Médicales Suisses
       </Typography>
 
+      {/* Statistiques générales */}
       <Paper elevation={2} sx={{ p: 3, mb: 3, bgcolor: '#f8f9fa' }}>
         <Typography variant="h6" gutterBottom>
           📊 Aperçu des Ressources
@@ -141,9 +213,30 @@ const Ressources: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: 2 }}>
+              <Typography variant="h4" color="success.main">
+                {stats.specialtiesAvailable}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Spécialités
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box sx={{ textAlign: 'center', p: 2 }}>
+              <Typography variant="h4" color="warning.main">
+                {stats.avgPerCanton}+
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Par canton
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
       </Paper>
 
+      {/* Onglets */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange} aria-label="Ressources médicales">
           <Tab label="PROFESSIONNELS" />
@@ -152,8 +245,10 @@ const Ressources: React.FC = () => {
         </Tabs>
       </Box>
 
+      {/* Contenu des onglets */}
       {activeTab === 0 && (
         <Box>
+          {/* Filtres */}
           <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} md={4}>
@@ -191,6 +286,7 @@ const Ressources: React.FC = () => {
             </Grid>
           </Paper>
 
+          {/* Liste des professionnels */}
           <Grid container spacing={3}>
             {filteredProfessionals.map((professional) => (
               <Grid item xs={12} md={6} lg={4} key={professional.id}>
@@ -300,24 +396,11 @@ const Ressources: React.FC = () => {
       )}
 
       {activeTab === 1 && (
-        <Box>
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body1">
-              🗺️ <strong>Carte Interactive en Développement</strong><br />
-              La carte interactive avec géolocalisation des professionnels sera bientôt disponible.
-            </Typography>
-          </Alert>
-
-          <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom>
-              🚧 Fonctionnalité en Cours de Développement
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Notre équipe travaille actuellement sur l\'implémentation d\'une carte interactive
-              qui affichera tous les professionnels de santé avec leur géolocalisation précise.
-            </Typography>
-          </Paper>
-        </Box>
+        <InteractiveMap
+          professionals={mockProfessionals}
+          selectedCanton={selectedCanton}
+          setSelectedCanton={setSelectedCanton}
+        />
       )}
 
       {activeTab === 2 && (
@@ -346,6 +429,42 @@ const Ressources: React.FC = () => {
               <Typography>
                 Les délais varient selon la spécialité et la région. Pour les urgences,
                 contactez directement l\'hôpital ou appelez le 144.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion>
+            <AccordionSummary expandIcon={<Typography>+</Typography>}>
+              <Typography variant="h6">Comment savoir si un professionnel accepte ma caisse maladie ?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Chaque professionnel affiche les caisses maladie acceptées.
+                Vous pouvez également contacter directement votre caisse maladie pour vérifier.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion>
+            <AccordionSummary expandIcon={<Typography>+</Typography>}>
+              <Typography variant="h6">Que faire en cas d\'urgence ?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                En cas d\'urgence, appelez immédiatement le 144 (ambulance) ou le 117 (police).
+                Rendez-vous aux urgences de l\'hôpital le plus proche.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion>
+            <AccordionSummary expandIcon={<Typography>+</Typography>}>
+              <Typography variant="h6">Comment trouver un professionnel parlant ma langue ?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Utilisez les filtres de recherche pour trouver des professionnels parlant votre langue.
+                La plupart des professionnels parlent plusieurs langues.
               </Typography>
             </AccordionDetails>
           </Accordion>
