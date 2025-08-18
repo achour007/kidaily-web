@@ -96,7 +96,6 @@ const Ressources: React.FC = () => {
   const [selectedProfessional, setSelectedProfessional] = useState<ComprehensiveProfessional | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Données statiques pour les cantons et spécialités
   const cantons = [
     { code: 'ge', name: 'Genève', region: 'Suisse romande' },
     { code: 'vd', name: 'Vaud', region: 'Suisse romande' },
@@ -141,7 +140,6 @@ const Ressources: React.FC = () => {
     { id: 'dermatologist', name: 'Dermatologue', description: 'Spécialiste de la peau' }
   ];
 
-  // Statistiques simulées
   const stats = {
     totalProfessionals: 390,
     cantonsCovered: 26,
@@ -149,20 +147,16 @@ const Ressources: React.FC = () => {
     avgPerCanton: 15
   };
 
-  // Données simulées de professionnels (exemple pour quelques cantons)
   const mockProfessionals: ComprehensiveProfessional[] = [
-    // Genève
     {
       id: 'ge-001', name: 'Dr. Marie Dubois', specialty: 'Pédiatre', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'HUG - Hôpital Universitaire de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: true, rating: 4.8, reviews: 127, phone: '+41 22 372 33 11', email: 'marie.dubois@hug.ch', website: 'https://www.hug.ch', description: 'Pédiatre spécialisée dans le développement de l\'enfant', languages: ['Français', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 8h-18h'
     },
     {
       id: 'ge-002', name: 'Dr. Jean-Luc Martin', specialty: 'Psychologue', cantonCode: 'ge', canton: 'Genève', city: 'Genève', institution: 'Centre Médical de Genève', coordinates: { lat: 46.2044, lng: 6.1432 }, acceptsNewPatients: false, rating: 4.6, reviews: 89, phone: '+41 22 789 45 67', email: 'jl.martin@cmg.ch', website: 'https://www.cmg.ch', description: 'Psychologue spécialisé dans les troubles du comportement', languages: ['Français', 'Allemand'], insurance: ['LAMal'], availability: 'Mar-Sam 9h-17h'
     },
-    // Vaud
     {
       id: 'vd-001', name: 'Dr. Sophie Laurent', specialty: 'Orthophoniste', cantonCode: 'vd', canton: 'Vaud', city: 'Lausanne', institution: 'CHUV - Centre Hospitalier Universitaire Vaudois', coordinates: { lat: 46.5197, lng: 6.6323 }, acceptsNewPatients: true, rating: 4.9, reviews: 156, phone: '+41 21 314 11 11', email: 'sophie.laurent@chuv.ch', website: 'https://www.chuv.ch', description: 'Orthophoniste expérimentée dans les troubles du langage', languages: ['Français', 'Anglais', 'Italien'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Ven 7h30-19h'
     },
-    // Zurich
     {
       id: 'zh-001', name: 'Dr. Hans Mueller', specialty: 'Pédiatre', cantonCode: 'zh', canton: 'Zurich', city: 'Zurich', institution: 'Universitäts-Kinderspital Zürich', coordinates: { lat: 47.3769, lng: 8.5417 }, acceptsNewPatients: true, rating: 4.7, reviews: 203, phone: '+41 44 266 71 11', email: 'hans.mueller@kispi.uzh.ch', website: 'https://www.kispi.uzh.ch', description: 'Pédiatre spécialisé dans la néonatologie', languages: ['Allemand', 'Anglais'], insurance: ['LAMal', 'Swisscare'], availability: 'Lun-Dim 24h/24'
     }
@@ -177,7 +171,7 @@ const Ressources: React.FC = () => {
     let filtered = professionals;
 
     if (searchTerm) {
-      filtered = filtered.filter(prof => 
+      filtered = filtered.filter(prof =>
         prof.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prof.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prof.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -207,14 +201,14 @@ const Ressources: React.FC = () => {
   };
 
   const professionalCountsByCanton = cantons.reduce((acc, canton) => {
-    acc[canton.code] = Math.floor(Math.random() * 20) + 10; // 10-30 professionnels par canton
+    acc[canton.code] = Math.floor(Math.random() * 20) + 10;
     return acc;
   }, {} as { [key: string]: number });
 
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-        �� Ressources de Santé en Suisse
+        Ressources de Santé en Suisse
       </Typography>
 
       <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ mb: 3 }}>
@@ -454,7 +448,7 @@ const Ressources: React.FC = () => {
                 )}
                 {selectedProfessional.website && (
                   <Typography variant="body2" paragraph>
-                    <strong>Site web :</strong> 
+                    <strong>Site web :</strong>
                     <a href={selectedProfessional.website} target="_blank" rel="noopener noreferrer">
                       {selectedProfessional.website}
                     </a>
