@@ -35,6 +35,7 @@ import {
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
 import InteractiveMap from '../components/InteractiveMap';
+import { GenevaDatabase } from '../data/GenevaDatabase';
 
 const Ressources: React.FC = () => {
   const theme = useTheme();
@@ -43,99 +44,15 @@ const Ressources: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCanton, setSelectedCanton] = useState('all');
+  const [selectedCanton, setSelectedCanton] = useState('ge'); // Par défaut Genève
 
-  // Données simulées pour les professionnels avec coordonnées
-  const mockProfessionals = useMemo(() => [
-    {
-      id: 'ge-hug-001',
-      name: 'Dr. Marie Dubois',
-      specialty: 'Pédiatrie',
-      cantonCode: 'ge',
-      canton: 'Genève',
-      city: 'Genève',
-      institution: 'HUG - Hôpital Universitaire de Genève',
-      coordinates: { lat: 46.2044, lng: 6.1432 },
-      acceptsNewPatients: true,
-      rating: 4.8,
-      reviews: 127,
-      phone: '+41 22 372 33 11',
-      email: 'marie.dubois@hug.ch',
-      website: 'https://www.hug.ch',
-      description: 'Pédiatre spécialisée en développement de l\'enfant',
-      languages: ['Français', 'Anglais'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 8h-18h',
-      emergencyContact: true
-    },
-    {
-      id: 'vd-chuv-001',
-      name: 'Dr. Pierre Martin',
-      specialty: 'Orthopédie',
-      cantonCode: 'vd',
-      canton: 'Vaud',
-      city: 'Lausanne',
-      institution: 'CHUV - Centre Hospitalier Universitaire Vaudois',
-      coordinates: { lat: 46.5197, lng: 6.6323 },
-      acceptsNewPatients: false,
-      rating: 4.6,
-      reviews: 89,
-      phone: '+41 21 314 11 11',
-      email: 'pierre.martin@chuv.ch',
-      website: 'https://www.chuv.ch',
-      description: 'Orthopédiste spécialisé en traumatologie pédiatrique',
-      languages: ['Français', 'Allemand'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 9h-17h',
-      emergencyContact: true
-    },
-    {
-      id: 'zh-usz-001',
-      name: 'Dr. Anna Schmidt',
-      specialty: 'Neurologie',
-      cantonCode: 'zh',
-      canton: 'Zurich',
-      city: 'Zurich',
-      institution: 'USZ - Universitätsspital Zürich',
-      coordinates: { lat: 47.3769, lng: 8.5417 },
-      acceptsNewPatients: true,
-      rating: 4.9,
-      reviews: 156,
-      phone: '+41 44 255 11 11',
-      email: 'anna.schmidt@usz.ch',
-      website: 'https://www.usz.ch',
-      description: 'Neurologue pédiatrique spécialisée en troubles du développement',
-      languages: ['Allemand', 'Anglais', 'Français'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 8h-17h',
-      emergencyContact: true
-    },
-    {
-      id: 'be-insel-001',
-      name: 'Dr. Hans Müller',
-      specialty: 'Cardiologie',
-      cantonCode: 'be',
-      canton: 'Berne',
-      city: 'Berne',
-      institution: 'Inselspital Bern',
-      coordinates: { lat: 46.9479, lng: 7.4474 },
-      acceptsNewPatients: true,
-      rating: 4.7,
-      reviews: 98,
-      phone: '+41 31 632 21 11',
-      email: 'hans.mueller@insel.ch',
-      website: 'https://www.insel.ch',
-      description: 'Cardiologue pédiatrique spécialisé en cardiopathies congénitales',
-      languages: ['Allemand', 'Français', 'Anglais'],
-      insuranceAccepted: ['CSS', 'Swica', 'Concordia'],
-      openingHours: 'Lun-Ven: 8h-18h',
-      emergencyContact: true
-    }
-  ], []);
+  // Utiliser la vraie base de données Genève
+  const allProfessionals = useMemo(() => GenevaDatabase.getAllProfessionals(), []);
+  const genevaStats = useMemo(() => GenevaDatabase.getStatistics(), []);
 
   // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
-    return mockProfessionals.filter(professional => {
+    return allProfessionals.filter(professional => {
       const matchesSearch = professional.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            professional.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            professional.city.toLowerCase().includes(searchTerm.toLowerCase());
@@ -143,22 +60,19 @@ const Ressources: React.FC = () => {
       
       return matchesSearch && matchesCanton;
     });
-  }, [mockProfessionals, searchTerm, selectedCanton]);
+  }, [allProfessionals, searchTerm, selectedCanton]);
 
-  // Statistiques
+  // Statistiques mises à jour
   const stats = {
-    totalProfessionals: 390,
-    cantonsCovered: 26,
-    specialtiesAvailable: 12,
-    avgPerCanton: 15
+    totalProfessionals: genevaStats.totalProfessionals,
+    cantonsCovered: 1, // Pour l\'instant seulement Genève
+    specialtiesAvailable: genevaStats.specialtiesAvailable,
+    avgPerCanton: genevaStats.totalProfessionals
   };
 
-  // Cantons disponibles
+  // Cantons disponibles (pour l\'instant seulement Genève)
   const cantons = [
-    { code: 'ge', name: 'Genève' },
-    { code: 'vd', name: 'Vaud' },
-    { code: 'zh', name: 'Zurich' },
-    { code: 'be', name: 'Berne' }
+    { code: 'ge', name: 'Genève' }
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -168,19 +82,19 @@ const Ressources: React.FC = () => {
   return (
     <Box sx={{ p: isMobile ? 2 : 3 }}>
       <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ color: '#1976d2', mb: 3 }}>
-        Ressources Médicales Suisses
+        Ressources Médicales Suisses - Genève
       </Typography>
 
-      {/* Statistiques générales - Responsive */}
+      {/* Statistiques générales - Mises à jour */}
       <Paper elevation={2} sx={{ p: isMobile ? 2 : 3, mb: 3, bgcolor: '#f8f9fa' }}>
         <Typography variant="h6" gutterBottom>
-          📊 Aperçu des Ressources
+          📊 Aperçu des Ressources - Canton de Genève
         </Typography>
         <Grid container spacing={isMobile ? 1 : 2}>
           <Grid item xs={6} sm={6} md={3}>
             <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
               <Typography variant={isMobile ? "h5" : "h4"} color="primary">
-                {stats.totalProfessionals}+
+                {stats.totalProfessionals}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Professionnels
@@ -193,7 +107,7 @@ const Ressources: React.FC = () => {
                 {stats.cantonsCovered}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Cantons couverts
+                Canton couvert
               </Typography>
             </Box>
           </Grid>
@@ -210,17 +124,17 @@ const Ressources: React.FC = () => {
           <Grid item xs={6} sm={6} md={3}>
             <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
               <Typography variant={isMobile ? "h5" : "h4"} color="warning.main">
-                {stats.avgPerCanton}+
+                {genevaStats.acceptsNewPatients}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Par canton
+                Nouveaux patients
               </Typography>
             </Box>
           </Grid>
         </Grid>
       </Paper>
 
-      {/* Onglets - Responsive */}
+      {/* Onglets */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs 
           value={activeTab} 
@@ -238,10 +152,10 @@ const Ressources: React.FC = () => {
       {/* Contenu des onglets */}
       {activeTab === 0 && (
         <Box>
-          {/* Filtres - Responsive */}
+          {/* Filtres */}
           <Paper elevation={1} sx={{ p: isMobile ? 1.5 : 2, mb: 3 }}>
             <Grid container spacing={isMobile ? 1.5 : 2} alignItems="center">
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   placeholder="Rechercher un professionnel..."
@@ -257,7 +171,7 @@ const Ressources: React.FC = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                   <InputLabel>Canton</InputLabel>
                   <Select
@@ -277,7 +191,7 @@ const Ressources: React.FC = () => {
             </Grid>
           </Paper>
 
-          {/* Liste des professionnels - Responsive */}
+          {/* Liste des professionnels */}
           <Grid container spacing={isMobile ? 2 : 3}>
             {filteredProfessionals.map((professional) => (
               <Grid item xs={12} sm={6} lg={4} key={professional.id}>
@@ -320,7 +234,7 @@ const Ressources: React.FC = () => {
                     </Box>
 
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {professional.description}
+                      {professional.specialty} - {professional.institution}
                     </Typography>
 
                     <Box sx={{ mb: 2 }}>
@@ -328,15 +242,15 @@ const Ressources: React.FC = () => {
                         <strong>Institution:</strong> {professional.institution}
                       </Typography>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Horaires:</strong> {professional.openingHours}
+                        <strong>Disponibilité:</strong> {professional.availability || 'Non spécifié'}
                       </Typography>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        <strong>Langues:</strong> {professional.languages.join(', ')}
+                        <strong>Langues:</strong> {professional.languages ? professional.languages.join(', ') : 'Non spécifié'}
                       </Typography>
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                      {professional.insuranceAccepted.map((insurance) => (
+                      {professional.insurance && professional.insurance.map((insurance) => (
                         <Chip
                           key={insurance}
                           label={insurance}
@@ -391,7 +305,7 @@ const Ressources: React.FC = () => {
 
       {activeTab === 1 && (
         <InteractiveMap
-          professionals={mockProfessionals}
+          professionals={allProfessionals}
           selectedCanton={selectedCanton}
           setSelectedCanton={setSelectedCanton}
         />
