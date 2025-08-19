@@ -129,7 +129,8 @@ const MapControls: React.FC<{
   onFullscreen: () => void;
   onReset: () => void;
   isMobile: boolean;
-}> = ({ onZoomIn, onZoomOut, onFullscreen, onReset, isMobile }) => {
+  isFullscreen: boolean;
+}> = ({ onZoomIn, onZoomOut, onFullscreen, onReset, isMobile, isFullscreen }) => {
   return (
     <Box
       sx={{
@@ -168,13 +169,17 @@ const MapControls: React.FC<{
         </IconButton>
       </MuiTooltip>
       
-      <MuiTooltip title="Plein écran" placement="left">
+      <MuiTooltip title={isFullscreen ? "Quitter le plein écran" : "Plein écran"} placement="left">
         <IconButton
           onClick={onFullscreen}
           sx={{
-            bgcolor: 'white',
+            bgcolor: isFullscreen ? 'rgba(76, 175, 80, 0.9)' : 'white',
             boxShadow: 2,
-            '&:hover': { bgcolor: 'grey.100' },
+            '&:hover': { 
+              bgcolor: isFullscreen ? 'rgba(76, 175, 80, 1)' : 'grey.100' 
+            },
+            color: isFullscreen ? 'white' : 'inherit',
+            transition: 'all 0.2s ease-in-out'
           }}
         >
           <FullscreenIcon />
@@ -800,6 +805,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           onFullscreen={handleFullscreen}
           onReset={handleReset}
           isMobile={isMobile}
+          isFullscreen={isFullscreen}
         />
       </Paper>
 
