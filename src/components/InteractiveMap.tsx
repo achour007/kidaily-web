@@ -93,33 +93,43 @@ const cantonCoordinates: Record<string, {
   name: string;
   population: number;
   area: number;
+  capital: string;
+  region: string;
+  languages: string[];
 }> = {
-  'ge': { lat: 46.2044, lng: 6.1432, name: 'Genève', population: 500000, area: 282 },
-  'vd': { lat: 46.5197, lng: 6.6323, name: 'Vaud', population: 800000, area: 3212 },
-  'zh': { lat: 47.3769, lng: 8.5417, name: 'Zurich', population: 1500000, area: 1729 },
-  'be': { lat: 46.9479, lng: 7.4474, name: 'Berne', population: 1000000, area: 5959 },
-  'fr': { lat: 46.8065, lng: 7.1619, name: 'Fribourg', population: 320000, area: 1671 },
-  'ag': { lat: 47.3904, lng: 8.0454, name: 'Argovie', population: 680000, area: 1404 },
-  'bl': { lat: 47.4419, lng: 7.7644, name: 'Bâle-Campagne', population: 290000, area: 518 },
-  'bs': { lat: 47.5596, lng: 7.5886, name: 'Bâle-Ville', population: 200000, area: 37 },
-  'gr': { lat: 46.6569, lng: 9.5784, name: 'Grisons', population: 200000, area: 7105 },
-  'ju': { lat: 47.3444, lng: 7.3501, name: 'Jura', population: 73000, area: 838 },
-  'lu': { lat: 47.0502, lng: 8.3093, name: 'Lucerne', population: 410000, area: 1494 },
-  'ne': { lat: 46.9929, lng: 6.9319, name: 'Neuchâtel', population: 180000, area: 803 },
-  'sg': { lat: 47.4245, lng: 9.3767, name: 'Saint-Gall', population: 510000, area: 2026 },
-  'sh': { lat: 47.6969, lng: 8.6370, name: 'Schaffhouse', population: 82000, area: 298 },
-  'so': { lat: 47.2074, lng: 7.5312, name: 'Soleure', population: 275000, area: 790 },
-  'ti': { lat: 46.1707, lng: 8.7957, name: 'Tessin', population: 350000, area: 2812 },
-  'tg': { lat: 47.6038, lng: 9.0554, name: 'Thurgovie', population: 280000, area: 991 },
-  'vs': { lat: 46.1553, lng: 7.5988, name: 'Valais', population: 340000, area: 5224 },
-  'zg': { lat: 47.1662, lng: 8.5155, name: 'Zoug', population: 130000, area: 239 },
-  'ar': { lat: 47.3663, lng: 9.3004, name: 'Appenzell Rhodes-Extérieures', population: 55000, area: 243 },
-  'ai': { lat: 47.3102, lng: 9.4090, name: 'Appenzell Rhodes-Intérieures', population: 16000, area: 173 },
-  'gl': { lat: 46.9812, lng: 9.0658, name: 'Glaris', population: 41000, area: 685 },
-  'nw': { lat: 46.9267, lng: 8.3849, name: 'Nidwald', population: 43000, area: 276 },
-  'ow': { lat: 46.8779, lng: 8.2513, name: 'Obwald', population: 38000, area: 491 },
-  'sz': { lat: 47.0207, lng: 8.6514, name: 'Schwytz', population: 160000, area: 908 },
-  'ur': { lat: 46.7739, lng: 8.5964, name: 'Uri', population: 37000, area: 1077 }
+  // Suisse romande (francophone)
+  'ge': { lat: 46.2044, lng: 6.1432, name: 'Genève', population: 500000, area: 282, capital: 'Genève', region: 'Suisse romande', languages: ['Français'] },
+  'vd': { lat: 46.5197, lng: 6.6323, name: 'Vaud', population: 800000, area: 3212, capital: 'Lausanne', region: 'Suisse romande', languages: ['Français'] },
+  'fr': { lat: 46.8065, lng: 7.1619, name: 'Fribourg', population: 320000, area: 1671, capital: 'Fribourg', region: 'Suisse romande', languages: ['Français', 'Allemand'] },
+  'ju': { lat: 47.3444, lng: 7.3501, name: 'Jura', population: 73000, area: 838, capital: 'Delémont', region: 'Suisse romande', languages: ['Français'] },
+  'ne': { lat: 46.9929, lng: 6.9319, name: 'Neuchâtel', population: 180000, area: 803, capital: 'Neuchâtel', region: 'Suisse romande', languages: ['Français'] },
+  'vs': { lat: 46.1553, lng: 7.5988, name: 'Valais', population: 340000, area: 5224, capital: 'Sion', region: 'Suisse romande', languages: ['Français', 'Allemand'] },
+
+  // Suisse alémanique (germanophone)
+  'zh': { lat: 47.3769, lng: 8.5417, name: 'Zurich', population: 1500000, area: 1729, capital: 'Zurich', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'be': { lat: 46.9479, lng: 7.4474, name: 'Berne', population: 1000000, area: 5959, capital: 'Berne', region: 'Suisse alémanique', languages: ['Allemand', 'Français'] },
+  'ag': { lat: 47.3904, lng: 8.0454, name: 'Argovie', population: 680000, area: 1404, capital: 'Aarau', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'bl': { lat: 47.4419, lng: 7.7644, name: 'Bâle-Campagne', population: 290000, area: 518, capital: 'Liestal', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'bs': { lat: 47.5596, lng: 7.5886, name: 'Bâle-Ville', population: 200000, area: 37, capital: 'Bâle', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'lu': { lat: 47.0502, lng: 8.3093, name: 'Lucerne', population: 410000, area: 1494, capital: 'Lucerne', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'sg': { lat: 47.4245, lng: 9.3767, name: 'Saint-Gall', population: 510000, area: 2026, capital: 'Saint-Gall', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'sh': { lat: 47.6969, lng: 8.6370, name: 'Schaffhouse', population: 82000, area: 298, capital: 'Schaffhouse', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'so': { lat: 47.2074, lng: 7.5312, name: 'Soleure', population: 275000, area: 790, capital: 'Soleure', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'tg': { lat: 47.6038, lng: 9.0554, name: 'Thurgovie', population: 280000, area: 991, capital: 'Frauenfeld', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'zg': { lat: 47.1662, lng: 8.5155, name: 'Zoug', population: 130000, area: 239, capital: 'Zoug', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'ar': { lat: 47.3663, lng: 9.3004, name: 'Appenzell Rhodes-Extérieures', population: 55000, area: 243, capital: 'Herisau', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'ai': { lat: 47.3102, lng: 9.4090, name: 'Appenzell Rhodes-Intérieures', population: 16000, area: 173, capital: 'Appenzell', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'gl': { lat: 46.9812, lng: 9.0658, name: 'Glaris', population: 41000, area: 685, capital: 'Glaris', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'nw': { lat: 46.9267, lng: 8.3849, name: 'Nidwald', population: 43000, area: 276, capital: 'Stans', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'ow': { lat: 46.8779, lng: 8.2513, name: 'Obwald', population: 38000, area: 491, capital: 'Sarnen', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'sz': { lat: 47.0207, lng: 8.6514, name: 'Schwytz', population: 160000, area: 908, capital: 'Schwytz', region: 'Suisse alémanique', languages: ['Allemand'] },
+  'ur': { lat: 46.7739, lng: 8.5964, name: 'Uri', population: 37000, area: 1077, capital: 'Altdorf', region: 'Suisse alémanique', languages: ['Allemand'] },
+
+  // Suisse italienne (italophone)
+  'ti': { lat: 46.1707, lng: 8.7957, name: 'Tessin', population: 350000, area: 2812, capital: 'Bellinzone', region: 'Suisse italienne', languages: ['Italien'] },
+
+  // Suisse rhéto-romane (romanche)
+  'gr': { lat: 46.6569, lng: 9.5784, name: 'Grisons', population: 200000, area: 7105, capital: 'Coire', region: 'Suisse rhéto-romane', languages: ['Allemand', 'Italien', 'Romanche'] }
 };
 
 // Composant pour les contrôles de la carte
@@ -347,8 +357,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const mapRef = useRef<any>(null);
-  const [mapCenter] = useState<LatLngTuple>([46.8182, 8.2275]); // Centre de la Suisse
-  const [mapZoom, setMapZoom] = useState(isMobile ? 7 : 8);
+  // Centre de la Suisse pour couvrir tous les cantons
+  const [mapCenter] = useState<LatLngTuple>([46.8182, 8.2275]); // Centre géographique de la Suisse
+  const [mapZoom, setMapZoom] = useState(isMobile ? 6 : 7); // Zoom plus large pour voir toute la Suisse
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -413,14 +424,21 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     });
   }, [professionals, searchTerm, selectedCanton, filters]);
 
-  // Statistiques mises à jour
-  const stats = useMemo(() => ({
-    totalProfessionals: professionals.length,
-    filteredProfessionals: filteredProfessionals.length,
-    cantonsCovered: Object.keys(cantonCoordinates).length,
-    specialtiesAvailable: specialties.length,
-    avgPerCanton: Math.round(professionals.length / Object.keys(cantonCoordinates).length)
-  }), [professionals, filteredProfessionals, specialties]);
+  // Statistiques mises à jour avec informations linguistiques
+  const stats = useMemo(() => {
+    const regions = [...new Set(Object.values(cantonCoordinates).map(c => c.region))];
+    const allLanguages = [...new Set(Object.values(cantonCoordinates).flatMap(c => c.languages))];
+    
+    return {
+      totalProfessionals: professionals.length,
+      filteredProfessionals: filteredProfessionals.length,
+      cantonsCovered: Object.keys(cantonCoordinates).length,
+      specialtiesAvailable: specialties.length,
+      regionsCovered: regions.length,
+      languagesOfficial: allLanguages.length,
+      avgPerCanton: Math.round(professionals.length / Object.keys(cantonCoordinates).length)
+    };
+  }, [professionals, filteredProfessionals, specialties]);
 
   // Fonctions de contrôle de la carte
   const handleZoomIn = useCallback(() => {
@@ -590,7 +608,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             size={isMobile ? "small" : "medium"}
           />
           <Chip
-            label="Géolocalisation précise"
+            label={`${stats.regionsCovered} régions linguistiques`}
+            color="warning"
+            variant="outlined"
+            size={isMobile ? "small" : "medium"}
+          />
+          <Chip
+            label={`${stats.languagesOfficial} langues officielles`}
             color="success"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
@@ -661,19 +685,53 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                 }}
               >
                 <Popup>
-                  <Box sx={{ minWidth: isMobile ? '200px' : '250px' }}>
+                  <Box sx={{ minWidth: isMobile ? '200px' : '280px' }}>
                     <Typography variant="h6" gutterBottom>
-                      {coords.name}
+                      🏛️ {coords.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      {professionalCount} professionnels
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Population: {coords.population.toLocaleString()}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Superficie: {coords.area} km²
-                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <LocationOnIcon color="primary" fontSize="small" />
+                      <Typography variant="body2" color="primary" fontWeight="medium">
+                        Capitale: {coords.capital}
+                      </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <LanguageIcon color="secondary" fontSize="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        Région: {coords.region}
+                      </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <MedicalIcon color="success" fontSize="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        {professionalCount} professionnels
+                      </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <StarIcon color="warning" fontSize="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        Population: {coords.population.toLocaleString()}
+                      </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <LayersIcon color="info" fontSize="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        Superficie: {coords.area} km²
+                      </Typography>
+                    </Box>
+                    
+                    {/* Langues officielles */}
+                    <Box sx={{ mb: 1 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Langues: {coords.languages.join(', ')}
+                      </Typography>
+                    </Box>
+                    
                     <Chip
                       label={getCantonColor(cantonCode) === '#4caf50' ? '15+ prof.' :
                              getCantonColor(cantonCode) === '#ff9800' ? '10-14 prof.' :
