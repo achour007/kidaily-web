@@ -7,7 +7,7 @@ import {
   Circle,
   Tooltip
 } from 'react-leaflet';
-import { Icon, LatLngTuple } from 'leaflet';
+import { Icon, LatLngTuple } from 'leaflet'; 
 import 'leaflet/dist/leaflet.css';
 import {
   Box,
