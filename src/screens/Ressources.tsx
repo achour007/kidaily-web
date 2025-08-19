@@ -35,7 +35,7 @@ import {
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
 import InteractiveMap from '../components/InteractiveMap';
-import { SwissDatabase } from '../data/GenevaDatabase';
+import { SwissHealthcareDatabase } from '../data/SwissHealthcareDatabase';
 
 const Ressources: React.FC = () => {
   const theme = useTheme();
@@ -46,9 +46,9 @@ const Ressources: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('ge'); // Par défaut Genève
 
-  // Utiliser la base de données suisse complète
-  const allProfessionals = useMemo(() => SwissDatabase.getAllProfessionals(), []);
-  const swissStats = useMemo(() => SwissDatabase.getStats(), []);
+  // Utiliser la base de données suisse réelle et définitive
+  const allProfessionals = useMemo(() => SwissHealthcareDatabase.getAllProfessionals(), []);
+  const swissStats = useMemo(() => SwissHealthcareDatabase.getStats(), []);
 
   // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
