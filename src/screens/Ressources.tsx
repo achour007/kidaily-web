@@ -35,7 +35,7 @@ import {
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
 import InteractiveMap from '../components/InteractiveMap';
-import { GenevaDatabase } from '../data/GenevaDatabase';
+import { SwissDatabase } from '../data/GenevaDatabase';
 
 const Ressources: React.FC = () => {
   const theme = useTheme();
@@ -46,9 +46,9 @@ const Ressources: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('ge'); // Par défaut Genève
 
-  // Utiliser la vraie base de données Genève
-  const allProfessionals = useMemo(() => GenevaDatabase.getAllProfessionals(), []);
-  const genevaStats = useMemo(() => GenevaDatabase.getStatistics(), []);
+  // Utiliser la base de données suisse complète
+  const allProfessionals = useMemo(() => SwissDatabase.getAllProfessionals(), []);
+  const swissStats = useMemo(() => SwissDatabase.getStats(), []);
 
   // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
@@ -62,17 +62,43 @@ const Ressources: React.FC = () => {
     });
   }, [allProfessionals, searchTerm, selectedCanton]);
 
-  // Statistiques mises à jour
+  // Statistiques mises à jour pour toute la Suisse
   const stats = {
-    totalProfessionals: genevaStats.totalProfessionals,
-    cantonsCovered: 1, // Pour l\'instant seulement Genève
-    specialtiesAvailable: genevaStats.specialtiesAvailable,
-    avgPerCanton: genevaStats.totalProfessionals
+    totalProfessionals: swissStats.totalProfessionals,
+    cantonsCovered: swissStats.cantonsCovered,
+    specialtiesAvailable: swissStats.specialtiesAvailable,
+    avgPerCanton: Math.round(swissStats.totalProfessionals / swissStats.cantonsCovered)
   };
 
-  // Cantons disponibles (pour l\'instant seulement Genève)
+  // Cantons disponibles (toute la Suisse)
   const cantons = [
-    { code: 'ge', name: 'Genève' }
+    { code: 'all', name: 'Toute la Suisse' },
+    { code: 'ge', name: 'Genève' },
+    { code: 'vd', name: 'Vaud' },
+    { code: 'fr', name: 'Fribourg' },
+    { code: 'ju', name: 'Jura' },
+    { code: 'ne', name: 'Neuchâtel' },
+    { code: 'vs', name: 'Valais' },
+    { code: 'zh', name: 'Zurich' },
+    { code: 'be', name: 'Berne' },
+    { code: 'ag', name: 'Argovie' },
+    { code: 'bl', name: 'Bâle-Campagne' },
+    { code: 'bs', name: 'Bâle-Ville' },
+    { code: 'lu', name: 'Lucerne' },
+    { code: 'sg', name: 'Saint-Gall' },
+    { code: 'sh', name: 'Schaffhouse' },
+    { code: 'so', name: 'Soleure' },
+    { code: 'tg', name: 'Thurgovie' },
+    { code: 'zg', name: 'Zoug' },
+    { code: 'ar', name: 'Appenzell Rhodes-Extérieures' },
+    { code: 'ai', name: 'Appenzell Rhodes-Intérieures' },
+    { code: 'gl', name: 'Glaris' },
+    { code: 'nw', name: 'Nidwald' },
+    { code: 'ow', name: 'Obwald' },
+    { code: 'sz', name: 'Schwytz' },
+    { code: 'ur', name: 'Uri' },
+    { code: 'ti', name: 'Tessin' },
+    { code: 'gr', name: 'Grisons' }
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -82,13 +108,13 @@ const Ressources: React.FC = () => {
   return (
     <Box sx={{ p: isMobile ? 2 : 3 }}>
       <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ color: '#1976d2', mb: 3 }}>
-        Ressources Médicales Suisses - Genève
+        Ressources Médicales Suisses - Toute la Suisse
       </Typography>
 
       {/* Statistiques générales - Mises à jour */}
       <Paper elevation={2} sx={{ p: isMobile ? 2 : 3, mb: 3, bgcolor: '#f8f9fa' }}>
         <Typography variant="h6" gutterBottom>
-          📊 Aperçu des Ressources - Canton de Genève
+          📊 Aperçu des Ressources - Toute la Suisse
         </Typography>
         <Grid container spacing={isMobile ? 1 : 2}>
           <Grid item xs={6} sm={6} md={3}>
@@ -124,7 +150,7 @@ const Ressources: React.FC = () => {
           <Grid item xs={6} sm={6} md={3}>
             <Box sx={{ textAlign: 'center', p: isMobile ? 1 : 2 }}>
               <Typography variant={isMobile ? "h5" : "h4"} color="warning.main">
-                {genevaStats.acceptsNewPatients}
+                {swissStats.newPatientsAvailable}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Nouveaux patients
