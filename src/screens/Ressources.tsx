@@ -113,25 +113,6 @@ const Ressources: React.FC = () => {
     { code: 'phy', name: 'Physiothérapie pédiatrique' }
   ];
 
-  // Groupes d'âge disponibles
-  const ageGroups = [
-    { code: 'all', name: 'Tous les âges' },
-    { code: '0-2', name: '0-2 ans' },
-    { code: '3-6', name: '3-6 ans' },
-    { code: '7-12', name: '7-12 ans' },
-    { code: '13-18', name: '13-18 ans' }
-  ];
-
-  // Domaines de développement disponibles
-  const developmentalAreas = [
-    { code: 'all', name: 'Tous les domaines' },
-    { code: 'motor', name: 'Développement moteur' },
-    { code: 'language', name: 'Développement du langage' },
-    { code: 'cognitive', name: 'Développement cognitif' },
-    { code: 'social', name: 'Développement social' },
-    { code: 'emotional', name: 'Développement émotionnel' }
-  ];
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
