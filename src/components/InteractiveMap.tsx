@@ -415,7 +415,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   // Filtrage avancé des professionnels
   const filteredProfessionals = useMemo(() => {
-    return professionals.filter(professional => {
+    const filtered = professionals.filter(professional => {
       // Filtre par recherche textuelle
       const matchesSearch = !searchTerm || 
         professional.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -442,6 +442,19 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       return matchesSearch && matchesCanton && matchesSpecialty && 
              matchesRating && matchesNewPatients && matchesLanguages;
     });
+
+    // Debug: Afficher les professionnels de Neuchâtel
+    if (selectedCanton === 'ne') {
+      console.log('🔍 DEBUG NEUCHÂTEL:');
+      console.log('Professionnels totaux:', professionals.length);
+      console.log('Professionnels de Neuchâtel:', professionals.filter(p => p.cantonCode === 'ne').length);
+      console.log('Professionnels filtrés:', filtered.length);
+      console.log('Filtres actifs:', filters);
+      console.log('Recherche:', searchTerm);
+      console.log('Canton sélectionné:', selectedCanton);
+    }
+
+    return filtered;
   }, [professionals, searchTerm, selectedCanton, filters]);
 
   // Statistiques mises à jour avec informations linguistiques
