@@ -145,12 +145,12 @@ const MapControls: React.FC<{
     <Box
       sx={{
         position: 'absolute',
-        top: isMobile ? 10 : 20,
-        right: isMobile ? 10 : 20,
+        top: isMobile ? 8 : 20,
+        right: isMobile ? 8 : 20,
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
-        gap: 1,
+        gap: isMobile ? 0.5 : 1,
       }}
     >
       <MuiTooltip title="Zoom +" placement="left">
@@ -160,6 +160,11 @@ const MapControls: React.FC<{
             bgcolor: 'white',
             boxShadow: 2,
             '&:hover': { bgcolor: 'grey.100' },
+            minWidth: isMobile ? 40 : 48,
+            minHeight: isMobile ? 40 : 48,
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '1.2rem' : '1.5rem'
+            }
           }}
         >
           <ZoomInIcon />
@@ -173,6 +178,11 @@ const MapControls: React.FC<{
             bgcolor: 'white',
             boxShadow: 2,
             '&:hover': { bgcolor: 'grey.100' },
+            minWidth: isMobile ? 40 : 48,
+            minHeight: isMobile ? 40 : 48,
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '1.2rem' : '1.5rem'
+            }
           }}
         >
           <ZoomOutIcon />
@@ -189,7 +199,12 @@ const MapControls: React.FC<{
               bgcolor: isFullscreen ? 'rgba(76, 175, 80, 1)' : 'grey.100' 
             },
             color: isFullscreen ? 'white' : 'inherit',
-            transition: 'all 0.2s ease-in-out'
+            transition: 'all 0.2s ease-in-out',
+            minWidth: isMobile ? 40 : 48,
+            minHeight: isMobile ? 40 : 48,
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '1.2rem' : '1.5rem'
+            }
           }}
         >
           <FullscreenIcon />
@@ -203,6 +218,11 @@ const MapControls: React.FC<{
             bgcolor: 'white',
             boxShadow: 2,
             '&:hover': { bgcolor: 'grey.100' },
+            minWidth: isMobile ? 40 : 48,
+            minHeight: isMobile ? 40 : 48,
+            '& .MuiSvgIcon-root': {
+              fontSize: isMobile ? '1.2rem' : '1.5rem'
+            }
           }}
         >
           <LocationIcon />
@@ -519,8 +539,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   return (
     <Box>
       {/* Barre de recherche et filtres */}
-      <Paper elevation={2} sx={{ mb: 2, p: 2 }}>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+      <Paper elevation={2} sx={{ mb: 2, p: isMobile ? 1.5 : 2 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isMobile ? 1 : 2, 
+          flexWrap: 'wrap', 
+          alignItems: 'center',
+          flexDirection: isMobile ? 'column' : 'row'
+        }}>
           <TextField
             placeholder="Rechercher un professionnel, spécialité, ville..."
             value={searchTerm}
@@ -532,36 +558,60 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                 </InputAdornment>
               ),
             }}
-            sx={{ flexGrow: 1, minWidth: 250 }}
-            size="small"
+            sx={{ 
+              flexGrow: 1, 
+              minWidth: isMobile ? '100%' : 250,
+              width: isMobile ? '100%' : 'auto'
+            }}
+            size={isMobile ? "small" : "small"}
+            fullWidth={isMobile}
           />
           
-          <Button
-            variant="outlined"
-            startIcon={<FilterIcon />}
-            onClick={() => setShowFilters(!showFilters)}
-            size="small"
-          >
-            Filtres
-          </Button>
-          
-          <Button
-            variant="outlined"
-            startIcon={<LayersIcon />}
-            onClick={() => setShowCantonMarkers(!showCantonMarkers)}
-            size="small"
-          >
-            Cantons
-          </Button>
-          
-          <Button
-            variant="outlined"
-            startIcon={<MedicalIcon />}
-            onClick={() => setShowProfessionalMarkers(!showProfessionalMarkers)}
-            size="small"
-          >
-            Professionnels
-          </Button>
+          <Box sx={{ 
+            display: 'flex', 
+            gap: isMobile ? 1 : 2, 
+            flexWrap: 'wrap',
+            width: isMobile ? '100%' : 'auto'
+          }}>
+            <Button
+              variant="outlined"
+              startIcon={<FilterIcon />}
+              onClick={() => setShowFilters(!showFilters)}
+              size={isMobile ? "small" : "small"}
+              sx={{ 
+                flex: isMobile ? 1 : 'none',
+                minHeight: isMobile ? 44 : 'auto'
+              }}
+            >
+              {isMobile ? 'Filtres' : 'Filtres'}
+            </Button>
+            
+            <Button
+              variant="outlined"
+              startIcon={<LayersIcon />}
+              onClick={() => setShowCantonMarkers(!showCantonMarkers)}
+              size={isMobile ? "small" : "small"}
+              sx={{ 
+                flex: isMobile ? 1 : 'none',
+                minHeight: isMobile ? 44 : 'auto'
+              }}
+            >
+              {isMobile ? 'Cantons' : 'Cantons'}
+            </Button>
+            
+            <Button
+              variant="outlined"
+              startIcon={<MedicalIcon />}
+              onClick={() => setShowProfessionalMarkers(!showProfessionalMarkers)}
+              size={isMobile ? "small" : "small"}
+              sx={{ 
+                flex: isMobile ? 1 : 'none',
+                minHeight: isMobile ? 44 : 'auto'
+              }}
+            >
+              {isMobile ? 'Prof.' : 'Professionnels'}
+            </Button>
+          </Box>
         </Box>
       </Paper>
 
@@ -583,65 +633,86 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </Typography>
         
         <Box sx={{ 
-          display: 'flex', 
-          gap: 2, 
-          flexWrap: 'wrap', 
+          display: 'grid', 
+          gap: isMobile ? 1 : 2, 
           mb: 2,
-          flexDirection: isSmallMobile ? 'column' : 'row'
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(150px, 1fr))'
         }}>
           <Chip
-            label={`${stats.filteredProfessionals}/${stats.totalProfessionals} professionnels`}
+            label={`${stats.filteredProfessionals}/${stats.totalProfessionals} prof.`}
             color="primary"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
+            sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}
           />
           <Chip
             label={`${stats.cantonsCovered} cantons`}
             color="secondary"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
+            sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}
           />
           <Chip
             label={`${stats.specialtiesAvailable} spécialités`}
             color="info"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
+            sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}
           />
           <Chip
-            label={`${stats.regionsCovered} régions linguistiques`}
+            label={`${stats.regionsCovered} régions`}
             color="warning"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
+            sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}
           />
           <Chip
-            label={`${stats.languagesOfficial} langues officielles`}
+            label={`${stats.languagesOfficial} langues`}
             color="success"
             variant="outlined"
             size={isMobile ? "small" : "medium"}
+            sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}
           />
         </Box>
 
         {/* Légende des couleurs */}
         <Box sx={{ 
           display: 'flex', 
-          gap: 2, 
+          gap: isMobile ? 1 : 2, 
           flexWrap: 'wrap', 
           alignItems: 'center',
-          flexDirection: isSmallMobile ? 'column' : 'row'
+          flexDirection: isMobile ? 'column' : 'row'
         }}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.875rem' : 'inherit' }}>
             Légende:
           </Typography>
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          <Box sx={{ 
+            display: 'grid', 
+            gap: isMobile ? 0.5 : 1, 
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, auto)',
+            width: isMobile ? '100%' : 'auto'
+          }}>
             {[
               { color: '#4caf50', label: '15+ prof.' },
               { color: '#ff9800', label: '10-14 prof.' },
               { color: '#f44336', label: '5-9 prof.' },
               { color: '#e0e0e0', label: '0-4 prof.' }
             ].map((item) => (
-              <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Box sx={{ width: 16, height: 16, bgcolor: item.color, borderRadius: '2px' }} />
-                <Typography variant="caption">{item.label}</Typography>
+              <Box key={item.label} sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 0.5,
+                justifyContent: isMobile ? 'center' : 'flex-start'
+              }}>
+                <Box sx={{ 
+                  width: isMobile ? 14 : 16, 
+                  height: isMobile ? 14 : 16, 
+                  bgcolor: item.color, 
+                  borderRadius: '2px' 
+                }} />
+                <Typography variant="caption" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
+                  {item.label}
+                </Typography>
               </Box>
             ))}
           </Box>
@@ -685,49 +756,68 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                 }}
               >
                 <Popup>
-                  <Box sx={{ minWidth: isMobile ? '200px' : '280px' }}>
-                    <Typography variant="h6" gutterBottom>
+                  <Box sx={{ 
+                    minWidth: isMobile ? '180px' : '280px',
+                    maxWidth: isMobile ? '250px' : '350px'
+                  }}>
+                    <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom>
                       🏛️ {coords.name}
                     </Typography>
                     
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <LocationOnIcon color="primary" fontSize="small" />
-                      <Typography variant="body2" color="primary" fontWeight="medium">
-                        Capitale: {coords.capital}
-                      </Typography>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      gap: 1, 
+                      mb: 1,
+                      flexDirection: isMobile ? 'column' : 'row',
+                      alignItems: isMobile ? 'flex-start' : 'center'
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isMobile ? 0.5 : 1 }}>
+                        <LocationOnIcon color="primary" fontSize="small" />
+                        <Typography variant="body2" color="primary" fontWeight="medium" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
+                          Capitale: {coords.capital}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isMobile ? 0.5 : 1 }}>
+                        <LanguageIcon color="secondary" fontSize="small" />
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
+                          Région: {coords.region}
+                        </Typography>
+                      </Box>
                     </Box>
                     
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <LanguageIcon color="secondary" fontSize="small" />
-                      <Typography variant="body2" color="text.secondary">
-                        Région: {coords.region}
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <MedicalIcon color="success" fontSize="small" />
-                      <Typography variant="body2" color="text.secondary">
-                        {professionalCount} professionnels
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <StarIcon color="warning" fontSize="small" />
-                      <Typography variant="body2" color="text.secondary">
-                        Population: {coords.population.toLocaleString()}
-                      </Typography>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      gap: 1, 
+                      mb: 1,
+                      flexDirection: isMobile ? 'column' : 'row',
+                      alignItems: isMobile ? 'flex-start' : 'center'
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isMobile ? 0.5 : 1 }}>
+                        <MedicalIcon color="success" fontSize="small" />
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
+                          {professionalCount} professionnels
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isMobile ? 0.5 : 1 }}>
+                        <StarIcon color="warning" fontSize="small" />
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
+                          Population: {coords.population.toLocaleString()}
+                        </Typography>
+                      </Box>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <LayersIcon color="info" fontSize="small" />
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
                         Superficie: {coords.area} km²
                       </Typography>
                     </Box>
                     
                     {/* Langues officielles */}
                     <Box sx={{ mb: 1 }}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: isMobile ? '0.7rem' : 'inherit' }}>
                         Langues: {coords.languages.join(', ')}
                       </Typography>
                     </Box>
@@ -740,7 +830,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                       sx={{
                         bgcolor: getCantonColor(cantonCode),
                         color: 'white',
-                        mt: 1
+                        mt: 1,
+                        fontSize: isMobile ? '0.7rem' : 'inherit'
                       }}
                     />
                   </Box>
