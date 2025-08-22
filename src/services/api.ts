@@ -51,18 +51,27 @@ const getHeaders = (): HeadersInit => {
 
 // Fonction utilitaire pour gérer les réponses
 const handleResponse = async <T>(response: Response): Promise<T> => {
+  console.log('🔍 [API] Response status:', response.status);
+  console.log('🔍 [API] Response ok:', response.ok);
+  console.log('🔍 [API] Response headers:', response.headers);
+  
   if (!response.ok) {
     let errorMessage = 'Une erreur est survenue';
     let errorData = null;
 
     try {
       const errorResponse = await response.json();
+      console.log('🔍 [API] Error response JSON:', errorResponse);
       errorMessage = errorResponse.message || errorResponse.error || errorMessage;
       errorData = errorResponse;
     } catch {
       // Si la réponse n'est pas du JSON, utiliser le texte
+      console.log('🔍 [API] Error response text:', response.statusText);
       errorMessage = response.statusText || errorMessage;
     }
+
+    console.log('🔍 [API] Final error message:', errorMessage);
+    console.log('🔍 [API] Final error data:', errorData);
 
     // Si c'est une erreur 401, nettoyer les tokens
     if (response.status === 401) {

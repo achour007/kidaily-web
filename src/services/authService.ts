@@ -115,6 +115,10 @@ export class AuthService {
       
     } catch (error: any) {
       console.error('❌ [AUTH] Erreur d\'inscription:', error);
+      console.error('❌ [AUTH] Type d\'erreur:', typeof error);
+      console.error('❌ [AUTH] Status d\'erreur:', error.status);
+      console.error('❌ [AUTH] Message d\'erreur:', error.message);
+      console.error('❌ [AUTH] Erreur complète:', error);
       
       // Gestion spécifique des erreurs HTTP
       if (error.status === 404) {
