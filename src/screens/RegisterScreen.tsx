@@ -35,8 +35,9 @@ const RegisterScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useAppSelector((state) => {
-    console.log('🔍 [DEBUG] Store auth state:', { loading, error, isAuthenticated });
-    return state.auth;
+    const authState = state.auth;
+    console.log('🔍 [DEBUG] Store auth state:', authState);
+    return authState;
   });
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
