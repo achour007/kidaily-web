@@ -7,7 +7,7 @@ import {
   Circle,
   Tooltip
 } from 'react-leaflet';
-import { Icon, LatLngTuple } from 'leaflet'; 
+import { Icon, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   Box,
@@ -726,7 +726,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                 <Typography variant="caption" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
                   {item.label}
                 </Typography>
-              </Box>
+            </Box>
             ))}
           </Box>
         </Box>
@@ -760,15 +760,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           {showCantonMarkers && Object.entries(cantonCoordinates).map(([cantonCode, coords]) => {
             const professionalCount = professionals.filter(p => p.cantonCode === cantonCode).length;
             return (
-              <Marker
-                key={cantonCode}
-                position={[coords.lat, coords.lng] as LatLngTuple}
+            <Marker
+              key={cantonCode}
+              position={[coords.lat, coords.lng] as LatLngTuple}
                 icon={getCantonIcon(cantonCode)}
-                eventHandlers={{
-                  click: () => setSelectedCanton(cantonCode === selectedCanton ? 'all' : cantonCode),
-                }}
-              >
-                <Popup>
+              eventHandlers={{
+                click: () => setSelectedCanton(cantonCode === selectedCanton ? 'all' : cantonCode),
+              }}
+            >
+              <Popup>
                   <Box sx={{ 
                     minWidth: isMobile ? '180px' : '280px',
                     maxWidth: isMobile ? '250px' : '350px'
@@ -825,31 +825,31 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                       <LayersIcon color="info" fontSize="small" />
                       <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : 'inherit' }}>
                         Superficie: {coords.area} km²
-                      </Typography>
+                  </Typography>
                     </Box>
                     
                     {/* Langues officielles */}
                     <Box sx={{ mb: 1 }}>
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: isMobile ? '0.7rem' : 'inherit' }}>
                         Langues: {coords.languages.join(', ')}
-                      </Typography>
+                  </Typography>
                     </Box>
                     
-                    <Chip
-                      label={getCantonColor(cantonCode) === '#4caf50' ? '15+ prof.' :
-                             getCantonColor(cantonCode) === '#ff9800' ? '10-14 prof.' :
-                             getCantonColor(cantonCode) === '#f44336' ? '5-9 prof.' : '0-4 prof.'}
-                      size="small"
-                      sx={{
-                        bgcolor: getCantonColor(cantonCode),
-                        color: 'white',
+                  <Chip
+                    label={getCantonColor(cantonCode) === '#4caf50' ? '15+ prof.' :
+                           getCantonColor(cantonCode) === '#ff9800' ? '10-14 prof.' :
+                           getCantonColor(cantonCode) === '#f44336' ? '5-9 prof.' : '0-4 prof.'}
+                    size="small"
+                    sx={{
+                      bgcolor: getCantonColor(cantonCode),
+                      color: 'white',
                         mt: 1,
                         fontSize: isMobile ? '0.7rem' : 'inherit'
-                      }}
-                    />
-                  </Box>
-                </Popup>
-              </Marker>
+                    }}
+                  />
+                </Box>
+              </Popup>
+            </Marker>
             );
           })}
 
@@ -872,15 +872,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                     <MedicalIcon color="primary" fontSize="small" />
                     <Typography variant="body2" color="primary" fontWeight="medium">
-                      {professional.specialty}
-                    </Typography>
+                    {professional.specialty}
+                  </Typography>
                   </Box>
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                     <LocationOnIcon color="action" fontSize="small" />
                     <Typography variant="body2" color="text.secondary">
-                      {professional.city}, {professional.canton}
-                    </Typography>
+                    {professional.city}, {professional.canton}
+                  </Typography>
                   </Box>
                   
                   <Typography variant="body2" gutterBottom>
@@ -903,11 +903,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   )}
                   
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    <Chip
-                      label={professional.acceptsNewPatients ? 'Nouveaux patients' : 'Liste d\'attente'}
-                      color={professional.acceptsNewPatients ? 'success' : 'warning'}
-                      size="small"
-                    />
+                  <Chip
+                    label={professional.acceptsNewPatients ? 'Nouveaux patients' : 'Liste d\'attente'}
+                    color={professional.acceptsNewPatients ? 'success' : 'warning'}
+                    size="small"
+                  />
                     {professional.phone && (
                       <Chip
                         icon={<PhoneIcon />}
