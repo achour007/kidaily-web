@@ -32,6 +32,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useLanguageContext } from '../contexts/LanguageContext';
 import { saveConfiguration, getSavedConfiguration, clearAllConfiguration } from '../utils/setupUtils';
+import HerokuDiagnostic from '../components/HerokuDiagnostic';
 
 /**
  * Écran de configuration initiale pour la sélection de version et de langue
@@ -48,6 +49,7 @@ const SetupScreen: React.FC = () => {
   
   const [selectedLanguage, setSelectedLanguage] = useState(language);
   const [isConfigured, setIsConfigured] = useState(false);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
 
   // Vérifier si la configuration est déjà faite
   useEffect(() => {
@@ -307,16 +309,30 @@ const SetupScreen: React.FC = () => {
             )}
           </Box>
 
-          {/* Message si déjà configuré */}
-          {isConfigured && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              {t.alreadyConfigured || 'Configuration déjà effectuée. Vous pouvez modifier vos choix ci-dessus ou réinitialiser la configuration.'}
-            </Alert>
-          )}
-        </Paper>
-      </Container>
-    </Box>
-  );
-};
+                     {/* Message si déjà configuré */}
+           {isConfigured && (
+             <Alert severity="info" sx={{ mt: 2 }}>
+               {t.alreadyConfigured || 'Configuration déjà effectuée. Vous pouvez modifier vos choix ci-dessus ou réinitialiser la configuration.'}
+             </Alert>
+           )}
+
+           {/* Bouton de diagnostic */}
+           <Box sx={{ mt: 3, textAlign: 'center' }}>
+             <Button
+               variant="outlined"
+               onClick={() => setShowDiagnostic(!showDiagnostic)}
+               sx={{ mb: 2 }}
+             >
+               {showDiagnostic ? 'Masquer le diagnostic' : '🔍 Diagnostic Backend Heroku'}
+             </Button>
+           </Box>
+
+           {/* Composant de diagnostic */}
+           {showDiagnostic && <HerokuDiagnostic />}
+         </Paper>
+       </Container>
+     </Box>
+   );
+ };
 
 export default SetupScreen;

@@ -36,33 +36,58 @@ export interface RefreshTokenResponse {
 
 // Service d'authentification
 export class AuthService {
-  // Connexion utilisateur
+  // Connexion utilisateur - DIAGNOSTIC COMPLET
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await ApiService.post<AuthResponse>('/auth/login', credentials);
+    console.log('🔐 [AUTH] Début de la connexion avec:', credentials.email);
+    console.log('🔐 [AUTH] URL de l\'API:', process.env.REACT_APP_API_URL || 'https://kidaily-backend-cb9a147c3208.herokuapp.com/api');
     
-    // Sauvegarder les tokens si présents dans la réponse
-    if (response.token) {
-      this.saveTokens(response.token, response.refreshToken);
-    }
-
-    // Si une langue est spécifiée, la mettre à jour (après sauvegarde du token)
-    if (credentials.language) {
-      try {
-        await ApiService.put('/users/language', { language: credentials.language });
-        // Sauvegarder la langue dans localStorage
-        localStorage.setItem('selectedLanguage', credentials.language);
-      } catch (error) {
-        console.warn('Erreur lors de la mise à jour de la langue:', error);
-        // Ne pas faire échouer la connexion pour cette erreur
+    try {
+      console.log('🔐 [AUTH] Envoi de la requête POST vers /auth/login');
+      
+      const response = await ApiService.post<AuthResponse>('/auth/login', credentials);
+      
+      console.log('✅ [AUTH] Réponse reçue:', response);
+      
+      // Sauvegarder les tokens si présents dans la réponse
+      if (response.token) {
+        console.log('🔐 [AUTH] Token reçu, sauvegarde...');
+        this.saveTokens(response.token, response.refreshToken);
+      } else {
+        console.warn('⚠️ [AUTH] Aucun token reçu dans la réponse');
       }
-    }
 
-    // Si une version est spécifiée, la sauvegarder
-    if (credentials.version) {
-      localStorage.setItem('selectedVersion', credentials.version);
+      // Si une langue est spécifiée, la mettre à jour
+      if (credentials.language) {
+        try {
+          console.log('🌐 [AUTH] Mise à jour de la langue:', credentials.language);
+          await ApiService.post('/users/language', { language: credentials.language });
+          localStorage.setItem('selectedLanguage', credentials.language);
+          console.log('✅ [AUTH] Langue mise à jour avec succès');
+        } catch (error) {
+          console.warn('⚠️ [AUTH] Erreur lors de la mise à jour de la langue:', error);
+          // Ne pas faire échouer la connexion pour cette erreur
+        }
+      }
+
+      // Si une version est spécifiée, la sauvegarder
+      if (credentials.version) {
+        console.log('📱 [AUTH] Sauvegarde de la version:', credentials.version);
+        localStorage.setItem('selectedVersion', credentials.version);
+      }
+      
+      console.log('🎉 [AUTH] Connexion réussie pour:', credentials.email);
+      return response;
+      
+    } catch (error: any) {
+      console.error('❌ [AUTH] Erreur de connexion:', error);
+      console.error('❌ [AUTH] Type d\'erreur:', typeof error);
+      console.error('❌ [AUTH] Message d\'erreur:', error.message);
+      console.error('❌ [AUTH] Status d\'erreur:', error.status);
+      console.error('❌ [AUTH] Stack trace:', error.stack);
+      
+      // Relancer l'erreur pour que le composant puisse la gérer
+      throw error;
     }
-    
-    return response;
   }
 
   // Inscription utilisateur
@@ -96,6 +121,12 @@ export class AuthService {
   // Vérifier si l'utilisateur est connecté
   static isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
+    
+    // En mode développement, accepter les tokens simulés
+    if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+      return !!token && (token.startsWith('dev-token-') || token.startsWith('Bearer '));
+    }
+    
     return !!token;
   }
 
