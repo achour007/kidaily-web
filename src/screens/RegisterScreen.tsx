@@ -237,7 +237,7 @@ const RegisterScreen: React.FC = () => {
                     textTransform: 'uppercase'
                   }}
                 >
-                  ⚠️ Erreur d'inscription
+                                     ⚠️ Difficulté technique détectée
                 </Typography>
                 <Typography 
                   variant="body1" 
@@ -254,9 +254,9 @@ const RegisterScreen: React.FC = () => {
                     💡 <strong>Que faire maintenant ?</strong>
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#e65100', mt: 1 }}>
-                    • Si vous avez déjà un compte, utilisez "Se connecter" ci-dessous
-                    • Si c'est votre première fois, essayez avec une autre adresse email
-                    • Contactez le support si le problème persiste
+                                         • Si vous avez déjà un compte, utilisez "Se connecter" ci-dessous
+                     • Si c'est votre première fois, essayez avec une autre adresse email
+                     • Contactez notre équipe support si le problème persiste
                   </Typography>
                 </Box>
               </Box>

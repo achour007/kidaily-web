@@ -87,18 +87,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP pour la connexion
       if (error.status === 401) {
-        throw new Error('Email ou mot de passe incorrect. Vérifiez vos identifiants.');
+        throw new Error('Vos identifiants de connexion sont incorrects. Veuillez vérifier votre email et mot de passe, puis réessayer.');
       } else if (error.status === 404) {
-        throw new Error('Le service de connexion n\'est pas disponible. Veuillez réessayer plus tard.');
+        throw new Error('Le service d\'authentification est temporairement indisponible. Veuillez réessayer dans quelques instants.');
       } else if (error.status === 400) {
-        throw new Error('Données de connexion invalides. Vérifiez que tous les champs sont remplis.');
+        throw new Error('Veuillez vérifier que tous les champs de connexion sont correctement remplis et réessayer.');
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur. Veuillez réessayer plus tard ou contactez le support.');
-      } else if (error.status === 0 || error.message === 'Network Error') {
-        throw new Error('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter notre équipe support.');
+      } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
+        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez vérifier votre connexion internet et réessayer dans quelques instants. Si le problème persiste, contactez notre équipe support.');
       } else {
-        // Message d'erreur générique mais informatif
-        throw new Error(`Erreur de connexion: ${error.message || 'Veuillez réessayer plus tard.'}`);
+        // Message d'erreur professionnel et informatif
+        throw new Error(`Nous rencontrons une difficulté technique lors de votre connexion. Veuillez réessayer dans quelques instants ou contacter notre équipe support si le problème persiste.`);
       }
     }
   }
@@ -118,18 +118,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP
       if (error.status === 404) {
-        throw new Error('Le service d\'inscription n\'est pas disponible. Veuillez réessayer plus tard.');
+        throw new Error('Le service d\'inscription est temporairement indisponible. Veuillez réessayer dans quelques instants.');
       } else if (error.status === 409) {
-        throw new Error('Un compte avec cette adresse email existe déjà. Utilisez la fonction "Se connecter" ou réinitialisez votre mot de passe.');
+        throw new Error('Un compte avec cette adresse email existe déjà. Veuillez utiliser la fonction "Se connecter" ou réinitialiser votre mot de passe si vous l\'avez oublié.');
       } else if (error.status === 400) {
-        throw new Error('Données d\'inscription invalides. Vérifiez que tous les champs sont correctement remplis.');
+        throw new Error('Veuillez vérifier que tous les champs d\'inscription sont correctement remplis et réessayer.');
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur. Veuillez réessayer plus tard ou contactez le support.');
-      } else if (error.status === 0 || error.message === 'Network Error') {
-        throw new Error('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter notre équipe support.');
+      } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
+        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez vérifier votre connexion internet et réessayer dans quelques instants. Si le problème persiste, contactez notre équipe support.');
       } else {
-        // Message d'erreur générique mais informatif
-        throw new Error(`Erreur d'inscription: ${error.message || 'Veuillez réessayer plus tard.'}`);
+        // Message d'erreur professionnel et informatif
+        throw new Error(`Nous rencontrons une difficulté technique lors de votre inscription. Veuillez réessayer dans quelques instants ou contacter notre équipe support si le problème persiste.`);
       }
     }
   }
