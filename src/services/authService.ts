@@ -87,18 +87,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP pour la connexion
       if (error.status === 401) {
-        throw new Error('Email ou mot de passe incorrect');
+        throw new Error('Identifiants incorrects');
       } else if (error.status === 404) {
-        throw new Error('Service de connexion indisponible');
+        throw new Error('Service indisponible');
       } else if (error.status === 400) {
-        throw new Error('Données de connexion invalides');
+        throw new Error('Données invalides');
       } else if (error.status === 500) {
         throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible au serveur');
+        throw new Error('Connexion impossible');
       } else {
         // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur de connexion');
+        throw new Error(error.message || 'Erreur');
       }
     }
   }
@@ -118,18 +118,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP
       if (error.status === 404) {
-        throw new Error('Service d\'inscription indisponible');
+        throw new Error('Service indisponible');
       } else if (error.status === 409) {
-        throw new Error('Cette adresse email est déjà utilisée');
+        throw new Error('Ce mail est déjà utilisé');
       } else if (error.status === 400) {
-        throw new Error('Données d\'inscription invalides');
+        throw new Error('Données invalides');
       } else if (error.status === 500) {
         throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible au serveur');
+        throw new Error('Connexion impossible');
       } else {
         // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur d\'inscription');
+        throw new Error(error.message || 'Erreur');
       }
     }
   }
