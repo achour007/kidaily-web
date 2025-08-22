@@ -45,7 +45,7 @@ const Ressources: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCanton, setSelectedCanton] = useState('ge'); // Par défaut Genève
+  const [selectedCanton, setSelectedCanton] = useState('GE'); // Par défaut Genève
 
   // Utiliser le service pédiatrique simplifié
   const allProfessionals = useMemo(() => SimplePediatricService.getAllProfessionals(), []);
@@ -71,35 +71,35 @@ const Ressources: React.FC = () => {
     avgPerCanton: Math.round(pediatricStats.totalProfessionals / pediatricStats.cantonsCovered)
   };
 
-  // Cantons disponibles (toute la Suisse)
+  // Cantons disponibles (toute la Suisse) - Codes en MAJUSCULES pour correspondre aux données
   const cantons = [
     { code: 'all', name: 'Toute la Suisse' },
-    { code: 'ge', name: 'Genève' },
-    { code: 'vd', name: 'Vaud' },
-    { code: 'fr', name: 'Fribourg' },
-    { code: 'ju', name: 'Jura' },
-    { code: 'ne', name: 'Neuchâtel' },
-    { code: 'vs', name: 'Valais' },
-    { code: 'zh', name: 'Zurich' },
-    { code: 'be', name: 'Berne' },
-    { code: 'ag', name: 'Argovie' },
-    { code: 'bl', name: 'Bâle-Campagne' },
-    { code: 'bs', name: 'Bâle-Ville' },
-    { code: 'lu', name: 'Lucerne' },
-    { code: 'sg', name: 'Saint-Gall' },
-    { code: 'sh', name: 'Schaffhouse' },
-    { code: 'so', name: 'Soleure' },
-    { code: 'tg', name: 'Thurgovie' },
-    { code: 'zg', name: 'Zoug' },
-    { code: 'ar', name: 'Appenzell Rhodes-Extérieures' },
-    { code: 'ai', name: 'Appenzell Rhodes-Intérieures' },
-    { code: 'gl', name: 'Glaris' },
-    { code: 'nw', name: 'Nidwald' },
-    { code: 'ow', name: 'Obwald' },
-    { code: 'sz', name: 'Schwytz' },
-    { code: 'ur', name: 'Uri' },
-    { code: 'ti', name: 'Tessin' },
-    { code: 'gr', name: 'Grisons' }
+    { code: 'GE', name: 'Genève' },
+    { code: 'VD', name: 'Vaud' },
+    { code: 'FR', name: 'Fribourg' },
+    { code: 'JU', name: 'Jura' },
+    { code: 'NE', name: 'Neuchâtel' },
+    { code: 'VS', name: 'Valais' },
+    { code: 'ZH', name: 'Zurich' },
+    { code: 'BE', name: 'Berne' },
+    { code: 'AG', name: 'Argovie' },
+    { code: 'BL', name: 'Bâle-Campagne' },
+    { code: 'BS', name: 'Bâle-Ville' },
+    { code: 'LU', name: 'Lucerne' },
+    { code: 'SG', name: 'Saint-Gall' },
+    { code: 'SH', name: 'Schaffhouse' },
+    { code: 'SO', name: 'Soleure' },
+    { code: 'TG', name: 'Thurgovie' },
+    { code: 'ZG', name: 'Zoug' },
+    { code: 'AR', name: 'Appenzell Rhodes-Extérieures' },
+    { code: 'AI', name: 'Appenzell Rhodes-Intérieures' },
+    { code: 'GL', name: 'Glaris' },
+    { code: 'NW', name: 'Nidwald' },
+    { code: 'OW', name: 'Obwald' },
+    { code: 'SZ', name: 'Schwytz' },
+    { code: 'UR', name: 'Uri' },
+    { code: 'TI', name: 'Tessin' },
+    { code: 'GR', name: 'Grisons' }
   ];
 
   // Spécialités pédiatriques disponibles
