@@ -34,8 +34,12 @@ const RegisterScreen: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useAppSelector((state) => {
+    console.log('🔍 [DEBUG] Store auth state:', { loading, error, isAuthenticated });
+    return state.auth;
+  });
   const [showErrorToast, setShowErrorToast] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   // Rediriger vers setup après inscription réussie
   useEffect(() => {
@@ -44,9 +48,20 @@ const RegisterScreen: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Afficher la notification toast quand il y a une erreur
+  // Gérer les erreurs localement aussi
   useEffect(() => {
     if (error) {
+      console.log('🚨 [DEBUG] Erreur Redux détectée:', error);
+      setLocalError(error);
+      setShowErrorToast(true);
+    }
+  }, [error]);
+
+  // Afficher la notification toast quand il y a une erreur
+  useEffect(() => {
+    console.log('🔍 [DEBUG] useEffect error changé:', error);
+    if (error) {
+      console.log('🚨 [DEBUG] Erreur détectée, affichage du toast');
       setShowErrorToast(true);
     }
   }, [error]);
@@ -168,7 +183,7 @@ const RegisterScreen: React.FC = () => {
             </Typography>
           </Box>
 
-          {error && (
+          {(error || localError) && (
             <Alert 
               severity="error" 
               sx={{ 
@@ -338,6 +353,20 @@ const RegisterScreen: React.FC = () => {
                   Se connecter
                 </Link>
               </Typography>
+              
+              {/* Bouton de test pour forcer l'affichage d'une erreur */}
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ mt: 2 }}
+                onClick={() => {
+                  console.log('🧪 [TEST] Bouton de test cliqué');
+                  setLocalError('🧪 Erreur de test - Vérification de l\'affichage');
+                  setShowErrorToast(true);
+                }}
+              >
+                🧪 Tester l'affichage d'erreur
+              </Button>
             </Box>
           </Box>
         </Paper>
@@ -345,7 +374,7 @@ const RegisterScreen: React.FC = () => {
 
       {/* Notification toast pour les erreurs - TRÈS VISIBLE */}
       <Snackbar
-        open={showErrorToast && !!error}
+        open={showErrorToast && !!(error || localError)}
         autoHideDuration={8000}
         onClose={() => setShowErrorToast(false)}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
