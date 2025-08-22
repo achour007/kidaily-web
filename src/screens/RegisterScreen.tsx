@@ -50,10 +50,13 @@ const RegisterScreen: React.FC = () => {
 
   // Gérer les erreurs localement aussi
   useEffect(() => {
+    console.log('🔍 [DEBUG] useEffect error - error actuel:', error);
     if (error) {
       console.log('🚨 [DEBUG] Erreur Redux détectée:', error);
       setLocalError(error);
       setShowErrorToast(true);
+    } else {
+      console.log('✅ [DEBUG] Pas d\'erreur Redux');
     }
   }, [error]);
 
@@ -148,11 +151,21 @@ const RegisterScreen: React.FC = () => {
       const { confirmPassword, ...registerData } = formData;
       await dispatch(register(registerData)).unwrap();
       // La redirection se fait automatiquement via useEffect
-    } catch (error) {
+    } catch (error: any) {
       // L'erreur est gérée par le slice Redux
       console.error('Erreur d\'inscription:', error);
+      
+      // FORCER l'affichage de l'erreur localement
+      if (error && error.message) {
+        console.log('🚨 [DEBUG] Erreur capturée dans handleSubmit:', error.message);
+        setLocalError(error.message);
+        setShowErrorToast(true);
+      }
     }
   };
+
+  // Log de débogage dans le render
+  console.log('🔍 [DEBUG] RENDER - error:', error, 'localError:', localError, 'showErrorToast:', showErrorToast);
 
   return (
     <Container maxWidth="sm">
