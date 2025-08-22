@@ -36,7 +36,7 @@ import {
   RecordVoiceOver as SpeechIcon,
 } from '@mui/icons-material';
 import InteractiveMap from '../components/InteractiveMap';
-import { SwissPediatricDatabase } from '../data/SwissPediatricDatabase';
+import { SimplePediatricService } from '../services/simplePediatricService';
 
 const Ressources: React.FC = () => {
   const theme = useTheme();
@@ -47,9 +47,9 @@ const Ressources: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCanton, setSelectedCanton] = useState('ge'); // Par défaut Genève
 
-  // Utiliser la base de données pédiatrique spécialisée
-  const allProfessionals = useMemo(() => SwissPediatricDatabase.getAllProfessionals(), []);
-  const pediatricStats = useMemo(() => SwissPediatricDatabase.getStats(), []);
+  // Utiliser le service pédiatrique simplifié
+  const allProfessionals = useMemo(() => SimplePediatricService.getAllProfessionals(), []);
+  const pediatricStats = useMemo(() => SimplePediatricService.getStats(), []);
 
   // Filtrage des professionnels
   const filteredProfessionals = useMemo(() => {
