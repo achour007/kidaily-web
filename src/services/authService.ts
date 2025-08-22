@@ -87,18 +87,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP pour la connexion
       if (error.status === 401) {
-        throw new Error('Vos identifiants de connexion sont incorrects. Veuillez vérifier votre email et mot de passe, puis réessayer.');
+        throw new Error('Email ou mot de passe incorrect');
       } else if (error.status === 404) {
-        throw new Error('Le service d\'authentification est temporairement indisponible. Veuillez réessayer dans quelques instants.');
+        throw new Error('Service de connexion indisponible');
       } else if (error.status === 400) {
-        throw new Error('Veuillez vérifier que tous les champs de connexion sont correctement remplis et réessayer.');
+        throw new Error('Données de connexion invalides');
       } else if (error.status === 500) {
-        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter notre équipe support.');
+        throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez vérifier votre connexion internet et réessayer dans quelques instants. Si le problème persiste, contactez notre équipe support.');
+        throw new Error('Connexion impossible au serveur');
       } else {
-        // Message d'erreur professionnel et informatif
-        throw new Error(`Nous rencontrons une difficulté technique lors de votre connexion. Veuillez réessayer dans quelques instants ou contacter notre équipe support si le problème persiste.`);
+        // Message d'erreur simple et direct
+        throw new Error(error.message || 'Erreur de connexion');
       }
     }
   }
@@ -118,18 +118,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP
       if (error.status === 404) {
-        throw new Error('Le service d\'inscription est temporairement indisponible. Veuillez réessayer dans quelques instants.');
+        throw new Error('Service d\'inscription indisponible');
       } else if (error.status === 409) {
-        throw new Error('Un compte avec cette adresse email existe déjà. Veuillez utiliser la fonction "Se connecter" ou réinitialiser votre mot de passe si vous l\'avez oublié.');
+        throw new Error('Cette adresse email est déjà utilisée');
       } else if (error.status === 400) {
-        throw new Error('Veuillez vérifier que tous les champs d\'inscription sont correctement remplis et réessayer.');
+        throw new Error('Données d\'inscription invalides');
       } else if (error.status === 500) {
-        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter notre équipe support.');
+        throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Nous rencontrons actuellement des difficultés techniques. Veuillez vérifier votre connexion internet et réessayer dans quelques instants. Si le problème persiste, contactez notre équipe support.');
+        throw new Error('Connexion impossible au serveur');
       } else {
-        // Message d'erreur professionnel et informatif
-        throw new Error(`Nous rencontrons une difficulté technique lors de votre inscription. Veuillez réessayer dans quelques instants ou contacter notre équipe support si le problème persiste.`);
+        // Message d'erreur simple et direct
+        throw new Error(error.message || 'Erreur d\'inscription');
       }
     }
   }
