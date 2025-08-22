@@ -237,7 +237,7 @@ const RegisterScreen: React.FC = () => {
                     textTransform: 'uppercase'
                   }}
                 >
-                                     ⚠️ Erreur
+                                     ⚠️ Attention
                 </Typography>
                 <Typography 
                   variant="body1" 
