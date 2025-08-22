@@ -42,12 +42,8 @@ const RegisterScreen: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Nettoyer les erreurs quand l'utilisateur tape
-  useEffect(() => {
-    if (error) {
-      dispatch(clearError());
-    }
-  }, [formData, dispatch, error]);
+  // Nettoyer les erreurs seulement quand l'utilisateur modifie un champ spécifique
+  // (pas automatiquement pour permettre la lecture des messages d'erreur)
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -164,8 +160,23 @@ const RegisterScreen: React.FC = () => {
           </Box>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
+            <Alert 
+              severity="error" 
+              sx={{ 
+                mb: 2,
+                '& .MuiAlert-message': {
+                  fontSize: '0.95rem',
+                  lineHeight: 1.4
+                }
+              }}
+              onClose={() => dispatch(clearError())}
+            >
+              <Typography variant="body2" component="div">
+                <strong>Erreur d'inscription :</strong>
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                {error}
+              </Typography>
             </Alert>
           )}
 

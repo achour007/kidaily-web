@@ -85,15 +85,53 @@ export class AuthService {
       console.error('❌ [AUTH] Status d\'erreur:', error.status);
       console.error('❌ [AUTH] Stack trace:', error.stack);
       
-      // Relancer l'erreur pour que le composant puisse la gérer
-      throw error;
+      // Gestion spécifique des erreurs HTTP pour la connexion
+      if (error.status === 401) {
+        throw new Error('Email ou mot de passe incorrect. Vérifiez vos identifiants.');
+      } else if (error.status === 404) {
+        throw new Error('Le service de connexion n\'est pas disponible. Veuillez réessayer plus tard.');
+      } else if (error.status === 400) {
+        throw new Error('Données de connexion invalides. Vérifiez que tous les champs sont remplis.');
+      } else if (error.status === 500) {
+        throw new Error('Erreur serveur. Veuillez réessayer plus tard ou contactez le support.');
+      } else if (error.status === 0 || error.message === 'Network Error') {
+        throw new Error('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+      } else {
+        // Message d'erreur générique mais informatif
+        throw new Error(`Erreur de connexion: ${error.message || 'Veuillez réessayer plus tard.'}`);
+      }
     }
   }
 
-  // Inscription utilisateur
+  // Inscription utilisateur - GESTION D'ERREURS AMÉLIORÉE
   static async register(userData: RegisterData): Promise<AuthResponse> {
-    const response = await ApiService.post<AuthResponse>('/auth/register', userData);
-    return response;
+    try {
+      console.log('🔐 [AUTH] Début de l\'inscription pour:', userData.email);
+      
+      const response = await ApiService.post<AuthResponse>('/auth/register', userData);
+      
+      console.log('✅ [AUTH] Inscription réussie pour:', userData.email);
+      return response;
+      
+    } catch (error: any) {
+      console.error('❌ [AUTH] Erreur d\'inscription:', error);
+      
+      // Gestion spécifique des erreurs HTTP
+      if (error.status === 404) {
+        throw new Error('Le service d\'inscription n\'est pas disponible. Veuillez réessayer plus tard.');
+      } else if (error.status === 409) {
+        throw new Error('Un compte avec cette adresse email existe déjà. Utilisez la fonction "Se connecter" ou réinitialisez votre mot de passe.');
+      } else if (error.status === 400) {
+        throw new Error('Données d\'inscription invalides. Vérifiez que tous les champs sont correctement remplis.');
+      } else if (error.status === 500) {
+        throw new Error('Erreur serveur. Veuillez réessayer plus tard ou contactez le support.');
+      } else if (error.status === 0 || error.message === 'Network Error') {
+        throw new Error('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');
+      } else {
+        // Message d'erreur générique mais informatif
+        throw new Error(`Erreur d'inscription: ${error.message || 'Veuillez réessayer plus tard.'}`);
+      }
+    }
   }
 
   // Rafraîchir le token
