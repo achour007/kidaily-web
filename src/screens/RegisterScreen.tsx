@@ -9,6 +9,7 @@ import {
   Link,
   Container,
   Paper,
+  Snackbar,
 } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -34,6 +35,7 @@ const RegisterScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   // Rediriger vers setup après inscription réussie
   useEffect(() => {
@@ -41,6 +43,13 @@ const RegisterScreen: React.FC = () => {
       navigate('/setup');
     }
   }, [isAuthenticated, navigate]);
+
+  // Afficher la notification toast quand il y a une erreur
+  useEffect(() => {
+    if (error) {
+      setShowErrorToast(true);
+    }
+  }, [error]);
 
   // Nettoyer les erreurs seulement quand l'utilisateur modifie un champ spécifique
   // (pas automatiquement pour permettre la lecture des messages d'erreur)
@@ -163,20 +172,65 @@ const RegisterScreen: React.FC = () => {
             <Alert 
               severity="error" 
               sx={{ 
-                mb: 2,
+                mb: 3,
+                p: 2,
+                border: '2px solid #d32f2f',
+                backgroundColor: '#ffebee',
+                '& .MuiAlert-icon': {
+                  fontSize: '1.5rem'
+                },
                 '& .MuiAlert-message': {
-                  fontSize: '0.95rem',
-                  lineHeight: 1.4
+                  fontSize: '1rem',
+                  lineHeight: 1.5,
+                  fontWeight: 500
                 }
               }}
               onClose={() => dispatch(clearError())}
+              action={
+                <Button 
+                  color="inherit" 
+                  size="small" 
+                  onClick={() => dispatch(clearError())}
+                  sx={{ color: '#d32f2f', fontWeight: 'bold' }}
+                >
+                  FERMER
+                </Button>
+              }
             >
-              <Typography variant="body2" component="div">
-                <strong>Erreur d'inscription :</strong>
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                {error}
-              </Typography>
+              <Box>
+                <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ 
+                    color: '#d32f2f', 
+                    fontWeight: 'bold',
+                    mb: 1,
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  ⚠️ Erreur d'inscription
+                </Typography>
+                <Typography 
+                  variant="body1" 
+                  sx={{ 
+                    color: '#d32f2f',
+                    fontWeight: 500,
+                    lineHeight: 1.6
+                  }}
+                >
+                  {error}
+                </Typography>
+                <Box sx={{ mt: 2, p: 2, backgroundColor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
+                  <Typography variant="body2" sx={{ color: '#e65100', fontWeight: 500 }}>
+                    💡 <strong>Que faire maintenant ?</strong>
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#e65100', mt: 1 }}>
+                    • Si vous avez déjà un compte, utilisez "Se connecter" ci-dessous
+                    • Si c'est votre première fois, essayez avec une autre adresse email
+                    • Contactez le support si le problème persiste
+                  </Typography>
+                </Box>
+              </Box>
             </Alert>
           )}
 
@@ -288,6 +342,35 @@ const RegisterScreen: React.FC = () => {
           </Box>
         </Paper>
       </Box>
+
+      {/* Notification toast pour les erreurs - TRÈS VISIBLE */}
+      <Snackbar
+        open={showErrorToast && !!error}
+        autoHideDuration={8000}
+        onClose={() => setShowErrorToast(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            backgroundColor: '#d32f2f',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            minWidth: '400px',
+            '& .MuiSnackbarContent-message': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1
+            }
+          }
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <span style={{ fontSize: '1.5rem' }}>🚨</span>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+            ERREUR D'INSCRIPTION DÉTECTÉE !
+          </Typography>
+        </Box>
+      </Snackbar>
     </Container>
   );
 };
