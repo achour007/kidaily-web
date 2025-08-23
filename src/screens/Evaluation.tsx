@@ -15,8 +15,6 @@ import {
   Alert,
   Paper,
   Grid,
-  ToggleButton,
-  ToggleButtonGroup,
   List,
   ListItem,
   ListItemIcon,
@@ -30,14 +28,12 @@ import {
   Assessment as AssessmentIcon,
   Verified as VerifiedIcon,
   School as SchoolIcon,
-  Star as StarIcon,
 } from '@mui/icons-material';
 import { ComprehensiveEvaluationQuestions } from '../data/comprehensiveEvaluationQuestions';
 import { ProfessionalEvaluationSystem, DEVELOPMENT_DOMAINS } from '../data/professionalEvaluationSystem';
 
 const Evaluation: React.FC = () => {
   const navigate = useNavigate();
-  const [evaluationMode, setEvaluationMode] = useState<'standard' | 'professional'>('standard');
   const [activeStep, setActiveStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [childAge, setChildAge] = useState('2-3');
@@ -53,25 +49,17 @@ const Evaluation: React.FC = () => {
     { value: '4-5', label: '4-5 ans', months: 54 },
   ];
 
-  // Choisir le système d'évaluation selon le mode
-  const getCurrentQuestions = () => {
-    if (evaluationMode === 'professional') {
-      return ProfessionalEvaluationSystem.getQuestionsByAge(childAgeInMonths);
-    } else {
-      return ComprehensiveEvaluationQuestions.getQuestionsByAge(childAge);
-    }
+  // Combiner toutes les questions disponibles
+  const getAllQuestions = () => {
+    const standardQuestions = ComprehensiveEvaluationQuestions.getQuestionsByAge(childAge);
+    const professionalQuestions = ProfessionalEvaluationSystem.getQuestionsByAge(childAgeInMonths);
+    
+    // Combiner et dédupliquer si nécessaire
+    const allQuestions = [...standardQuestions, ...professionalQuestions];
+    return allQuestions;
   };
 
-  const getCurrentCategories = () => {
-    if (evaluationMode === 'professional') {
-      return DEVELOPMENT_DOMAINS;
-    } else {
-      return ComprehensiveEvaluationQuestions.getCategories();
-    }
-  };
-
-  const currentQuestions = getCurrentQuestions();
-  const categories = getCurrentCategories();
+  const currentQuestions = getAllQuestions();
   const progress = currentQuestions.length > 0 ? (activeStep / currentQuestions.length) * 100 : 0;
 
   const handleAgeChange = (ageValue: string) => {
@@ -105,37 +93,16 @@ const Evaluation: React.FC = () => {
   };
 
   const handleFinish = () => {
-    if (evaluationMode === 'professional') {
-      // Utiliser le système professionnel
-      const report = ProfessionalEvaluationSystem.generateEvaluationReport(answers, childAgeInMonths);
-      setResultats([{
-        overallScore: report.overallScore,
-        domainScores: report.domainScores,
-        criticalFindings: report.criticalFindings,
-        recommendations: report.recommendations,
-        nextSteps: report.nextSteps,
-        clinicalNotes: report.clinicalNotes
-      }]);
-    } else {
-      // Utiliser l'ancien système
-      const results = categories.map(category => {
-        const categoryQuestions = (currentQuestions as any[]).filter((q: any) => q.category === category.id);
-        const totalScore = categoryQuestions.reduce((sum, question) => {
-          const answer = answers[question.id];
-          const option = question.options.find((opt: any) => opt.value === answer);
-          return sum + (option?.score || 0);
-        }, 0);
-        const maxScore = categoryQuestions.length * 3;
-        const percentage = (totalScore / maxScore) * 100;
-        
-        return {
-          category: category.name,
-          score: percentage,
-          status: percentage >= 70 ? 'normal' : percentage >= 50 ? 'attention' : 'retard',
-        };
-      });
-      setResultats(results);
-    }
+    // Générer un rapport complet avec toutes les questions
+    const report = ProfessionalEvaluationSystem.generateEvaluationReport(answers, childAgeInMonths);
+    setResultats([{
+      overallScore: report.overallScore,
+      domainScores: report.domainScores,
+      criticalFindings: report.criticalFindings,
+      recommendations: report.recommendations,
+      nextSteps: report.nextSteps,
+      clinicalNotes: report.clinicalNotes
+    }]);
     
     setShowResults(true);
   };
@@ -144,247 +111,148 @@ const Evaluation: React.FC = () => {
 
   // Si on affiche les résultats
   if (showResults) {
-    if (evaluationMode === 'professional') {
-      const report = resultats[0];
-      return (
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            🏆 Rapport d'Évaluation Professionnelle
-          </Typography>
+    const report = resultats[0];
+    return (
+      <Box>
+        <Typography variant="h4" gutterBottom>
+          🏆 Rapport d'Évaluation Complète
+        </Typography>
 
-          {/* Score global */}
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Score Global
+        {/* Score global */}
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Score Global
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              {report.overallScore >= 75 ? (
+                <CheckCircleIcon color="success" />
+              ) : report.overallScore >= 60 ? (
+                <WarningIcon color="warning" />
+              ) : (
+                <ErrorIcon color="error" />
+              )}
+              <Typography variant="h4" sx={{ ml: 1 }}>
+                {report.overallScore.toFixed(1)}%
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                {report.overallScore >= 75 ? (
-                  <CheckCircleIcon color="success" />
-                ) : report.overallScore >= 60 ? (
-                  <WarningIcon color="warning" />
-                ) : (
-                  <ErrorIcon color="error" />
-                )}
-                <Typography variant="h4" sx={{ ml: 1 }}>
-                  {report.overallScore.toFixed(1)}%
-                </Typography>
-              </Box>
-              <Typography variant="body2" color="text.secondary">
-                {report.clinicalNotes}
-              </Typography>
-            </CardContent>
-          </Card>
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              {report.clinicalNotes}
+            </Typography>
+          </CardContent>
+        </Card>
 
-          {/* Scores par domaine */}
-          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-            Scores par Domaine de Développement
-          </Typography>
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            {Object.entries(report.domainScores).map(([domainId, domainScore]) => {
-              const domain = DEVELOPMENT_DOMAINS.find(d => d.id === domainId);
-              const score = domainScore as { score: number; level: string };
-              return (
-                <Grid item xs={12} sm={6} md={4} key={domainId}>
-                  <Card elevation={2}>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {domain?.name || domainId}
-                      </Typography>
-                      <Box sx={{ mb: 2 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                          <Typography variant="body2">
-                            {score.score.toFixed(1)}%
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {score.level === 'excellent' ? 'Excellent' : 
-                             score.level === 'normal' ? 'Normal' : 
-                             score.level === 'concerning' ? 'Préoccupant' : 'À surveiller'}
-                          </Typography>
-                        </Box>
-                        <LinearProgress
-                          variant="determinate"
-                          value={score.score}
-                          sx={{
-                            height: 8,
-                            borderRadius: 4,
-                            backgroundColor: '#e0e0e0',
-                            '& .MuiLinearProgress-bar': {
-                              backgroundColor: score.level === 'excellent' ? '#4caf50' : 
-                                              score.level === 'normal' ? '#2196f3' : 
-                                              score.level === 'concerning' ? '#f44336' : '#ff9800',
-                            },
-                          }}
-                        />
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              );
-            })}
-          </Grid>
-
-          {/* Recommandations */}
-          {report.recommendations.length > 0 && (
-            <Card sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  📋 Recommandations
-                </Typography>
-                <List>
-                  {report.recommendations.map((rec: string, index: number) => (
-                    <ListItem key={index}>
-                      <ListItemIcon>
-                        <VerifiedIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary={rec} />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Prochaines étapes */}
-          {report.nextSteps.length > 0 && (
-            <Card sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  🚀 Prochaines Étapes
-                </Typography>
-                <List>
-                  {report.nextSteps.map((step: string, index: number) => (
-                    <ListItem key={index}>
-                      <ListItemIcon>
-                        <AssessmentIcon color="success" />
-                      </ListItemIcon>
-                      <ListItemText primary={step} />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Actions */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setShowResults(false);
-                setActiveStep(0);
-                setAnswers({});
-              }}
-            >
-              Nouvelle évaluation
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => navigate('/dashboard')}
-            >
-              Retour au tableau de bord
-            </Button>
-          </Box>
-        </Box>
-      );
-    } else {
-      // Affichage des résultats de l'ancien système (code existant)
-      return (
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Résultats de l'évaluation
-          </Typography>
-
-          {/* Score global */}
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Score global
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                {resultats.some(r => r.status === 'retard') ? (
-                  <ErrorIcon color="error" />
-                ) : resultats.some(r => r.status === 'attention') ? (
-                  <WarningIcon color="warning" />
-                ) : (
-                  <CheckCircleIcon color="success" />
-                )}
-                <Typography variant="h4" sx={{ ml: 1 }}>
-                  {Math.round(resultats.reduce((sum, r) => sum + r.score, 0) / resultats.length)}%
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-
-          {/* Détails par catégorie */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-            {resultats.map((resultat) => (
-              <Card key={resultat.category}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6">
-                      {resultat.category}
+        {/* Scores par domaine */}
+        <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+          Scores par Domaine de Développement
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 3 }}>
+          {Object.entries(report.domainScores).map(([domainId, domainScore]) => {
+            const domain = DEVELOPMENT_DOMAINS.find(d => d.id === domainId);
+            const score = domainScore as { score: number; level: string };
+            return (
+              <Grid item xs={12} sm={6} md={4} key={domainId}>
+                <Card elevation={2}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {domain?.name || domainId}
                     </Typography>
-                    {resultat.status === 'normal' ? (
-                      <CheckCircleIcon color="success" />
-                    ) : resultat.status === 'attention' ? (
-                      <WarningIcon color="warning" />
-                    ) : (
-                      <ErrorIcon color="error" />
-                    )}
-                  </Box>
-                  
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2">
-                        {Math.round(resultat.score)}%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {resultat.status === 'normal' ? 'Développement normal' : 
-                         resultat.status === 'attention' ? 'Attention requise' : 'Retard possible'}
-                      </Typography>
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                        <Typography variant="body2">
+                          {score.score.toFixed(1)}%
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {score.level === 'excellent' ? 'Excellent' : 
+                           score.level === 'normal' ? 'Normal' : 
+                           score.level === 'concerning' ? 'Préoccupant' : 'À surveiller'}
+                        </Typography>
+                      </Box>
+                      <LinearProgress
+                        variant="determinate"
+                        value={score.score}
+                        sx={{
+                          height: 8,
+                          borderRadius: 4,
+                          backgroundColor: '#e0e0e0',
+                          '& .MuiLinearProgress-bar': {
+                            backgroundColor: score.level === 'excellent' ? '#4caf50' : 
+                                            score.level === 'normal' ? '#2196f3' : 
+                                            score.level === 'concerning' ? '#f44336' : '#ff9800',
+                          },
+                        }}
+                      />
                     </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={resultat.score}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: '#e0e0e0',
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: resultat.status === 'normal' ? '#4caf50' : 
-                                          resultat.status === 'attention' ? '#ff9800' : '#f44336',
-                        },
-                      }}
-                    />
-                  </Box>
-                </CardContent>
-              </Card>
-            ))}
-          </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
 
-          {/* Actions */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setShowResults(false);
-                setActiveStep(0);
-                setAnswers({});
-              }}
-            >
-              Nouvelle évaluation
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => navigate('/dashboard')}
-            >
-              Retour au tableau de bord
-            </Button>
-          </Box>
+        {/* Recommandations */}
+        {report.recommendations.length > 0 && (
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                📋 Recommandations
+              </Typography>
+              <List>
+                {report.recommendations.map((rec: string, index: number) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      <VerifiedIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText primary={rec} />
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Prochaines étapes */}
+        {report.nextSteps.length > 0 && (
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                🚀 Prochaines Étapes
+              </Typography>
+              <List>
+                {report.nextSteps.map((step: string, index: number) => (
+                  <ListItem key={index}>
+                    <ListItemIcon>
+                      <AssessmentIcon color="success" />
+                    </ListItemIcon>
+                    <ListItemText primary={step} />
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Actions */}
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setShowResults(false);
+              setActiveStep(0);
+              setAnswers({});
+            }}
+          >
+            Nouvelle évaluation
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => navigate('/dashboard')}
+          >
+            Retour au tableau de bord
+          </Button>
         </Box>
-      );
-    }
+      </Box>
+    );
   }
 
   return (
@@ -393,7 +261,7 @@ const Evaluation: React.FC = () => {
         Évaluation du développement
       </Typography>
 
-      {/* Bannière d'introduction du système professionnel */}
+      {/* Bannière d'introduction du système complet */}
       <Paper 
         elevation={2} 
         sx={{ 
@@ -409,7 +277,7 @@ const Evaluation: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <ScienceIcon sx={{ fontSize: 32, mr: 2 }} />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                SYSTÈME D'ÉVALUATION PROFESSIONNEL
+                SYSTÈME D'ÉVALUATION COMPLET
               </Typography>
             </Box>
             
@@ -420,7 +288,7 @@ const Evaluation: React.FC = () => {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
               <Chip 
                 icon={<AssessmentIcon />} 
-                label="250+ questions" 
+                label={`${currentQuestions.length} questions`}
                 sx={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white' }} 
               />
               <Chip 
@@ -459,54 +327,6 @@ const Evaluation: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-      </Paper>
-
-      {/* Sélection du mode d'évaluation */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h6" gutterBottom>
-          Mode d'évaluation
-        </Typography>
-        <ToggleButtonGroup
-          value={evaluationMode}
-          exclusive
-          onChange={(e, newMode) => {
-            if (newMode !== null) {
-              setEvaluationMode(newMode);
-              setActiveStep(0);
-              setAnswers({});
-              setShowResults(false);
-            }
-          }}
-          sx={{ mb: 2 }}
-        >
-          <ToggleButton value="standard" sx={{ minWidth: 200 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <AssessmentIcon />
-              <Box sx={{ textAlign: 'left' }}>
-                <Typography variant="body2" fontWeight="bold">Évaluation Standard</Typography>
-                <Typography variant="caption">43 questions - Dépistage rapide</Typography>
-              </Box>
-            </Box>
-          </ToggleButton>
-          <ToggleButton value="professional" sx={{ minWidth: 200 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <StarIcon color="primary" />
-              <Box sx={{ textAlign: 'left' }}>
-                <Typography variant="body2" fontWeight="bold">Évaluation Professionnelle</Typography>
-                <Typography variant="caption">250+ questions - Analyse complète</Typography>
-              </Box>
-            </Box>
-          </ToggleButton>
-        </ToggleButtonGroup>
-        
-        {evaluationMode === 'professional' && (
-          <Alert severity="info" sx={{ mt: 2 }}>
-            <Typography variant="body2">
-              <strong>Mode Professionnel :</strong> Évaluation scientifiquement validée basée sur les standards internationaux (ASQ-3, DDST-II, Bayley, etc.). 
-              Couvre 8 domaines de développement avec 250+ questions adaptées à l'âge de l'enfant.
-            </Typography>
-          </Alert>
-        )}
       </Paper>
 
       {/* Sélection de l'âge */}
@@ -548,18 +368,23 @@ const Evaluation: React.FC = () => {
           <CardContent>
             <Box sx={{ mb: 2 }}>
               <Chip
-                label={evaluationMode === 'professional' 
-                  ? DEVELOPMENT_DOMAINS.find(d => d.id === (currentQuestion as any).domain)?.name 
-                  : categories.find(c => c.id === (currentQuestion as any).category)?.name}
+                label={(currentQuestion as any).domain ? 
+                  DEVELOPMENT_DOMAINS.find(d => d.id === (currentQuestion as any).domain)?.name :
+                  (currentQuestion as any).category ? 
+                  ComprehensiveEvaluationQuestions.getCategories().find(c => c.id === (currentQuestion as any).category)?.name :
+                  'Développement'
+                }
                 sx={{ 
-                  backgroundColor: evaluationMode === 'professional'
-                    ? DEVELOPMENT_DOMAINS.find(d => d.id === (currentQuestion as any).domain)?.color
-                    : categories.find(c => c.id === (currentQuestion as any).category)?.color,
+                  backgroundColor: (currentQuestion as any).domain ? 
+                    DEVELOPMENT_DOMAINS.find(d => d.id === (currentQuestion as any).domain)?.color :
+                    (currentQuestion as any).category ? 
+                    ComprehensiveEvaluationQuestions.getCategories().find(c => c.id === (currentQuestion as any).category)?.color :
+                    '#2196f3',
                   color: 'white',
                   mb: 2,
                 }}
               />
-              {evaluationMode === 'professional' && (currentQuestion as any).criticalAge && (
+              {(currentQuestion as any).criticalAge && (
                 <Chip
                   label="Âge critique"
                   color="warning"
@@ -573,7 +398,7 @@ const Evaluation: React.FC = () => {
               {currentQuestion.text}
             </Typography>
 
-            {evaluationMode === 'professional' && (currentQuestion as any).helpText && (
+            {(currentQuestion as any).helpText && (
               <Alert severity="info" sx={{ mb: 2 }}>
                 <Typography variant="body2">
                   {(currentQuestion as any).helpText}
@@ -596,7 +421,7 @@ const Evaluation: React.FC = () => {
                         <Typography variant="body1">
                           {option.label}
                         </Typography>
-                        {evaluationMode === 'professional' && (option as any).clinicalInterpretation && (
+                        {(option as any).clinicalInterpretation && (
                           <Typography variant="caption" color="text.secondary">
                             {(option as any).clinicalInterpretation}
                           </Typography>
@@ -644,10 +469,9 @@ const Evaluation: React.FC = () => {
       {/* Informations */}
       <Alert severity="info" sx={{ mt: 3 }}>
         <Typography variant="body2">
-          {evaluationMode === 'professional' 
-            ? 'Cette évaluation professionnelle est basée sur des standards internationaux validés (ASQ-3, DDST-II, Bayley, etc.) et permet une analyse complète du développement de votre enfant.'
-            : 'Cette évaluation est basée sur des outils validés (Denver II, M-CHAT, etc.) et permet d\'identifier les domaines de développement qui nécessitent une attention particulière.'
-          }
+          Cette évaluation complète est basée sur des standards internationaux validés (ASQ-3, DDST-II, Bayley, etc.) 
+          et permet une analyse complète du développement de votre enfant avec {currentQuestions.length} questions 
+          couvrant 8 domaines de développement majeurs.
         </Typography>
       </Alert>
     </Box>
