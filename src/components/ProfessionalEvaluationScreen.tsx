@@ -274,7 +274,7 @@ const ProfessionalEvaluationScreen: React.FC = () => {
                         </AccordionSummary>
                         <AccordionDetails>
                           <List dense>
-                            {domainScore.recommendations.map((rec, index) => (
+                            {domainScore.recommendations.map((rec: string, index: number) => (
                               <ListItem key={index}>
                                 <ListItemIcon>
                                   <InfoIcon color="primary" />
@@ -305,7 +305,7 @@ const ProfessionalEvaluationScreen: React.FC = () => {
                     ⚠️ Découvertes Préoccupantes :
                   </Typography>
                   <List dense>
-                    {state.evaluationReport.criticalFindings.map((finding, index) => (
+                    {state.evaluationReport.criticalFindings.map((finding: string, index: number) => (
                       <ListItem key={index}>
                         <ListItemIcon>
                           <ErrorIcon color="error" />
@@ -321,7 +321,7 @@ const ProfessionalEvaluationScreen: React.FC = () => {
                 📋 Recommandations Globales :
               </Typography>
               <List dense>
-                {state.evaluationReport.recommendations.map((rec, index) => (
+                {state.evaluationReport.recommendations.map((rec: string, index: number) => (
                   <ListItem key={index}>
                     <ListItemIcon>
                       <CheckCircleIcon color="primary" />
@@ -337,7 +337,7 @@ const ProfessionalEvaluationScreen: React.FC = () => {
                 🎯 Prochaines Étapes :
               </Typography>
               <List dense>
-                {state.evaluationReport.nextSteps.map((step, index) => (
+                {state.evaluationReport.nextSteps.map((step: string, index: number) => (
                   <ListItem key={index}>
                     <ListItemIcon>
                       <CheckCircleIcon color="success" />

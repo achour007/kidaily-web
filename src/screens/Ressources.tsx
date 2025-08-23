@@ -46,7 +46,6 @@ import {
   School as SchoolIcon,
   Psychology as PsychologyIcon,
   Timeline as TimelineIcon,
-  Book as BookIcon,
   Article as ArticleIcon,
   Language as LanguageIcon,
 } from '@mui/icons-material';

@@ -15,7 +15,6 @@ import {
   Alert,
   Paper,
   Grid,
-  Link,
   ToggleButton,
   ToggleButtonGroup,
   List,
@@ -34,7 +33,7 @@ import {
   Star as StarIcon,
 } from '@mui/icons-material';
 import { ComprehensiveEvaluationQuestions } from '../data/comprehensiveEvaluationQuestions';
-import { ProfessionalEvaluationSystem, PROFESSIONAL_EVALUATION_QUESTIONS, DEVELOPMENT_DOMAINS } from '../data/professionalEvaluationSystem';
+import { ProfessionalEvaluationSystem, DEVELOPMENT_DOMAINS } from '../data/professionalEvaluationSystem';
 
 const Evaluation: React.FC = () => {
   const navigate = useNavigate();
@@ -120,16 +119,10 @@ const Evaluation: React.FC = () => {
     } else {
       // Utiliser l'ancien système
       const results = categories.map(category => {
-        const categoryQuestions = currentQuestions.filter(q => {
-          if (evaluationMode === 'professional') {
-            return 'domain' in q && (q as any).domain === category.id;
-          } else {
-            return 'category' in q && (q as any).category === category.id;
-          }
-        });
+        const categoryQuestions = (currentQuestions as any[]).filter((q: any) => q.category === category.id);
         const totalScore = categoryQuestions.reduce((sum, question) => {
           const answer = answers[question.id];
-          const option = question.options.find(opt => opt.value === answer);
+          const option = question.options.find((opt: any) => opt.value === answer);
           return sum + (option?.score || 0);
         }, 0);
         const maxScore = categoryQuestions.length * 3;
