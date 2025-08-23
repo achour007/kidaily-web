@@ -87,18 +87,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP pour la connexion
       if (error.status === 401) {
-        throw new Error('Le mot de passe entré est incorrect. Vous l\'avez oublié ?');
+        throw new Error('Mot de passe incorrect');
       } else if (error.status === 404) {
-        throw new Error('Service indisponible. Réessayez plus tard.');
+        throw new Error('Service indisponible');
       } else if (error.status === 400) {
-        throw new Error('Données invalides. Vérifiez vos informations.');
+        throw new Error('Données invalides');
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur. Réessayez plus tard.');
+        throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible. Vérifiez votre internet.');
+        throw new Error('Connexion impossible');
       } else {
         // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur. Réessayez.');
+        throw new Error(error.message || 'Erreur');
       }
     }
   }
@@ -122,18 +122,18 @@ export class AuthService {
       
       // Gestion spécifique des erreurs HTTP
       if (error.status === 404) {
-        throw new Error('Service indisponible. Réessayez plus tard.');
+        throw new Error('Service indisponible');
       } else if (error.status === 409) {
-        throw new Error('Ce mail est déjà utilisé. Vous avez oublié votre mot de passe ?');
+        throw new Error('Ce mail est déjà utilisé');
       } else if (error.status === 400) {
-        throw new Error('Données invalides. Vérifiez vos informations.');
+        throw new Error('Données invalides');
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur. Réessayez plus tard.');
+        throw new Error('Erreur serveur');
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible. Vérifiez votre internet.');
+        throw new Error('Connexion impossible');
       } else {
         // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur. Réessayez.');
+        throw new Error(error.message || 'Erreur');
       }
     }
   }

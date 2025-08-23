@@ -237,7 +237,7 @@ const RegisterScreen: React.FC = () => {
                     textTransform: 'uppercase'
                   }}
                 >
-                                     ⚠️ Attention
+                                     ⚠️ Erreur
                 </Typography>
                 <Typography 
                   variant="body1" 
@@ -249,16 +249,7 @@ const RegisterScreen: React.FC = () => {
                 >
                   {error}
                 </Typography>
-                <Box sx={{ mt: 2, p: 2, backgroundColor: '#fff3e0', borderRadius: 1, border: '1px solid #ffb74d' }}>
-                  <Typography variant="body2" sx={{ color: '#e65100', fontWeight: 500 }}>
-                    💡 <strong>Que faire maintenant ?</strong>
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#e65100', mt: 1 }}>
-                                         • Si vous avez déjà un compte, utilisez "Se connecter" ci-dessous
-                     • Si c'est votre première fois, essayez avec une autre adresse email
-                     • Contactez notre équipe support si le problème persiste
-                  </Typography>
-                </Box>
+                
               </Box>
             </Alert>
           )}
