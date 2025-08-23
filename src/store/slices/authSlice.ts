@@ -36,7 +36,14 @@ export const login = createAsyncThunk(
       AuthService.saveTokens(response.token, response.refreshToken);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Erreur de connexion');
+      // Passer les informations complètes de l'erreur pour le système unifié
+      const errorInfo = {
+        message: error.message || 'Erreur de connexion',
+        status: error?.status || (error instanceof Error && (error as any).status),
+        type: error?.constructor?.name
+      };
+
+      return rejectWithValue(errorInfo);
     }
   }
 );
@@ -49,7 +56,14 @@ export const register = createAsyncThunk(
       AuthService.saveTokens(response.token, response.refreshToken);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Erreur d\'inscription');
+      // Passer les informations complètes de l'erreur pour le système unifié
+      const errorInfo = {
+        message: error.message || 'Erreur d\'inscription',
+        status: error?.status || (error instanceof Error && (error as any).status),
+        type: error?.constructor?.name
+      };
+
+      return rejectWithValue(errorInfo);
     }
   }
 );
@@ -92,7 +106,9 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        // Gestion de l'erreur pour compatibilité
+        const payload = action.payload as any;
+        state.error = typeof payload === 'string' ? payload : payload?.message || 'Erreur de connexion';
       })
       // Register
       .addCase(register.pending, (state) => {
@@ -107,7 +123,9 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        // Gestion de l'erreur pour compatibilité
+        const payload = action.payload as any;
+        state.error = typeof payload === 'string' ? payload : payload?.message || 'Erreur d\'inscription';
       })
       // Logout
       .addCase(logout.fulfilled, (state) => {

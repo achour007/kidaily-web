@@ -256,6 +256,23 @@ export const de: Translations = {
   authorizationError: 'Autorisierungsfehler',
   notFoundError: 'Ressource nicht gefunden',
   timeoutError: 'Zeitüberschreitung',
+  warning: 'Warnung',
+  
+  // Unified Error Messages
+  emailAlreadyRegistered: 'Diese E-Mail ist bereits registriert',
+  invalidCredentials: 'Ungültige E-Mail oder Passwort',
+  serverErrorOccurred: 'Serverfehler, bitte später versuchen',
+  checkInternetConnection: 'Überprüfen Sie Ihre Internetverbindung',
+  checkInformation: 'Bitte überprüfen Sie Ihre Angaben',
+  serverTemporarilyUnavailable: 'Server ist vorübergehend nicht verfügbar',
+  anErrorOccurred: 'Ein Fehler ist aufgetreten',
+  
+  // Unified Error Actions
+  signIn: 'Anmelden',
+  tryAgain: 'Erneut versuchen',
+  checkConnection: 'Verbindung prüfen',
+  correct: 'Korrigieren',
+  tryLater: 'Später versuchen',
   
   // Success
   operationSuccessful: 'Operation erfolgreich',

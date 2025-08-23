@@ -1,5 +1,18 @@
 import ApiService from './api';
 
+// Classe d'erreur qui préserve le status HTTP
+export class AuthError extends Error {
+  public status: number;
+  public originalError: any;
+  
+  constructor(message: string, status: number, originalError?: any) {
+    super(message);
+    this.name = 'AuthError';
+    this.status = status;
+    this.originalError = originalError;
+  }
+}
+
 // Types pour l'authentification
 export interface LoginCredentials {
   email: string;
@@ -38,19 +51,15 @@ export interface RefreshTokenResponse {
 export class AuthService {
   // Connexion utilisateur - DIAGNOSTIC COMPLET
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    console.log('🔐 [AUTH] Début de la connexion avec:', credentials.email);
-    console.log('🔐 [AUTH] URL de l\'API:', process.env.REACT_APP_API_URL || 'https://kidaily-backend-cb9a147c3208.herokuapp.com/api');
-    
-    try {
-      console.log('🔐 [AUTH] Envoi de la requête POST vers /auth/login');
+        try {
       
       const response = await ApiService.post<AuthResponse>('/auth/login', credentials);
       
-      console.log('✅ [AUTH] Réponse reçue:', response);
+
       
       // Sauvegarder les tokens si présents dans la réponse
       if (response.token) {
-        console.log('🔐 [AUTH] Token reçu, sauvegarde...');
+
         this.saveTokens(response.token, response.refreshToken);
       } else {
         console.warn('⚠️ [AUTH] Aucun token reçu dans la réponse');
@@ -59,10 +68,10 @@ export class AuthService {
       // Si une langue est spécifiée, la mettre à jour
       if (credentials.language) {
         try {
-          console.log('🌐 [AUTH] Mise à jour de la langue:', credentials.language);
+
           await ApiService.post('/users/language', { language: credentials.language });
           localStorage.setItem('selectedLanguage', credentials.language);
-          console.log('✅ [AUTH] Langue mise à jour avec succès');
+
         } catch (error) {
           console.warn('⚠️ [AUTH] Erreur lors de la mise à jour de la langue:', error);
           // Ne pas faire échouer la connexion pour cette erreur
@@ -71,34 +80,30 @@ export class AuthService {
 
       // Si une version est spécifiée, la sauvegarder
       if (credentials.version) {
-        console.log('📱 [AUTH] Sauvegarde de la version:', credentials.version);
+
         localStorage.setItem('selectedVersion', credentials.version);
       }
       
-      console.log('🎉 [AUTH] Connexion réussie pour:', credentials.email);
+
       return response;
       
     } catch (error: any) {
-      console.error('❌ [AUTH] Erreur de connexion:', error);
-      console.error('❌ [AUTH] Type d\'erreur:', typeof error);
-      console.error('❌ [AUTH] Message d\'erreur:', error.message);
-      console.error('❌ [AUTH] Status d\'erreur:', error.status);
-      console.error('❌ [AUTH] Stack trace:', error.stack);
+
       
-      // Gestion spécifique des erreurs HTTP pour la connexion
+      // Gestion spécifique des erreurs HTTP pour la connexion avec préservation du status
       if (error.status === 401) {
-        throw new Error('Mot de passe incorrect');
+        throw new AuthError('Email ou mot de passe incorrect', 401, error);
       } else if (error.status === 404) {
-        throw new Error('Service indisponible');
+        throw new AuthError('Le serveur est temporairement indisponible', 404, error);
       } else if (error.status === 400) {
-        throw new Error('Données invalides');
+        throw new AuthError('Vérifiez vos informations', 400, error);
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur');
+        throw new AuthError('Erreur du serveur, réessayez plus tard', 500, error);
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible');
+        throw new AuthError('Vérifiez votre connexion internet', 0, error);
       } else {
-        // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur');
+        // Message d'erreur avec status préservé
+        throw new AuthError(error.message || 'Une erreur est survenue', error.status || 500, error);
       }
     }
   }
@@ -106,34 +111,30 @@ export class AuthService {
   // Inscription utilisateur - GESTION D'ERREURS AMÉLIORÉE
   static async register(userData: RegisterData): Promise<AuthResponse> {
     try {
-      console.log('🔐 [AUTH] Début de l\'inscription pour:', userData.email);
+
       
       const response = await ApiService.post<AuthResponse>('/auth/register', userData);
       
-      console.log('✅ [AUTH] Inscription réussie pour:', userData.email);
+
       return response;
       
     } catch (error: any) {
-      console.error('❌ [AUTH] Erreur d\'inscription:', error);
-      console.error('❌ [AUTH] Type d\'erreur:', typeof error);
-      console.error('❌ [AUTH] Status d\'erreur:', error.status);
-      console.error('❌ [AUTH] Message d\'erreur:', error.message);
-      console.error('❌ [AUTH] Erreur complète:', error);
+
       
-      // Gestion spécifique des erreurs HTTP
+      // Gestion spécifique des erreurs HTTP avec préservation du status
       if (error.status === 404) {
-        throw new Error('Service indisponible');
+        throw new AuthError('Le serveur est temporairement indisponible', 404, error);
       } else if (error.status === 409) {
-        throw new Error('Ce mail est déjà utilisé');
+        throw new AuthError('Cet email est déjà enregistré', 409, error);
       } else if (error.status === 400) {
-        throw new Error('Données invalides');
+        throw new AuthError('Vérifiez vos informations', 400, error);
       } else if (error.status === 500) {
-        throw new Error('Erreur serveur');
+        throw new AuthError('Erreur du serveur, réessayez plus tard', 500, error);
       } else if (error.status === 0 || error.message === 'Network Error' || error.message === 'Failed to fetch') {
-        throw new Error('Connexion impossible');
+        throw new AuthError('Vérifiez votre connexion internet', 0, error);
       } else {
-        // Message d'erreur simple et direct
-        throw new Error(error.message || 'Erreur');
+        // Message d'erreur avec status préservé
+        throw new AuthError(error.message || 'Une erreur est survenue', error.status || 500, error);
       }
     }
   }

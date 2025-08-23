@@ -264,6 +264,23 @@ export const fr: Translations = {
   authorizationError: 'Erreur d\'autorisation',
   notFoundError: 'Ressource non trouvée',
   timeoutError: 'Erreur de délai d\'attente',
+  warning: 'Attention',
+  
+  // Unified Error Messages
+  emailAlreadyRegistered: 'Cet email est déjà enregistré',
+  invalidCredentials: 'Email ou mot de passe incorrect',
+  serverErrorOccurred: 'Erreur du serveur, réessayez plus tard',
+  checkInternetConnection: 'Vérifiez votre connexion internet',
+  checkInformation: 'Vérifiez vos informations',
+  serverTemporarilyUnavailable: 'Le serveur est temporairement indisponible',
+  anErrorOccurred: 'Une erreur est survenue',
+  
+  // Unified Error Actions
+  signIn: 'Se connecter',
+  tryAgain: 'Réessayer',
+  checkConnection: 'Vérifier ma connexion',
+  correct: 'Corriger',
+  tryLater: 'Réessayer plus tard',
   
   // Success
   operationSuccessful: 'Opération réussie',

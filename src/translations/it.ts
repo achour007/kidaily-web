@@ -256,6 +256,23 @@ export const it: Translations = {
   authorizationError: 'Errore di autorizzazione',
   notFoundError: 'Risorsa non trovata',
   timeoutError: 'Errore di timeout',
+  warning: 'Attenzione',
+  
+  // Unified Error Messages
+  emailAlreadyRegistered: 'Questa email è già registrata',
+  invalidCredentials: 'Email o password non validi',
+  serverErrorOccurred: 'Errore del server, riprovare più tardi',
+  checkInternetConnection: 'Controlla la tua connessione internet',
+  checkInformation: 'Controlla le tue informazioni',
+  serverTemporarilyUnavailable: 'Il server è temporaneamente non disponibile',
+  anErrorOccurred: 'Si è verificato un errore',
+  
+  // Unified Error Actions
+  signIn: 'Accedi',
+  tryAgain: 'Riprova',
+  checkConnection: 'Controlla connessione',
+  correct: 'Correggi',
+  tryLater: 'Riprova più tardi',
   
   // Success
   operationSuccessful: 'Operazione completata con successo',

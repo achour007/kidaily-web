@@ -263,6 +263,23 @@ export interface Translations {
   authorizationError: string;
   notFoundError: string;
   timeoutError: string;
+  warning: string;
+  
+  // Unified Error Messages
+  emailAlreadyRegistered: string;
+  invalidCredentials: string;
+  serverErrorOccurred: string;
+  checkInternetConnection: string;
+  checkInformation: string;
+  serverTemporarilyUnavailable: string;
+  anErrorOccurred: string;
+  
+  // Unified Error Actions
+  signIn: string;
+  tryAgain: string;
+  checkConnection: string;
+  correct: string;
+  tryLater: string;
   
   // Success
   operationSuccessful: string;

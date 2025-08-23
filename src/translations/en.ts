@@ -256,6 +256,23 @@ export const en: Translations = {
   authorizationError: 'Authorization error',
   notFoundError: 'Resource not found',
   timeoutError: 'Timeout error',
+  warning: 'Warning',
+  
+  // Unified Error Messages
+  emailAlreadyRegistered: 'This email is already registered',
+  invalidCredentials: 'Invalid email or password',
+  serverErrorOccurred: 'Server error, please try again later',
+  checkInternetConnection: 'Check your internet connection',
+  checkInformation: 'Please check your information',
+  serverTemporarilyUnavailable: 'Server is temporarily unavailable',
+  anErrorOccurred: 'An error occurred',
+  
+  // Unified Error Actions
+  signIn: 'Sign in',
+  tryAgain: 'Try again',
+  checkConnection: 'Check connection',
+  correct: 'Correct',
+  tryLater: 'Try later',
   
   // Success
   operationSuccessful: 'Operation successful',

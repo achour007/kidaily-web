@@ -4,7 +4,6 @@ import {
   TextField,
   Button,
   Typography,
-  Alert,
   CircularProgress,
   Link,
   Container,
@@ -27,6 +26,8 @@ import {
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { login, clearError } from '../store/slices/authSlice';
+import { UnifiedErrorAlert, UnifiedError } from '../components/UnifiedErrorAlert';
+import { ErrorHandlingService } from '../services/ErrorHandlingService';
 import { useLanguageContext } from '../contexts/LanguageContext';
 
 const LoginScreen: React.FC = () => {
@@ -40,6 +41,7 @@ const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
   const { language, t, changeLanguage, supportedLanguages } = useLanguageContext();
+  const [unifiedError, setUnifiedError] = useState<UnifiedError | null>(null);
 
   // Rediriger si déjà connecté
   useEffect(() => {
@@ -47,6 +49,21 @@ const LoginScreen: React.FC = () => {
       navigate('/setup');
     }
   }, [isAuthenticated, navigate]);
+
+  // Gérer les erreurs avec le système unifié
+  useEffect(() => {
+    if (error) {
+      console.log('🚨 [LOGIN] Erreur détectée:', error);
+      // Créer une erreur unifiée
+      // Si error est un objet avec status, on le passe directement, sinon on crée un objet simple
+      const errorObj = typeof error === 'string' ? { message: error } : error;
+      console.log('🔍 [LoginScreen] Passage au ErrorHandlingService:', errorObj);
+      const unified = ErrorHandlingService.createUnifiedError(errorObj, language);
+      setUnifiedError(unified);
+    } else {
+      setUnifiedError(null);
+    }
+  }, [error, language]);
 
   // Nettoyer les erreurs quand l'utilisateur tape
   useEffect(() => {
@@ -95,9 +112,15 @@ const LoginScreen: React.FC = () => {
       const version = localStorage.getItem('selectedVersion') || 'local';
       await dispatch(login({ email, password, language, version })).unwrap();
       // La redirection se fait automatiquement via useEffect
-    } catch (error) {
-      // L'erreur est gérée par le slice Redux
+    } catch (error: any) {
+      // L'erreur est gérée par le slice Redux et le système unifié
       console.error('Erreur de connexion:', error);
+      
+      // Créer une erreur unifiée si nécessaire
+      if (error && error.message) {
+        const unified = ErrorHandlingService.createUnifiedError(error, language);
+        setUnifiedError(unified);
+      }
     }
   };
 
@@ -282,11 +305,7 @@ const LoginScreen: React.FC = () => {
                       t.login
                     )}
                   </Button>
-                  {error && (
-                    <Alert severity="error" sx={{ mt: 2 }}>
-                      {error}
-                    </Alert>
-                  )}
+                  {/* Système d'erreur unifié remplacé par le composant en position fixe */}
                   <Box mt={2} textAlign="center">
                     <Typography variant="body2" color="text.secondary">
                       {t.noAccount}{' '}
@@ -300,6 +319,16 @@ const LoginScreen: React.FC = () => {
             </Paper>
           </Grow>
         </Container>
+        
+        {/* Système d'erreur unifié - Style orange professionnel */}
+        <Box sx={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1300, maxWidth: '500px', width: '90%' }}>
+          <UnifiedErrorAlert
+            error={unifiedError}
+            onClose={() => setUnifiedError(null)}
+            autoHideDuration={8000}
+            variant="filled"
+          />
+        </Box>
       </Box>
     </Box>
   );

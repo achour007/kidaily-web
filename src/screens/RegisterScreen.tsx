@@ -9,11 +9,16 @@ import {
   Link,
   Container,
   Paper,
-  Snackbar,
 } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { register, clearError } from '../store/slices/authSlice';
+import { UnifiedErrorAlert, UnifiedError } from '../components/UnifiedErrorAlert';
+import { ErrorHandlingService } from '../services/ErrorHandlingService';
+import { useLanguageContext } from '../contexts/LanguageContext';
+import { AdaptiveAuthService } from '../services/AdaptiveAuthService';
+import StorageModeIndicator from '../components/StorageModeIndicator';
+import useStorageMode from '../hooks/useStorageMode';
 
 const RegisterScreen: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -34,41 +39,37 @@ const RegisterScreen: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useAppSelector((state) => {
-    const authState = state.auth;
-    console.log('🔍 [DEBUG] Store auth state:', authState);
-    return authState;
-  });
-  const [showErrorToast, setShowErrorToast] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const { language } = useLanguageContext();
+  const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const [unifiedError, setUnifiedError] = useState<UnifiedError | null>(null);
+  const [storageState] = useStorageMode();
+  const [isAdaptiveMode, setIsAdaptiveMode] = useState(false);
 
-  // Rediriger vers setup après inscription réussie
+  // Déterminer le mode à utiliser
   useEffect(() => {
-    if (isAuthenticated) {
+    const selectedVersion = localStorage.getItem('selectedVersion');
+    const useAdaptive = localStorage.getItem('useAdaptiveAuth') === 'true';
+    setIsAdaptiveMode(useAdaptive || selectedVersion === 'local');
+  }, [storageState.mode]);
+
+  // Rediriger vers setup après inscription réussie (mode Redux)
+  useEffect(() => {
+    if (!isAdaptiveMode && isAuthenticated) {
       navigate('/setup');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAdaptiveMode, isAuthenticated, navigate]);
 
-  // Gérer les erreurs localement aussi
+  // Gérer les erreurs avec le système unifié
   useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect error - error actuel:', error);
     if (error) {
-      console.log('🚨 [DEBUG] Erreur Redux détectée:', error);
-      setLocalError(error);
-      setShowErrorToast(true);
+      // Créer une erreur unifiée
+      const errorObj = typeof error === 'string' ? { message: error } : error;
+      const unified = ErrorHandlingService.createUnifiedError(errorObj, language);
+      setUnifiedError(unified);
     } else {
-      console.log('✅ [DEBUG] Pas d\'erreur Redux');
+      setUnifiedError(null);
     }
-  }, [error]);
-
-  // Afficher la notification toast quand il y a une erreur
-  useEffect(() => {
-    console.log('🔍 [DEBUG] useEffect error changé:', error);
-    if (error) {
-      console.log('🚨 [DEBUG] Erreur détectée, affichage du toast');
-      setShowErrorToast(true);
-    }
-  }, [error]);
+  }, [error, language]);
 
   // Nettoyer les erreurs seulement quand l'utilisateur modifie un champ spécifique
   // (pas automatiquement pour permettre la lecture des messages d'erreur)
@@ -150,26 +151,41 @@ const RegisterScreen: React.FC = () => {
 
     try {
       const { confirmPassword, ...registerData } = formData;
-      await dispatch(register(registerData)).unwrap();
-      // La redirection se fait automatiquement via useEffect
-    } catch (error: any) {
-      // L'erreur est gérée par le slice Redux
-      console.error('Erreur d\'inscription:', error);
       
-      // FORCER l'affichage de l'erreur localement
-      if (error && error.message) {
-        console.log('🚨 [DEBUG] Erreur capturée dans handleSubmit:', error.message);
-        setLocalError(error.message);
-        setShowErrorToast(true);
+      // Déterminer si on utilise le mode adaptatif
+      if (isAdaptiveMode) {
+        // Utiliser AdaptiveAuthService
+        const result = await AdaptiveAuthService.register(registerData);
+        
+        if (result.success) {
+          console.log(`✅ Inscription réussie en mode ${result.mode}`);
+          navigate('/setup');
+        } else {
+          const unified = ErrorHandlingService.createUnifiedError(
+            { message: result.error }, 
+            language
+          );
+          setUnifiedError(unified);
+        }
+      } else {
+        // Utiliser le système Redux standard
+        await dispatch(register(registerData)).unwrap();
       }
+    } catch (error: any) {
+      const unified = ErrorHandlingService.createUnifiedError(error, language);
+      setUnifiedError(unified);
     }
   };
 
-  // Log de débogage dans le render
-  console.log('🔍 [DEBUG] RENDER - error:', error, 'localError:', localError, 'showErrorToast:', showErrorToast);
+
 
   return (
     <Container maxWidth="sm">
+      {/* Indicateur de mode de stockage */}
+      <Box sx={{ position: 'fixed', top: 16, right: 16, zIndex: 1000 }}>
+        <StorageModeIndicator compact />
+      </Box>
+      
       <Box
         sx={{
           minHeight: '100vh',
@@ -197,7 +213,7 @@ const RegisterScreen: React.FC = () => {
             </Typography>
           </Box>
 
-          {(error || localError) && (
+          {false && (
             <Alert 
               severity="error" 
               sx={{ 
@@ -237,7 +253,7 @@ const RegisterScreen: React.FC = () => {
                     textTransform: 'uppercase'
                   }}
                 >
-                                     ⚠️ Erreur
+                                     ⚠️ Attention
                 </Typography>
                 <Typography 
                   variant="body1" 
@@ -359,52 +375,21 @@ const RegisterScreen: React.FC = () => {
                 </Link>
               </Typography>
               
-              {/* Bouton de test pour forcer l'affichage d'une erreur */}
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ mt: 2 }}
-                onClick={() => {
-                  console.log('🧪 [TEST] Bouton de test cliqué');
-                  setLocalError('🧪 Erreur de test - Vérification de l\'affichage');
-                  setShowErrorToast(true);
-                }}
-              >
-                🧪 Tester l'affichage d'erreur
-              </Button>
+
             </Box>
           </Box>
         </Paper>
       </Box>
 
-      {/* Notification toast pour les erreurs - TRÈS VISIBLE */}
-      <Snackbar
-        open={showErrorToast && !!(error || localError)}
-        autoHideDuration={8000}
-        onClose={() => setShowErrorToast(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{
-          '& .MuiSnackbarContent-root': {
-            backgroundColor: '#d32f2f',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1.1rem',
-            minWidth: '400px',
-            '& .MuiSnackbarContent-message': {
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }
-          }
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <span style={{ fontSize: '1.5rem' }}>🚨</span>
-          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-            ERREUR D'INSCRIPTION DÉTECTÉE !
-          </Typography>
-        </Box>
-      </Snackbar>
+      {/* Système d'erreur unifié - Style orange professionnel */}
+      <Box sx={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1300, maxWidth: '500px', width: '90%' }}>
+        <UnifiedErrorAlert
+          error={unifiedError}
+          onClose={() => setUnifiedError(null)}
+          autoHideDuration={8000}
+          variant="filled"
+        />
+      </Box>
     </Container>
   );
 };

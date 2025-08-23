@@ -33,6 +33,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguageContext } from '../contexts/LanguageContext';
 import { saveConfiguration, getSavedConfiguration, clearAllConfiguration } from '../utils/setupUtils';
 import HerokuDiagnostic from '../components/HerokuDiagnostic';
+import ModeToggle from '../components/ModeToggle';
+import StorageModeIndicator from '../components/StorageModeIndicator';
 
 /**
  * Écran de configuration initiale pour la sélection de version et de langue
@@ -256,6 +258,12 @@ const SetupScreen: React.FC = () => {
                 </RadioGroup>
               </FormControl>
 
+              {/* Composant de basculement de mode expérimental */}
+              <ModeToggle />
+              
+              {/* Indicateur de mode de stockage */}
+              <StorageModeIndicator showDetails />
+              
               {/* Message d'information */}
               {(version === 'local' || version === 'cloud') && (
                 <Alert severity="info" sx={{ mt: 2 }}>
