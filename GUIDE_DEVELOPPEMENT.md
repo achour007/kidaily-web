@@ -178,6 +178,58 @@ app.use(cors({
 
 **⚠️ IMPORTANT :** Si vous changez l'URL Vercel, mettre à jour cette configuration !
 
+### **4. URLs STABLES ET ALIAS - NOUVEAU SYSTÈME**
+
+**🎯 PROBLÈME RÉSOLU :** L'URL Vercel changeait à chaque déploiement, causant des problèmes de CORS !
+
+#### **A. URLs stables configurées :**
+- 🌐 **URL principale :** `https://kidaily-app.vercel.app`
+- 🚀 **URL production :** `https://kidaily-production.vercel.app`
+
+#### **B. Avantages des URLs stables :**
+- ✅ **Configuration CORS** du backend **une seule fois**
+- ✅ **URLs de production** stables et prévisibles
+- ✅ **Meilleure expérience** utilisateur
+- ✅ **Configuration** simplifiée pour l'équipe
+
+#### **C. Fichiers de configuration :**
+- `vercel.json` - Configuration Vercel optimisée
+- `deploy-stable.ps1` - Script de déploiement automatisé
+- `vercel-domains.json` - Documentation des domaines
+
+#### **D. Procédure de déploiement avec URLs stables :**
+
+```bash
+# 1. Déploiement standard
+vercel --prod
+
+# 2. Configuration des alias stables
+vercel alias set kidaily-app.vercel.app
+vercel alias set kidaily-production.vercel.app
+
+# 3. Vérification des alias
+vercel alias ls
+```
+
+#### **E. Configuration CORS mise à jour :**
+
+```javascript
+// Configuration CORS AVEC URLs STABLES
+app.use(cors({
+  origin: [
+    "http://localhost:3000",                    // Développement local frontend
+    "http://localhost:3001",                    // Développement local backend
+    "https://kidaily-app.vercel.app",           // Production Vercel - URL STABLE
+    "https://kidaily-production.vercel.app"     // Production Vercel - URL STABLE
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
+}));
+```
+
+**💡 AVANTAGE :** Plus besoin de mettre à jour la configuration CORS à chaque déploiement !
+
 ## 🔐 AUTHENTIFICATION - ENDPOINTS RÉELS
 
 ### **1. ENDPOINTS DISPONIBLES ET TESTÉS**
@@ -327,7 +379,11 @@ git push heroku master
 - [ ] Aller dans `kidaily-git`
 - [ ] Vérifier `vercel.json` (URL API correcte)
 - [ ] `vercel --prod`
+- [ ] **NOUVEAU :** Configurer les alias stables :
+  - [ ] `vercel alias set kidaily-app.vercel.app`
+  - [ ] `vercel alias set kidaily-production.vercel.app`
 - [ ] Vérifier le déploiement `vercel ls`
+- [ ] Vérifier les alias `vercel alias ls`
 
 ### **APRÈS DÉPLOIEMENT**
 - [ ] Test de l'API backend (endpoint /health ou /auth/login)
@@ -341,7 +397,10 @@ git push heroku master
 - **Dashboard Heroku :** https://dashboard.heroku.com/apps/kidaily-backend
 - **Dashboard Vercel :** https://vercel.com/achour007s-projects/kidaily-web
 - **API Backend :** https://kidaily-backend-cb9a147c3208.herokuapp.com
-- **Frontend :** https://kidaily-6e5r4hmtc-achour007s-projects.vercel.app
+- **Frontend URLs STABLES :**
+  - 🌐 **URL principale :** https://kidaily-app.vercel.app
+  - 🚀 **URL production :** https://kidaily-production.vercel.app
+- **Frontend URL temporaire :** https://kidaily-6e5r4hmtc-achour007s-projects.vercel.app
 
 ## 📚 COMMANDES RAPIDES - RÉFÉRENCE
 

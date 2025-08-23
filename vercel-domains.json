@@ -1,0 +1,15 @@
+{
+  "domains": [
+    "kidaily-app.vercel.app",
+    "kidaily-production.vercel.app"
+  ],
+  "configuration": {
+    "description": "Configuration des domaines stables pour Kidaily",
+    "benefits": [
+      "URL stable à chaque déploiement",
+      "Configuration CORS simplifiée",
+      "Meilleure expérience utilisateur",
+      "Configuration backend unique"
+    ]
+  }
+}
